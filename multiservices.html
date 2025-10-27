@@ -1,0 +1,1092 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Vitch Multiservice - Services numériques rapides et fiables</title>
+  <meta name="description" content="Vitch Multiservice - Boost publicité, badge WhatsApp, ChatGPT Go, crédits de jeux et services sur demande." />
+  <meta name="author" content="Vitch Multiservice" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect fill='%23000' width='100' height='100'/%3E%3Ctext x='50' y='57' font-size='50' fill='%23fff' text-anchor='middle' font-family='Arial'%3EV%3C/text%3E%3C/svg%3E">
+
+  <!-- Google Fonts (typographie premium) -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Playfair+Display:ital,wght@0,400;0,700;1,600&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS (CDN, play mode) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    // Tailwind config for fonts & container
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#0ea5a0',
+            accent: '#7c3aed',
+            'glass': 'rgba(255,255,255,0.06)'
+          },
+          fontFamily: {
+            sans: ['Inter','system-ui','-apple-system','"Segoe UI"','Roboto','"Helvetica Neue"'],
+            serif: ['Playfair Display','Georgia']
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-TY3n2GZ2Yv7k2GqZMXkq...replacedForBrevity..." crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+  <!-- Anime.js -->
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha512-6vD1JbJ6Z3bGz0s..." crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+  <!-- Minimal custom CSS (only where relevant) -->
+  <style>
+    /* Focus-visible for accessibility */
+    :focus { outline: none; }
+    :focus-visible { outline: 3px solid rgba(14,165,160,0.35); border-radius: 6px; outline-offset: 2px; }
+
+    /* Glassy backdrop for premium look */
+    .glass-card { background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); }
+
+    /* Smooth hardware-accelerated transforms */
+    .will-change-transform { will-change: transform, opacity; }
+
+    /* Floating WhatsApp button position */
+    .whatsapp-float { position: fixed; z-index: 60; right: 1rem; bottom: 1.25rem; }
+
+    /* Prevent large layout shifts for animated circles */
+    .circle-anim { width: 120px; height: 120px; border-radius: 9999px; display:flex; align-items:center; justify-content:center; }
+
+    /* Subtle utility for visually hidden text */
+    .sr-only { position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+  </style>
+</head>
+<body class="bg-[#05060a] text-slate-100 leading-relaxed antialiased">
+
+  <!-- Skip link for screen readers -->
+  <a class="sr-only focus:not-sr-only absolute left-4 top-4 bg-white text-slate-900 px-3 py-2 rounded" href="#main">Aller au contenu</a>
+
+  <!-- HEADER (fixed) -->
+<header class="fixed inset-x-0 top-0 z-50 backdrop-blur-xl bg-[#0b1220]/70 border-b border-white/10 shadow-lg">
+  <nav class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8" aria-label="Navigation principale">
+    <div class="flex items-center justify-between h-16">
+      
+      <!-- 🔹 Logo -->
+      <a href="#" class="flex items-center gap-3" aria-label="Vitch Multiservice - Accueil">
+        <div class="flex-shrink-0">
+          <img 
+            src="logovitchmultiservice.png" 
+            alt="Logo Vitch Multiservice"
+            width="60"
+            height="60"
+            class="w-12 h-12 sm:w-14 sm:h-14 object-contain drop-shadow-lg transition-transform duration-300 hover:scale-105"
+          />
+        </div>
+        <div class="hidden sm:block leading-tight">
+          <h1 class="text-base sm:text-lg font-semibold tracking-tight text-white">
+            Vitch <span class="text-primary">Multiservice</span>
+          </h1>
+          <p class="text-xs text-slate-400">Services numériques rapides</p>
+        </div>
+      </a>
+
+      <!-- 🔹 Menu Desktop -->
+      <div class="hidden md:flex items-center gap-8">
+        <a href="#services" class="text-sm font-medium text-slate-300 hover:text-white transition">Services</a>
+        <a href="#contact" class="text-sm font-medium text-slate-300 hover:text-white transition">Contact</a>
+        <a 
+          href="https://wa.me/50935601379" 
+          class="inline-flex items-center gap-2 bg-primary text-slate-900 px-4 py-2 rounded-md text-sm font-semibold shadow-md hover:brightness-105 transition focus-visible:ring-4 focus-visible:ring-primary/30"
+        >
+          <i class="fa-solid fa-bolt"></i> Commander
+        </a>
+      </div>
+
+      <!-- 🔹 Hamburger Mobile -->
+      <div class="md:hidden">
+        <button 
+          id="btn-menu" 
+          aria-expanded="false" 
+          aria-controls="mobile-menu" 
+          class="p-2 rounded-md text-slate-300 hover:text-white focus-visible:ring-4 focus-visible:ring-primary/30"
+        >
+          <span class="sr-only">Ouvrir le menu</span>
+          <i class="fa-solid fa-bars text-xl"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- 🔹 Menu Mobile -->
+    <div id="mobile-menu" class="hidden md:hidden mt-2" aria-hidden="true">
+      <div class="bg-[#0b1220]/90 backdrop-blur-lg border border-white/10 px-3 py-4 rounded-lg">
+        <a href="#services" class="block px-3 py-2 rounded text-sm font-medium text-slate-300 hover:text-white transition">Services</a>
+        <a href="#contact" class="block px-3 py-2 rounded text-sm font-medium text-slate-300 hover:text-white transition">Contact</a>
+        <a 
+          href="https://wa.me/50935601379" 
+          class="mt-2 block px-3 py-2 rounded-md text-sm font-semibold bg-primary text-slate-900 text-center hover:brightness-110 transition"
+        >
+          <i class="fa-brands fa-whatsapp"></i> Commander
+        </a>
+      </div>
+    </div>
+  </nav>
+</header>
+
+<script>
+  
+
+  btnMenu.addEventListener('click', () => {
+    const isOpen = mobileMenu.classList.toggle('hidden');
+    btnMenu.setAttribute('aria-expanded', !isOpen);
+    mobileMenu.setAttribute('aria-hidden', isOpen);
+  });
+</script>
+
+
+  <main id="main" class="pt-24">
+<section id="hero" class="relative w-full min-h-screen overflow-hidden mb-24">
+  <div id="carousel" class="flex transition-transform duration-700 ease-in-out w-full">
+
+    <!-- 🟦 SLIDE 1 : Boostage Facebook -->
+    <div class="min-w-full flex flex-col md:flex-row items-center justify-center px-6 md:px-16 py-10">
+      <div class="w-full md:w-1/2 mb-6 md:mb-0">
+        <img src="facebook.jpg"
+             alt="Boostage Facebook"
+             class="w-full h-64 sm:h-80 md:h-[400px] object-cover rounded-lg shadow-lg">
+      </div>
+      <div class="w-full md:w-1/2 text-center md:text-left">
+        <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold mb-4">🚀 Boostez vos pubs Facebook</h1>
+        <p class="text-gray-600 mb-6 text-sm sm:text-base">
+          Gagnez plus de visibilité grâce à notre service de <strong>boostage professionnel</strong> de publicités Facebook.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-3 justify-center md:justify-start">
+          <a id="boostFbCommander" href="#" class="bg-blue-600 text-white px-6 py-3 rounded-lg shadow hover:bg-blue-700 transition">
+            <i class="fa-brands fa-facebook"></i> Commander
+          </a>
+          <button id="boostFbInfo" class="border border-blue-600 text-blue-600 px-6 py-3 rounded-lg hover:bg-blue-600 hover:text-white transition">
+            En savoir plus
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 🟩 SLIDE 2 : Badge WhatsApp Business -->
+    <div class="min-w-full flex flex-col md:flex-row-reverse items-center justify-center px-6 md:px-16 py-10">
+      <div class="w-full md:w-1/2 mb-6 md:mb-0">
+        <img src="vrified.jpg" alt="Badge WhatsApp" class="w-full h-64 sm:h-80 md:h-[400px] object-cover rounded-lg shadow-lg">
+      </div>
+      <div class="w-full md:w-1/2 text-center md:text-right">
+        <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold mb-4">💬 Badge WhatsApp Business</h1>
+        <p class="text-gray-600 mb-6 text-sm sm:text-base">
+          Devenez un compte professionnel vérifié avec notre service d’obtention de badge WhatsApp Business.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-3 justify-center md:justify-end">
+          <a id="badgeWppCommander" href="#" class="bg-green-600 text-white px-6 py-3 rounded-lg shadow hover:bg-green-700 transition">
+            <i class="fa-brands fa-whatsapp"></i> Commander
+          </a>
+          <button id="badgeWppInfo" class="border border-green-600 text-green-600 px-6 py-3 rounded-lg hover:bg-green-600 hover:text-white transition">
+            En savoir plus
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 🟪 SLIDE 3 : Paiement en ligne -->
+    <div class="min-w-full flex flex-col md:flex-row items-center justify-center px-6 md:px-16 py-10">
+      <div class="w-full md:w-1/2 mb-6 md:mb-0">
+        <img src="cours.jpg" alt="Paiement en ligne" class="w-full h-64 sm:h-80 md:h-[400px] object-cover rounded-lg shadow-lg">
+      </div>
+      <div class="w-full md:w-1/2 text-center md:text-left">
+        <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold mb-4">💳 Paiement de cours ou services en ligne</h1>
+        <p class="text-gray-600 mb-6 text-sm sm:text-base">
+          Nous effectuons vos paiements de formations, cours et abonnements sur toutes les plateformes.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-3 justify-center md:justify-start">
+          <a id="paiementCommander" href="#" class="bg-indigo-600 text-white px-6 py-3 rounded-lg shadow hover:bg-indigo-700 transition">
+            <i class="fa-solid fa-globe"></i> Commander
+          </a>
+          <button id="paiementInfo" class="border border-indigo-600 text-indigo-600 px-6 py-3 rounded-lg hover:bg-indigo-600 hover:text-white transition">
+            En savoir plus
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ⚫ SLIDE 4 : ChatGPT GO -->
+    <div class="min-w-full flex flex-col md:flex-row-reverse items-center justify-center px-6 md:px-16 py-10">
+      <div class="w-full md:w-1/2 mb-6 md:mb-0">
+        <img src="chatg.jpg" alt="ChatGPT GO" class="w-full h-64 sm:h-80 md:h-[400px] object-cover rounded-lg shadow-lg">
+      </div>
+      <div class="w-full md:w-1/2 text-center md:text-right">
+        <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold mb-4">🤖 Accédez à ChatGPT Go</h1>
+        <p class="text-gray-600 mb-6 text-sm sm:text-base">
+          Obtenez un accès rapide à ChatGPT Go pour booster votre productivité.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-3 justify-center md:justify-end">
+          <a id="chatgptCommander" href="#" class="bg-gray-800 text-white px-6 py-3 rounded-lg shadow hover:bg-gray-900 transition">
+            <i class="fa-solid fa-robot"></i> Commander
+          </a>
+          <button id="chatgptInfo" class="border border-gray-800 text-gray-800 px-6 py-3 rounded-lg hover:bg-gray-800 hover:text-white transition">
+            En savoir plus
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 🟧 SLIDE 5 : Achat sur demande -->
+    <div class="min-w-full flex flex-col md:flex-row items-center justify-center px-6 md:px-16 py-10">
+      <div class="w-full md:w-1/2 mb-6 md:mb-0">
+        <img src="vente.jpg"
+             alt="Achat sur demande"
+             class="w-full h-64 sm:h-80 md:h-[400px] object-cover rounded-lg shadow-lg">
+      </div>
+      <div class="w-full md:w-1/2 text-center md:text-left">
+        <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold mb-4">🛍️ Achat sur demande</h1>
+        <p class="text-gray-600 mb-6 text-sm sm:text-base">
+          Dites-nous ce que vous voulez, nous l’achetons pour vous, où que ce soit sur le net.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-3 justify-center md:justify-start">
+          <a id="achatCommander" href="#" class="bg-orange-600 text-white px-6 py-3 rounded-lg shadow hover:bg-orange-700 transition">
+            <i class="fa-solid fa-cart-shopping"></i> Commander
+          </a>
+          <button id="achatInfo" class="border border-orange-600 text-orange-600 px-6 py-3 rounded-lg hover:bg-orange-600 hover:text-white transition">
+            En savoir plus
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 🎮 SLIDE 6 : Coins & Diamants -->
+    <div class="min-w-full flex flex-col md:flex-row items-center justify-center px-6 md:px-16 py-10">
+      <div class="w-full md:w-1/2 mb-6 md:mb-0">
+        <img src="coin.jpg"
+             alt="Achat de coins et diamants"
+             class="w-full h-64 sm:h-80 md:h-[400px] object-cover rounded-lg shadow-lg">
+      </div>
+      <div class="w-full md:w-1/2 text-center md:text-left">
+        <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold mb-4">🎮 Achat de Coins & Diamants</h1>
+        <p class="text-gray-600 mb-6 text-sm sm:text-base">
+          Obtiens tes <strong>coins eFootball</strong>, <strong>diamants Free Fire</strong>, 
+          et bien d’autres monnaies de jeux au meilleur prix 💰.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-3 justify-center md:justify-start">
+          <a id="coinsCommander" href="#" class="bg-orange-600 text-white px-6 py-3 rounded-lg shadow hover:bg-orange-700 transition">
+            <i class="fa-solid fa-cart-shopping"></i> Commander maintenant
+          </a>
+          <button id="coinsInfo" class="border border-orange-600 text-orange-600 px-6 py-3 rounded-lg hover:bg-orange-600 hover:text-white transition">
+            En savoir plus
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 🪟 MODALES (1 par slide) -->
+<div id="boostFbModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+  <div class="bg-white rounded-lg shadow-lg max-w-md w-full p-6 text-center">
+    <h2 class="text-2xl font-bold mb-3">🚀 Boostage Facebook</h2>
+    <p class="text-gray-600 mb-6">Nous augmentons la portée de vos publicités grâce à un boost ciblé et efficace.</p>
+    <button onclick="fermerModal('boostFbModal')" class="bg-blue-600 text-white px-5 py-2 rounded hover:bg-blue-700">Fermer</button>
+  </div>
+</div>
+
+<div id="badgeWppModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+  <div class="bg-white rounded-lg shadow-lg max-w-md w-full p-6 text-center">
+    <h2 class="text-2xl font-bold mb-3">💬 Badge WhatsApp Business</h2>
+    <p class="text-gray-600 mb-6">Obtenez la crédibilité de votre compte professionnel avec le badge vérifié.</p>
+    <button onclick="fermerModal('badgeWppModal')" class="bg-green-600 text-white px-5 py-2 rounded hover:bg-green-700">Fermer</button>
+  </div>
+</div>
+
+<div id="paiementModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+  <div class="bg-white rounded-lg shadow-lg max-w-md w-full p-6 text-center">
+    <h2 class="text-2xl font-bold mb-3">💳 Paiement en ligne</h2>
+    <p class="text-gray-600 mb-6">Nous réglons vos paiements sur les plateformes mondiales en toute sécurité.</p>
+    <button onclick="fermerModal('paiementModal')" class="bg-indigo-600 text-white px-5 py-2 rounded hover:bg-indigo-700">Fermer</button>
+  </div>
+</div>
+
+<div id="chatgptModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+  <div class="bg-white rounded-lg shadow-lg max-w-md w-full p-6 text-center">
+    <h2 class="text-2xl font-bold mb-3">🤖 ChatGPT Go</h2>
+    <p class="text-gray-600 mb-6">Accédez rapidement à ChatGPT Go pour vos projets professionnels et personnels.</p>
+    <button onclick="fermerModal('chatgptModal')" class="bg-gray-800 text-white px-5 py-2 rounded hover:bg-gray-900">Fermer</button>
+  </div>
+</div>
+
+<div id="achatModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+  <div class="bg-white rounded-lg shadow-lg max-w-md w-full p-6 text-center">
+    <h2 class="text-2xl font-bold mb-3">🛍️ Achat sur demande</h2>
+    <p class="text-gray-600 mb-6">Nous achetons pour vous n’importe quel article sur internet, selon vos besoins.</p>
+    <button onclick="fermerModal('achatModal')" class="bg-orange-600 text-white px-5 py-2 rounded hover:bg-orange-700">Fermer</button>
+  </div>
+</div>
+
+<div id="coinsModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+  <div class="bg-white rounded-lg shadow-lg max-w-md w-full p-6 text-center">
+    <h2 class="text-2xl font-bold mb-3">🎮 Coins & Diamants</h2>
+    <p class="text-gray-600 mb-6">Recharge rapide et sécurisée pour tous vos jeux préférés : eFootball, Free Fire, etc.</p>
+    <button onclick="fermerModal('coinsModal')" class="bg-orange-600 text-white px-5 py-2 rounded hover:bg-orange-700">Fermer</button>
+  </div>
+</div>
+
+<!-- ✅ SCRIPT GÉNÉRAL -->
+<script>
+  const numeroWhatsApp = "50935601379";
+
+  function ouvrirModal(id) {
+    document.getElementById(id).classList.remove("hidden");
+  }
+  function fermerModal(id) {
+    document.getElementById(id).classList.add("hidden");
+  }
+
+  function commander(service) {
+    const message = encodeURIComponent(`Bonjour 👋, je souhaite commander le service suivant : ${service}`);
+    window.open(`https://wa.me/${numeroWhatsApp}?text=${message}`, "_blank");
+  }
+
+  // 🎯 Liaisons uniques pour chaque slide
+  document.getElementById("boostFbInfo").onclick = () => ouvrirModal("boostFbModal");
+  document.getElementById("boostFbCommander").onclick = () => commander("Boostage Facebook");
+
+  document.getElementById("badgeWppInfo").onclick = () => ouvrirModal("badgeWppModal");
+  document.getElementById("badgeWppCommander").onclick = () => commander("Badge WhatsApp Business");
+
+  document.getElementById("paiementInfo").onclick = () => ouvrirModal("paiementModal");
+  document.getElementById("paiementCommander").onclick = () => commander("Paiement de cours ou services en ligne");
+
+  document.getElementById("chatgptInfo").onclick = () => ouvrirModal("chatgptModal");
+  document.getElementById("chatgptCommander").onclick = () => commander("Accès ChatGPT Go");
+
+  document.getElementById("achatInfo").onclick = () => ouvrirModal("achatModal");
+  document.getElementById("achatCommander").onclick = () => commander("Achat sur demande");
+
+  document.getElementById("coinsInfo").onclick = () => ouvrirModal("coinsModal");
+  document.getElementById("coinsCommander").onclick = () => commander("Achat de Coins & Diamants");
+</script>
+
+
+<!-- ===== SCRIPT ANIME.JS + CAROUSEL ===== -->
+<script>
+  const slides = document.querySelectorAll('#carousel > div');
+  let currentSlide = 0;
+
+  function showSlide(index) {
+    slides.forEach((s, i) => {
+      s.classList.toggle('hidden', i !== index);
+      if (i === index) {
+        anime({
+          targets: s.querySelectorAll('img, h1, p, a'),
+          opacity: [0, 1],
+          translateY: [30, 0],
+          delay: anime.stagger(100),
+          duration: 700,
+          easing: 'easeOutQuad'
+        });
+      }
+    });
+  }
+
+  function nextSlide() {
+    currentSlide = (currentSlide + 1) % slides.length;
+    showSlide(currentSlide);
+  }
+
+  // Défilement automatique toutes les 5s
+  setInterval(nextSlide, 5000);
+
+  // Afficher le premier slide
+  showSlide(currentSlide);
+</script>
+
+    <!-- HERO / Introduction (animated) -->
+  
+
+    <!-- SERVICES SECTION -->
+    <section id="services" class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-20" aria-labelledby="services-title">
+      <div class="mb-8" data-animate>
+        <h2 id="services-title" class="text-3xl sm:text-4xl font-serif">Nos Services</h2>
+        <p class="text-slate-400 mt-2 max-w-prose">Solutions claires, prix transparents et livraison rapide. Chaque service est optimisé pour la conversion.</p>
+      </div>
+
+      <!-- Cards grid -->
+      <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <!-- Card 1 -->
+        <!-- Boostage Facebook (version interactive premium corrigée) -->
+       <!-- ===== Carte Service : Boostage Facebook ===== -->
+<article class="service-card relative p-6 rounded-2xl glass-card border border-white/10 overflow-visible will-change-transform"
+  data-animate
+  data-service="Boostage de Publicité Facebook"
+  data-phone="50935601379"
+  data-plans='[
+    {"plan":"1 jour","price":"250 Gdes"},
+    {"plan":"1 semaine","price":"1 500 Gdes"},
+    {"plan":"1 mois","price":"7 000 Gdes"}
+  ]'>
+
+  <div class="flex items-start gap-4">
+    <div class="flex-none">
+      <div class="w-16 h-16 rounded-full bg-gradient-to-br from-blue-600 to-[#3b82f6] flex items-center justify-center ring-1 ring-white/8">
+        <i class="fa-brands fa-facebook-f fa-lg" aria-hidden="true"></i>
+      </div>
+    </div>
+    <div>
+      <h3 class="text-lg font-semibold">Boostage de Publicité Facebook</h3>
+      <p class="text-sm text-slate-300 mt-1">
+        Générez plus de vues, de clics et de clients grâce à nos campagnes optimisées.
+      </p>
+    </div>
+  </div>
+
+  <!-- Détails -->
+  <ul class="mt-5 text-sm space-y-2 text-slate-300">
+    <li>📈 Portée garantie</li>
+    <li>⚡ Livraison rapide</li>
+  </ul>
+
+  <!-- Tarifs -->
+  <div class="mt-5 border-t border-white/10 pt-4">
+    <p class="text-sm font-medium text-slate-200 mb-2">💰 Tarifs disponibles :</p>
+    <div class="grid grid-cols-1 gap-2 text-slate-300 text-sm">
+      <div class="flex justify-between"><span>1 jour</span><span class="font-semibold text-white">250 Gdes</span></div>
+      <div class="flex justify-between"><span>1 semaine</span><span class="font-semibold text-white">1 500 Gdes</span></div>
+      <div class="flex justify-between"><span>1 mois</span><span class="font-semibold text-white">7 000 Gdes</span></div>
+    </div>
+  </div>
+
+  <!-- Boutons -->
+  <div class="mt-6 flex items-center justify-between">
+    <button class="buy-btn relative inline-flex items-center gap-2 px-4 py-2 rounded-md bg-primary text-slate-900 text-sm font-medium hover:brightness-110">
+      <i class="fa-solid fa-cart-shopping" aria-hidden="true"></i> Acheter
+    </button>
+    <button class="text-slate-400 text-sm" aria-label="Infos">
+      <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
+    </button>
+  </div>
+</article>
+
+<!-- ===== MODALE GLOBALE ===== -->
+<div id="buy-modal" class="fixed inset-0 z-50 hidden bg-black/60 backdrop-blur-sm flex items-center justify-center">
+  <div class="bg-[#0b1220] border border-white/10 rounded-2xl p-6 w-[90%] sm:w-[400px] text-center relative animate-fadeIn">
+    <h3 id="modal-title" class="text-xl font-semibold mb-4 text-white"></h3>
+    <ul id="modal-plans" class="text-slate-300 space-y-2 mb-6 text-sm"></ul>
+    <button id="cancel-btn" class="mt-3 px-4 py-2 rounded-md bg-slate-700 hover:bg-slate-600 text-white text-sm">
+      Annuler
+    </button>
+  </div>
+</div>
+
+<!-- ===== STYLE ANIMATION ===== -->
+<style>
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1); }
+}
+.animate-fadeIn { animation: fadeIn 0.25s ease-out; }
+</style>
+
+<!-- ===== SCRIPT ===== -->
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const modal = document.getElementById("buy-modal");
+  const title = document.getElementById("modal-title");
+  const plansList = document.getElementById("modal-plans");
+  const cancel = document.getElementById("cancel-btn");
+
+  // Gérer ouverture de la modale
+  document.querySelectorAll(".service-card .buy-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const card = btn.closest(".service-card");
+      const service = card.dataset.service;
+      const phone = card.dataset.phone;
+      const plans = JSON.parse(card.dataset.plans || "[]");
+
+      // Injecter contenu dynamique
+      title.textContent = service;
+      plansList.innerHTML = "";
+
+      plans.forEach(p => {
+        const li = document.createElement("li");
+        li.innerHTML = `
+          <button class="w-full bg-white/5 hover:bg-white/10 rounded-md px-3 py-2 transition">
+            ${p.plan} — ${p.price}
+          </button>
+        `;
+
+        // Quand l’utilisateur clique sur un plan
+        li.querySelector("button").addEventListener("click", () => {
+          const msg = encodeURIComponent(
+            `Bonjour 👋, je souhaite acheter le service "${service}"\nPlan choisi : ${p.plan}\nPrix : ${p.price}`
+          );
+          window.open(`https://wa.me/${phone}?text=${msg}`, "_blank", "noopener");
+          modal.classList.add("hidden");
+        });
+
+        plansList.appendChild(li);
+      });
+
+      // Afficher la modale
+      modal.classList.remove("hidden");
+    });
+  });
+
+  // Fermeture de la modale
+  cancel.addEventListener("click", () => modal.classList.add("hidden"));
+  modal.addEventListener("click", e => {
+    if (e.target === modal) modal.classList.add("hidden");
+  });
+});
+</script>
+
+
+        <!-- Card 2 -->
+        <!-- ===== Carte Service : Badge de Vérification WhatsApp Business ===== -->
+<article class="service-card relative p-6 rounded-2xl glass-card border border-white/10 overflow-visible will-change-transform"
+  data-animate
+  data-service="Badge de Vérification WhatsApp Business"
+  data-phone="50935601379"
+  data-plans='[
+    {"plan":"Vérification officielle","price":"2 000 Gdes"}
+  ]'>
+
+  <div class="flex items-start gap-4">
+    <div class="flex-none">
+      <div class="w-16 h-16 rounded-full bg-gradient-to-br from-green-500 to-[#10b981] flex items-center justify-center ring-1 ring-white/8">
+        <i class="fa-brands fa-whatsapp fa-lg" aria-hidden="true"></i>
+      </div>
+    </div>
+    <div>
+      <h3 id="s2-title" class="text-lg font-semibold">Badge de Vérification WhatsApp Business</h3>
+      <p class="text-sm text-slate-300 mt-1">
+        Obtenez le badge officiel de WhatsApp pour renforcer la crédibilité de votre entreprise.
+      </p>
+    </div>
+  </div>
+
+  <ul class="mt-4 text-sm space-y-2 text-slate-300" aria-label="Détails du service Badge WhatsApp">
+    <li>✅ Compte vérifié</li>
+    <li>🔒 Processus sécurisé</li>
+    <li>🕒 Délai : 24–48 h</li>
+  </ul>
+
+  <div class="mt-6 flex items-center justify-between">
+    <button class="buy-btn inline-flex items-center gap-2 px-4 py-2 rounded-md bg-[#22c55e] text-slate-900 text-sm font-medium hover:brightness-110">
+      <i class="fa-solid fa-cart-shopping"></i> Acheter
+    </button>
+    <button class="text-slate-400 text-sm" aria-label="En savoir plus sur Badge WhatsApp">
+      <i class="fa-solid fa-circle-info"></i>
+    </button>
+  </div>
+</article>
+
+        <!-- Card 3 -->
+       <!-- ===== Carte Service : Plan ChatGPT Go ===== -->
+<article class="service-card relative p-6 rounded-2xl glass-card border border-white/10 overflow-visible will-change-transform"
+  data-animate
+  data-service="Plan ChatGPT Go"
+  data-phone="50935601379"
+  data-plans='[
+    {"plan":"Abonnement IA illimité","price":"1 000 Gdes"}
+  ]'>
+
+  <div class="flex items-start gap-4">
+    <div class="flex-none">
+      <div class="w-16 h-16 rounded-full bg-gradient-to-br from-emerald-400 to-[#06b6d4] flex items-center justify-center ring-1 ring-white/8">
+        <i class="fa-solid fa-robot fa-lg" aria-hidden="true"></i>
+      </div>
+    </div>
+    <div>
+      <h3 id="s3-title" class="text-lg font-semibold">Plan ChatGPT Go</h3>
+      <p class="text-sm text-slate-300 mt-1">
+        Accédez à une IA rapide et performante pour vos tâches, études ou projets professionnels.
+      </p>
+    </div>
+  </div>
+
+  <ul class="mt-4 text-sm space-y-2 text-slate-300" aria-label="Détails du service ChatGPT Go">
+    <li>🤖 Plan individuel ou business</li>
+    <li>💡 Assistance IA illimitée</li>
+    <li>💳 Paiement sécurisé</li>
+  </ul>
+
+  <div class="mt-5 border-t border-white/10 pt-4">
+    <p class="text-sm font-medium text-slate-200 mb-2">💰 Prix :</p>
+    <div class="flex justify-between text-sm text-slate-300">
+      <span>Abonnement IA illimité</span>
+      <span class="font-semibold text-white">1 000 Gdes</span>
+    </div>
+  </div>
+
+  <div class="mt-6 flex items-center justify-between">
+    <button class="buy-btn inline-flex items-center gap-2 px-4 py-2 rounded-md bg-accent text-white text-sm font-medium hover:brightness-110">
+      <i class="fa-solid fa-cart-shopping" aria-hidden="true"></i> Acheter
+    </button>
+    <button class="text-slate-400 text-sm" aria-label="En savoir plus sur ChatGPT Go">
+      <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
+    </button>
+  </div>
+</article>
+
+<!-- Card 4 -->
+
+<!-- Card 4 -->
+<article class="p-6 rounded-2xl glass-card border border-white/6 will-change-transform" data-animate role="region" aria-labelledby="s4-title">
+  <div class="flex items-start gap-4">
+    <div class="flex-none">
+      <div class="w-16 h-16 rounded-full bg-gradient-to-br from-red-600 to-[#ef4444] flex items-center justify-center ring-1 ring-white/8">
+        <i class="fa-solid fa-gamepad fa-lg" aria-hidden="true"></i>
+      </div>
+    </div>
+    <div>
+      <h3 id="s4-title" class="text-lg font-semibold">Crédits et Pièces de Jeux</h3>
+      <p class="text-sm text-slate-300 mt-1">Achetez des pièces pour eFootball, FIFA, Free Fire et d'autres jeux sur demande.</p>
+    </div>
+  </div>
+
+  <ul class="mt-4 text-sm space-y-2 text-slate-300" aria-label="Détails du service Crédits de jeux">
+    <li>🎮 Toutes plateformes disponibles</li>
+    <li>🔥 Livraison instantanée</li>
+    <li>💰 Prix variables selon le jeu</li>
+  </ul>
+
+  <div class="mt-6 flex items-center justify-between">
+    <a  href="https://wa.me/50935601379" >
+    <button class="inline-flex items-center gap-2 px-4 py-2 rounded-md bg-red-500 text-white text-sm font-medium hover:bg-red-600 transition-colors" id="btn-commander-jeux">
+      Commander des pièces
+    </button>
+    </a>
+    <button class="text-slate-400 text-sm" aria-label="En savoir plus sur Crédits de jeux">
+      <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
+    </button>
+  </div>
+</article>
+
+<!-- Modal pour Crédits et Pièces de Jeux - À PLACER APRÈS LA FERMETURE DE LA BALISE </main> -->
+
+
+
+        <!-- Card 5 -->
+        <article class="p-6 rounded-2xl glass-card border border-white/6 will-change-transform" data-animate role="region" aria-labelledby="s5-title">
+          <div class="flex items-start gap-4">
+            <div class="flex-none">
+              <div class="w-16 h-16 rounded-full bg-gradient-to-br from-yellow-400 to-[#f59e0b] flex items-center justify-center ring-1 ring-white/8">
+                <i class="fa-solid fa-wrench fa-lg" aria-hidden="true"></i>
+              </div>
+            </div>
+            <div>
+              <h3 id="s5-title" class="text-lg font-semibold">Service sur Demande</h3>
+              <p class="text-sm text-slate-300 mt-1">Besoin spécifique ? Nous le réalisons sur mesure (cartes virtuelles, abonnements, etc.).</p>
+            </div>
+          </div>
+
+          <ul class="mt-4 text-sm space-y-2 text-slate-300" aria-label="Détails Service sur demande">
+            <li>📋 Sur devis</li>
+            <li>📞 Réponse rapide</li>
+          </ul>
+
+          <div class="mt-6 flex items-center justify-between">
+            <a href="https://wa.me/50935601379" class="inline-flex items-center gap-2 px-4 py-2 rounded-md bg-yellow-400 text-slate-900 text-sm font-medium">Faire une demande</a>
+            <button class="text-slate-400 text-sm" aria-label="En savoir plus Service sur demande"><i class="fa-solid fa-circle-info" aria-hidden="true"></i></button>
+          </div>
+        </article>
+      </div>
+    </section>
+  <section class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-20" aria-labelledby="hero-title" data-animate>
+      <div class="grid md:grid-cols-12 gap-8 items-center">
+        <div class="md:col-span-7">
+          <div class="relative overflow-hidden pr-6">
+            <!-- Decorative expanding circle animation element -->
+            <div aria-hidden="true" class="absolute -left-10 -top-14 circle-anim will-change-transform" style="background: radial-gradient(circle at 30% 30%, rgba(124,58,237,0.18), transparent 35%), radial-gradient(circle at 70% 70%, rgba(14,165,160,0.12), transparent 40%); transform: scale(.6);"></div>
+
+            <h2 id="hero-title" class="text-4xl sm:text-5xl font-serif leading-tight tracking-tight mb-4">
+              Vitch Multiservice <span class="text-primary">Services numériques rapides</span><br class="hidden sm:block" />
+              & fiables pour accélérer votre activité.
+            </h2>
+
+            <p class="text-lg text-slate-300 mb-6 max-w-prose">
+              Boostez visibilité, crédibilité et ventes avec des solutions clés en main : publicité, vérification WhatsApp Business, IA, crédits de jeux et services personnalisés.
+            </p>
+
+            <div class="flex gap-3 flex-wrap">
+              <a href="#services" class="inline-flex items-center gap-2 px-4 py-3 rounded-md bg-accent hover:brightness-105 text-white font-semibold focus-visible:ring-4 focus-visible:ring-accent/30">
+                <i class="fa-solid fa-layer-group" aria-hidden="true"></i> Voir nos services
+              </a>
+              <a  href="https://wa.me/50935601379"  class="inline-flex items-center gap-2 px-4 py-3 rounded-md bg-transparent border border-white/8 text-sm text-slate-200 hover:bg-white/2 focus-visible:ring-4 focus-visible:ring-primary/20">
+                <i class="fa-brands fa-whatsapp" aria-hidden="true"></i> Discuter sur WhatsApp
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <div class="md:col-span-5">
+          <!-- Right panel: quick features with subtle animations -->
+          <div class="space-y-4">
+            <div class="p-5 rounded-xl glass-card border border-white/4 will-change-transform" data-animate>
+              <h3 class="font-semibold">Livraison instantanée</h3>
+              <p class="text-sm text-slate-300">Nous envoyons vos commandes immédiatement après confirmation.</p>
+            </div>
+            <div class="p-5 rounded-xl glass-card border border-white/4 will-change-transform" data-animate>
+              <h3 class="font-semibold">Paiement sécurisé</h3>
+              <p class="text-sm text-slate-300">Supports divers + chiffrement pour vos transactions.</p>
+            </div>
+            <div class="p-5 rounded-xl glass-card border border-white/4 will-change-transform" data-animate>
+              <h3 class="font-semibold">Assistance 24/7</h3>
+              <p class="text-sm text-slate-300">Support rapide pour chaque commande.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- CONTACT SECTION -->
+<section
+  id="contact"
+  class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-20"
+  aria-labelledby="contact-title"
+  data-animate
+>
+  <div
+    class="bg-gradient-to-b from-white/5 to-transparent p-6 sm:p-8 rounded-2xl border border-white/10 backdrop-blur-lg shadow-md"
+  >
+    <h2
+      id="contact-title"
+      class="text-2xl sm:text-3xl font-serif mb-2 text-white"
+    >
+      Contactez <span class="text-primary">Vitch Multiservice</span>
+    </h2>
+
+    <p class="text-slate-400 mb-8 text-sm sm:text-base">
+      Remplissez le formulaire ci-dessous ou discutez directement via WhatsApp.
+    </p>
+
+    <!-- ✅ Formulaire simple (Formspree) -->
+    <form
+      action="https://formspree.io/f/mpwjajva"
+      method="POST"
+      class="grid gap-5"
+    >
+      <!-- Nom -->
+      <div class="flex flex-col">
+        <label for="name" class="text-sm font-medium mb-1 text-white/90"
+          >Nom complet</label
+        >
+        <input
+          id="name"
+          name="name"
+          type="text"
+          required
+          placeholder="Jean Dupont"
+          autocomplete="name"
+          class="w-full rounded-md px-3 py-2 bg-[#0b1220] border border-white/10 text-white placeholder-slate-500 focus:outline-none focus:ring-4 focus:ring-primary/30 transition"
+        />
+      </div>
+
+      <!-- Contact -->
+      <div class="flex flex-col">
+        <label for="contact" class="text-sm font-medium mb-1 text-white/90"
+          >WhatsApp ou Email</label
+        >
+        <input
+          id="contact"
+          name="contact"
+          type="text"
+          required
+          placeholder="+509 3X XX XX XX ou mail@exemple.com"
+          autocomplete="email"
+          class="w-full rounded-md px-3 py-2 bg-[#0b1220] border border-white/10 text-white placeholder-slate-500 focus:outline-none focus:ring-4 focus:ring-primary/30 transition"
+        />
+      </div>
+
+      <!-- Sélection du service -->
+      <div class="flex flex-col">
+        <label for="service" class="text-sm font-medium mb-1 text-white/90"
+          >Sélection du service</label
+        >
+        <select
+          id="service"
+          name="service"
+          required
+          class="w-full rounded-md px-3 py-2 bg-[#0b1220] border border-white/10 text-white focus:outline-none focus:ring-4 focus:ring-primary/30 transition"
+        >
+          <option value="" disabled selected>Choisir un service</option>
+          <option>Boostage de Publicité Facebook</option>
+          <option>Badge WhatsApp Business</option>
+          <option>Plan ChatGPT Go</option>
+          <option>Crédits / Pièces de jeux</option>
+          <option>Service sur Demande</option>
+        </select>
+      </div>
+
+      <!-- Message -->
+      <div class="flex flex-col">
+        <label for="message" class="text-sm font-medium mb-1 text-white/90"
+          >Message</label
+        >
+        <textarea
+          id="message"
+          name="message"
+          rows="4"
+          placeholder="Dites-nous ce dont vous avez besoin..."
+          class="w-full rounded-md px-3 py-2 bg-[#0b1220] border border-white/10 text-white placeholder-slate-500 focus:outline-none focus:ring-4 focus:ring-primary/30 transition"
+        ></textarea>
+      </div>
+
+      <!-- Honeypot anti-spam -->
+      <input type="text" name="_gotcha" style="display:none" aria-hidden="true" />
+
+      <!-- Redirection après succès -->
+      <input type="hidden" name="_redirect" value="https://ton-site.com/merci.html" />
+
+      <!-- Boutons d’action -->
+      <div class="flex flex-col sm:flex-row sm:items-center gap-3 mt-4">
+        <button
+          type="submit"
+          class="w-full sm:w-auto inline-flex justify-center items-center gap-2 px-5 py-3 rounded-md bg-primary text-slate-900 font-semibold hover:opacity-90 transition focus:outline-none focus:ring-4 focus:ring-primary/30"
+        >
+          <i class="fa-regular fa-paper-plane"></i>
+          Envoyer
+        </button>
+
+        <a
+          href="https://wa.me/509XXXXXXXX"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="w-full sm:w-auto inline-flex justify-center items-center gap-2 px-5 py-3 rounded-md bg-[#25D366] text-slate-900 font-semibold hover:bg-[#20bd5a] transition"
+        >
+          <i class="fa-brands fa-whatsapp"></i>
+          Discuter sur WhatsApp
+        </a>
+      </div>
+    </form>
+  </div>
+</section>
+
+
+
+
+  </main>
+
+  <!-- Floating WhatsApp quick contact -->
+  <a class="whatsapp-float" id="quick-whatsapp" href="https://wa.me/50935601379" target="_blank" rel="noopener noreferrer" aria-label="Contacter via WhatsApp">
+    <div class="p-3 rounded-full shadow-lg" style="background: linear-gradient(135deg,#25D366,#10B981);">
+      <i class="fa-brands fa-whatsapp fa-xl text-white" aria-hidden="true"></i>
+    </div>
+  </a>
+
+  <!-- FOOTER -->
+  <footer class="mt-12 border-t border-white/6">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col md:flex-row items-center justify-between gap-4">
+      <div class="flex items-center gap-3">
+        <div>
+          <img src="logovitchmultiservice.png" width="70" height="70" alt="Logo Vitch Multiservice">
+        </div>
+        <div>
+          <div class="font-semibold">Vitch Multiservice</div>
+          <div class="text-sm text-slate-400">Services numériques rapides et fiables</div>
+        </div>
+      </div>
+
+      <nav aria-label="Liens rapides" class="flex items-center gap-6">
+        <a href="#services" class="text-sm hover:text-white">Services</a>
+        <a href="#contact" class="text-sm hover:text-white">Contact</a>
+        <div class="flex items-center gap-3">
+          <a href="#" aria-label="Facebook" class="text-slate-400 hover:text-white"><i class="fa-brands fa-facebook" aria-hidden="true"></i></a>
+          <a href="https://wa.me/50935601379" aria-label="WhatsApp" class="text-slate-400 hover:text-white"><i class="fa-brands fa-whatsapp" aria-hidden="true"></i></a>
+          <a href="#" aria-label="Instagram" class="text-slate-400 hover:text-white"><i class="fa-brands fa-instagram" aria-hidden="true"></i></a>
+        </div>
+      </nav>
+
+      <div class="text-sm text-slate-500">© 2025 Vitch Multiservice</div>
+    </div>
+  </footer>
+
+  <!-- Scripts: Menu, Form & On-Scroll animations (IntersectionObserver + Anime.js) -->
+  <script>
+    // Mobile menu toggle
+    (function(){
+      const btn = document.getElementById('btn-menu');
+      const mobile = document.getElementById('mobile-menu');
+      btn.addEventListener('click', () => {
+        const open = mobile.classList.toggle('hidden') === false;
+        btn.setAttribute('aria-expanded', String(open));
+        mobile.setAttribute('aria-hidden', String(!open));
+      });
+    })();
+
+    // Simple client-side form handling (MVP) with accessibility and minimal validation
+    (function(){
+      const form = document.getElementById('contact-form');
+      const status = document.getElementById('form-status');
+
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        // Basic validation
+        const name = form.name.value.trim();
+        const contact = form.contact.value.trim();
+        const service = form.service.value;
+        if (!name || !contact || !service) {
+          status.textContent = 'Veuillez remplir les champs obligatoires.';
+          return;
+        }
+        // Simulate successful submit (replace with real endpoint)
+        status.textContent = 'Envoi en cours…';
+        setTimeout(() => {
+          status.textContent = 'Merci ! Votre message a été envoyé. Nous répondrons sous peu.';
+          form.reset();
+        }, 900);
+      });
+
+      // WhatsApp quick contact: open with prefilled message
+      document.getElementById('whatsapp-contact').addEventListener('click', (e) => {
+        e.preventDefault();
+        const phone = '50935601379';
+        const msg = encodeURIComponent('Bonjour, je souhaite commander/un renseignement sur vos services.');
+        window.open(`https://wa.me/${phone}?text=${msg}`, '_blank', 'noopener');
+      });
+    })();
+
+    // On-scroll animations using IntersectionObserver & Anime.js
+    (function(){
+      const animatedEls = document.querySelectorAll('[data-animate]');
+      const observer = new IntersectionObserver((entries, obs) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            animateIn(entry.target);
+            obs.unobserve(entry.target);
+          }
+        });
+      }, {threshold: 0.12});
+
+      animatedEls.forEach(el => {
+        // initial state for each element
+        el.style.opacity = 0;
+        el.style.transform = 'translateY(18px)';
+        observer.observe(el);
+      });
+
+      // animation function: applies different "futur premium" patterns depending on element
+      function animateIn(el) {
+        // If element contains a circular decorative child, do an expansion
+        const circle = el.querySelector('.circle-anim');
+        if (circle) {
+          // initial small
+          circle.style.transform = 'scale(.4)';
+          anime.timeline({
+            easing: 'cubicBezier(.2,.9,.2,1)',
+            duration: 750
+          })
+          .add({
+            targets: circle,
+            scale: [0.4, 1.05],
+            opacity: [0.0, 1],
+            duration: 700,
+          })
+          .add({
+            targets: el,
+            translateY: [18,0],
+            opacity: [0,1],
+            duration: 700,
+            offset: '-=500'
+          });
+          return;
+        }
+
+        // For regular cards / sections: apply a layered animation
+        anime.timeline({
+          easing: 'cubicBezier(.2,.9,.2,1)',
+          duration: 700
+        })
+        .add({
+          targets: el,
+          translateY: [18,0],
+          opacity: [0,1],
+          delay: anime.stagger(60),
+        })
+        .add({
+          targets: el.querySelectorAll('.will-change-transform'),
+          scale: [0.98,1],
+          duration: 500,
+          offset: '-=420'
+        });
+      }
+
+      // Additionally animate cards with a cascading effect
+      const cards = document.querySelectorAll('#services article');
+      cards.forEach((card, i) => {
+        card.style.opacity = 0;
+        card.style.transform = 'translateY(18px)';
+      });
+      const cardObs = new IntersectionObserver((entries, obs) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            // cascade per index
+            const idx = Array.from(cards).indexOf(entry.target);
+            anime({
+              targets: entry.target,
+              translateY: [22,0],
+              opacity: [0,1],
+              duration: 700,
+              delay: idx * 120,
+              easing: 'cubicBezier(.2,.9,.2,1)'
+            });
+            obs.unobserve(entry.target);
+          }
+        });
+      }, {threshold: 0.14});
+      cards.forEach(c => cardObs.observe(c));
+    })();
+
+    // Script pour le menu déroulant Facebook
+    (function() {
+      const buyBtn = document.getElementById('buy-facebook');
+      const menuWrapper = document.getElementById('plan-menu-facebook');
+      if (!buyBtn || !menuWrapper) return;
+      
+      const menu = menuWrapper.querySelector('div');
+      let open = false;
+
+      // Toggle menu affichage avec animation
+      buyBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        open = !open;
+
+        if (open) {
+          menuWrapper.classList.remove('hidden');
+          requestAnimationFrame(() => {
+            menu.classList.remove('opacity-0', 'scale-95');
+            menu.classList.add('opacity-100', 'scale-100');
+          });
+        } else {
+          menu.classList.remove('opacity-100', 'scale-100');
+          menu.classList.add('opacity-0', 'scale-95');
+          setTimeout(() => menuWrapper.classList.add('hidden'), 250);
+        }
+      });
+
+      // Ferme au clic extérieur
+      document.addEventListener('click', (e) => {
+        if (open && !menuWrapper.contains(e.target) && e.target !== buyBtn) {
+          menu.classList.remove('opacity-100', 'scale-100');
+          menu.classList.add('opacity-0', 'scale-95');
+          setTimeout(() => menuWrapper.classList.add('hidden'), 250);
+          open = false;
+        }
+      });
+
+      // Liens vers WhatsApp
+      menu.querySelectorAll('button[data-plan]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const plan = btn.dataset.plan;
+          const price = btn.dataset.price;
+          const service = 'Boostage de Publicité Facebook';
+          const phone = '50935601379';
+          const msg = encodeURIComponent(
+            `Bonjour 👋, je souhaite acheter le service "${service}"\nPlan choisi : ${plan}\nPrix : ${price}`
+          );
+          window.open(`https://wa.me/${phone}?text=${msg}`, '_blank', 'noopener');
+        });
+      });
+    })();
+  </script>
+</body>
+</html>
