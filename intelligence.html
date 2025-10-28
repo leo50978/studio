@@ -12,6 +12,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <!-- Anime.js -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
     <style>
         body {
             font-family: 'Poppins', sans-serif;
@@ -46,9 +49,15 @@
                     <i class="fas fa-brain text-6xl text-indigo-500 mb-4"></i>
                 </div>
                 
-                <div class="mb-6">
+                <div class="mb-4">
                     <label for="player-name" class="block text-left text-gray-700 mb-2 font-medium">Votre nom :</label>
                     <input type="text" id="player-name" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Entrez votre nom">
+                </div>
+                
+                <div class="mb-6">
+                    <label for="whatsapp-number" class="block text-left text-gray-700 mb-2 font-medium">Votre numéro WhatsApp :</label>
+                    <input type="tel" id="whatsapp-number" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Votre numéro WhatsApp">
+                    <p class="text-xs text-gray-500 mt-1 text-left">Format accepté: +33 6 12 34 56 78, 06 12 34 56 78, 0612345678, etc.</p>
                 </div>
                 
                 <button id="start-btn" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-4 rounded-lg transition duration-300 flex items-center justify-center">
@@ -131,409 +140,553 @@
     <audio id="completion-sound">
         <source src="winner-game-sound-404167.mp3" type="audio/mpeg">
     </audio>
-<script>(function(s){s.dataset.zone='10103780',s.src='https://forfrogadiertor.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
-    <script>
-        // Variables globales
-        let playerName = '';
-        let currentQuestionIndex = 0;
-        let score = 0;
-        let timer = 0;
-        let timerInterval;
-        let isSoundEnabled = true;
+
+   <script>
+    // Configuration Firebase
+    const firebaseConfig = {
+        apiKey: "AIzaSyBBTgIhlC7Guqmgud2TS3z_Df7pyqAhi6w",
+        authDomain: "projet-bcd8d.firebaseapp.com",
+        projectId: "projet-bcd8d",
+        storageBucket: "projet-bcd8d.firebasestorage.app",
+        messagingSenderId: "20520073751",
+        appId: "1:20520073751:web:819345aca686c7e7063a52",
+        measurementId: "G-MLC4DPS4X0"
+    };
+
+    // Initialiser Firebase
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    // Variables globales
+    let playerName = '';
+    let whatsappNumber = '';
+    let currentQuestionIndex = 0;
+    let score = 0;
+    let timer = 0;
+    let timerInterval;
+    let isSoundEnabled = true;
+    let userId = null;
+    
+    // Questions du test
+    const questions = [
+        {
+            question: "Combien font 15 + 27 ?",
+            answers: [
+                { text: "32", correct: false },
+                { text: "42", correct: true },
+                { text: "52", correct: false },
+                { text: "62", correct: false }
+            ]
+        },
+        {
+            question: "Si un train part à 8h et arrive à 10h30, combien de temps a duré le trajet ?",
+            answers: [
+                { text: "1h30", correct: false },
+                { text: "2h30", correct: true },
+                { text: "3h", correct: false },
+                { text: "2h", correct: false }
+            ]
+        },
+        {
+            question: "Quel mot ne correspond pas aux autres ?",
+            answers: [
+                { text: "chien", correct: false },
+                { text: "chat", correct: false },
+                { text: "oiseau", correct: false },
+                { text: "table", correct: true }
+            ]
+        },
+        {
+            question: "Si tous les roses sont des fleurs et certaines fleurs fanent, alors :",
+            answers: [
+                { text: "Toutes les fleurs sont roses", correct: false },
+                { text: "Certains roses peuvent faner", correct: true },
+                { text: "Aucune fleur ne fane", correct: false },
+                { text: "Les roses ne sont pas des fleurs", correct: false }
+            ]
+        },
+        {
+            question: "Quelle est la suite logique : 2, 4, 8, 16, … ?",
+            answers: [
+                { text: "32", correct: true },
+                { text: "24", correct: false },
+                { text: "36", correct: false },
+                { text: "30", correct: false }
+            ]
+        },
+        {
+            question: "Si 5 machines fabriquent 5 objets en 5 minutes, combien de temps pour 100 machines à fabriquer 100 objets ?",
+            answers: [
+                { text: "100 minutes", correct: false },
+                { text: "10 minutes", correct: false },
+                { text: "5 minutes", correct: true },
+                { text: "50 minutes", correct: false }
+            ]
+        },
+        {
+            question: "Quel mot est mal orthographié ?",
+            answers: [
+                { text: "Maison", correct: false },
+                { text: "Ortograf", correct: true },
+                { text: "Arbre", correct: false },
+                { text: "Chaise", correct: false }
+            ]
+        },
+        {
+            question: "Trouve l'intrus : carré, rectangle, triangle, cercle.",
+            answers: [
+                { text: "carré", correct: false },
+                { text: "rectangle", correct: false },
+                { text: "triangle", correct: false },
+                { text: "cercle", correct: true }
+            ]
+        },
+        {
+            question: "Quel nombre complète la série : 1, 1, 2, 3, 5, 8, … ?",
+            answers: [
+                { text: "13", correct: true },
+                { text: "10", correct: false },
+                { text: "11", correct: false },
+                { text: "15", correct: false }
+            ]
+        },
+        {
+            question: "Quel objet utilise-t-on pour mesurer le temps ?",
+            answers: [
+                { text: "Boussole", correct: false },
+                { text: "Montre", correct: true },
+                { text: "Règle", correct: false },
+                { text: "Balance", correct: false }
+            ]
+        }
+    ];
+
+    // Éléments DOM
+    const elements = {
+        welcomeScreen: document.getElementById('welcome-screen'),
+        questionScreen: document.getElementById('question-screen'),
+        resultScreen: document.getElementById('result-screen'),
+        playerNameInput: document.getElementById('player-name'),
+        whatsappNumberInput: document.getElementById('whatsapp-number'),
+        startBtn: document.getElementById('start-btn'),
+        currentQuestionElement: document.getElementById('current-question'),
+        currentScoreElement: document.getElementById('current-score'),
+        questionTextElement: document.getElementById('question-text'),
+        answersContainer: document.getElementById('answers-container'),
+        timerElement: document.getElementById('timer'),
+        soundControl: document.getElementById('sound-control'),
+        playerResultName: document.getElementById('player-result-name'),
+        finalScoreElement: document.getElementById('final-score'),
+        resultMessage: document.getElementById('result-message'),
+        shareBtn: document.getElementById('share-btn'),
+        restartBtn: document.getElementById('restart-btn')
+    };
+
+    // Sons
+    const sounds = {
+        backgroundMusic: document.getElementById('background-music'),
+        correctSound: document.getElementById('correct-sound'),
+        wrongSound: document.getElementById('wrong-sound'),
+        completionSound: document.getElementById('completion-sound')
+    };
+
+    // Initialisation
+    document.addEventListener('DOMContentLoaded', function() {
+        initializeApp();
+    });
+
+    function initializeApp() {
+        // Démarrer la musique de fond
+        sounds.backgroundMusic.volume = 0.3;
+        sounds.backgroundMusic.play().catch(e => console.log("Lecture automatique bloquée"));
         
-        // Questions du test
-        const questions = [
-            {
-                question: "Combien font 15 + 27 ?",
-                answers: [
-                    { text: "32", correct: false },
-                    { text: "42", correct: true },
-                    { text: "52", correct: false },
-                    { text: "62", correct: false }
-                ]
-            },
-            {
-                question: "Si un train part à 8h et arrive à 10h30, combien de temps a duré le trajet ?",
-                answers: [
-                    { text: "1h30", correct: false },
-                    { text: "2h30", correct: true },
-                    { text: "3h", correct: false },
-                    { text: "2h", correct: false }
-                ]
-            },
-            {
-                question: "Quel mot ne correspond pas aux autres ?",
-                answers: [
-                    { text: "chien", correct: false },
-                    { text: "chat", correct: false },
-                    { text: "oiseau", correct: false },
-                    { text: "table", correct: true }
-                ]
-            },
-            {
-                question: "Si tous les roses sont des fleurs et certaines fleurs fanent, alors :",
-                answers: [
-                    { text: "Toutes les fleurs sont roses", correct: false },
-                    { text: "Certains roses peuvent faner", correct: true },
-                    { text: "Aucune fleur ne fane", correct: false },
-                    { text: "Les roses ne sont pas des fleurs", correct: false }
-                ]
-            },
-            {
-                question: "Quelle est la suite logique : 2, 4, 8, 16, … ?",
-                answers: [
-                    { text: "32", correct: true },
-                    { text: "24", correct: false },
-                    { text: "36", correct: false },
-                    { text: "30", correct: false }
-                ]
-            },
-            {
-                question: "Si 5 machines fabriquent 5 objets en 5 minutes, combien de temps pour 100 machines à fabriquer 100 objets ?",
-                answers: [
-                    { text: "100 minutes", correct: false },
-                    { text: "10 minutes", correct: false },
-                    { text: "5 minutes", correct: true },
-                    { text: "50 minutes", correct: false }
-                ]
-            },
-            {
-                question: "Quel mot est mal orthographié ?",
-                answers: [
-                    { text: "Maison", correct: false },
-                    { text: "Ortograf", correct: true },
-                    { text: "Arbre", correct: false },
-                    { text: "Chaise", correct: false }
-                ]
-            },
-            {
-                question: "Trouve l'intrus : carré, rectangle, triangle, cercle.",
-                answers: [
-                    { text: "carré", correct: false },
-                    { text: "rectangle", correct: false },
-                    { text: "triangle", correct: false },
-                    { text: "cercle", correct: true }
-                ]
-            },
-            {
-                question: "Quel nombre complète la série : 1, 1, 2, 3, 5, 8, … ?",
-                answers: [
-                    { text: "13", correct: true },
-                    { text: "10", correct: false },
-                    { text: "11", correct: false },
-                    { text: "15", correct: false }
-                ]
-            },
-            {
-                question: "Quel objet utilise-t-on pour mesurer le temps ?",
-                answers: [
-                    { text: "Boussole", correct: false },
-                    { text: "Montre", correct: true },
-                    { text: "Règle", correct: false },
-                    { text: "Balance", correct: false }
-                ]
-            }
-        ];
+        // Événements
+        elements.startBtn.addEventListener('click', startQuiz);
+        elements.soundControl.addEventListener('click', toggleSound);
+        elements.shareBtn.addEventListener('click', shareResults);
+        elements.restartBtn.addEventListener('click', restartQuiz);
+        
+        // Récupérer l'userId sauvegardé
+        userId = localStorage.getItem('userId');
+        
+        // Animation de l'écran d'accueil
+        animateWelcomeScreen();
+    }
 
-        // Éléments DOM
-        const welcomeScreen = document.getElementById('welcome-screen');
-        const questionScreen = document.getElementById('question-screen');
-        const resultScreen = document.getElementById('result-screen');
-        const playerNameInput = document.getElementById('player-name');
-        const startBtn = document.getElementById('start-btn');
-        const currentQuestionElement = document.getElementById('current-question');
-        const currentScoreElement = document.getElementById('current-score');
-        const questionTextElement = document.getElementById('question-text');
-        const answersContainer = document.getElementById('answers-container');
-        const timerElement = document.getElementById('timer');
-        const soundControl = document.getElementById('sound-control');
-        const playerResultName = document.getElementById('player-result-name');
-        const finalScoreElement = document.getElementById('final-score');
-        const resultMessage = document.getElementById('result-message');
-        const shareBtn = document.getElementById('share-btn');
-        const restartBtn = document.getElementById('restart-btn');
-
-        // Sons
-        const backgroundMusic = document.getElementById('background-music');
-        const correctSound = document.getElementById('correct-sound');
-        const wrongSound = document.getElementById('wrong-sound');
-        const completionSound = document.getElementById('completion-sound');
-
-        // Initialisation
-        document.addEventListener('DOMContentLoaded', function() {
-            // Démarrer la musique de fond
-            backgroundMusic.volume = 0.3;
-            backgroundMusic.play().catch(e => console.log("Lecture automatique bloquée, l'utilisateur doit interagir"));
-            
-            // Événements
-            startBtn.addEventListener('click', startQuiz);
-            soundControl.addEventListener('click', toggleSound);
-            shareBtn.addEventListener('click', shareResults);
-            restartBtn.addEventListener('click', restartQuiz);
-            
-            // Animation de l'écran d'accueil
-            anime({
-                targets: '#welcome-screen',
-                scale: [0.9, 1],
-                opacity: [0, 1],
-                duration: 800,
-                easing: 'easeOutElastic(1, .8)'
-            });
+    function animateWelcomeScreen() {
+        anime({
+            targets: elements.welcomeScreen,
+            scale: [0.9, 1],
+            opacity: [0, 1],
+            duration: 800,
+            easing: 'easeOutElastic(1, .8)'
         });
+    }
 
-        // Démarrer le quiz
-        function startQuiz() {
-            playerName = playerNameInput.value.trim();
-            
-            if (!playerName) {
-                playerNameInput.focus();
-                anime({
-                    targets: '#player-name',
-                    translateX: [0, -10, 10, -10, 10, 0],
-                    duration: 500,
-                    easing: 'easeInOutSine'
-                });
-                return;
-            }
-            
-            // Transition entre les écrans
-            anime({
-                targets: welcomeScreen,
-                opacity: 0,
-                scale: 0.9,
-                duration: 500,
-                easing: 'easeInOutQuad',
-                complete: function() {
-                    welcomeScreen.classList.add('hidden');
-                    questionScreen.classList.remove('hidden');
-                    showQuestion();
-                    startTimer();
-                    
-                    anime({
-                        targets: questionScreen,
-                        opacity: [0, 1],
-                        scale: [0.9, 1],
-                        duration: 500,
-                        easing: 'easeOutQuad'
-                    });
-                }
-            });
+    // Démarrer le quiz
+    async function startQuiz() {
+        if (!validateForm()) return;
+        
+        // Sauvegarder les données utilisateur
+        await saveUserData();
+        
+        // Transition vers l'écran de questions
+        transitionToQuestionScreen();
+    }
+
+    function validateForm() {
+        playerName = elements.playerNameInput.value.trim();
+        whatsappNumber = elements.whatsappNumberInput.value.trim();
+        
+        if (!playerName) {
+            animateError(elements.playerNameInput);
+            return false;
         }
-
-        // Afficher une question
-        function showQuestion() {
-            const question = questions[currentQuestionIndex];
-            
-            currentQuestionElement.textContent = currentQuestionIndex + 1;
-            currentScoreElement.textContent = score;
-            questionTextElement.textContent = question.question;
-            
-            answersContainer.innerHTML = '';
-            
-            question.answers.forEach((answer, index) => {
-                const answerButton = document.createElement('button');
-                answerButton.className = 'w-full text-left p-4 bg-gray-100 hover:bg-indigo-100 border border-gray-200 rounded-lg transition duration-300 flex items-center';
-                answerButton.innerHTML = `
-                    <span class="bg-indigo-500 text-white rounded-full w-8 h-8 flex items-center justify-center mr-3">${String.fromCharCode(65 + index)}</span>
-                    <span>${answer.text}</span>
-                `;
-                
-                answerButton.addEventListener('click', () => selectAnswer(answer.correct));
-                
-                answersContainer.appendChild(answerButton);
-            });
-            
-            // Animation des réponses
-            anime({
-                targets: answersContainer.children,
-                opacity: [0, 1],
-                translateY: [20, 0],
-                delay: anime.stagger(100),
-                duration: 500,
-                easing: 'easeOutQuad'
-            });
+        
+        if (!whatsappNumber) {
+            animateError(elements.whatsappNumberInput);
+            return false;
         }
+        
+        // Nettoyer le numéro
+        whatsappNumber = cleanPhoneNumber(whatsappNumber);
+        return true;
+    }
 
-        // Sélectionner une réponse
-        function selectAnswer(isCorrect) {
-            // Jouer le son de réponse
-            if (isSoundEnabled) {
-                if (isCorrect) {
-                    correctSound.currentTime = 0;
-                    correctSound.play();
-                } else {
-                    wrongSound.currentTime = 0;
-                    wrongSound.play();
-                }
-            }
-            
-            // Mettre à jour le score
-            if (isCorrect) {
-                score++;
-                currentScoreElement.textContent = score;
+    function animateError(element) {
+        element.focus();
+        anime({
+            targets: element,
+            translateX: [0, -10, 10, -10, 10, 0],
+            duration: 500,
+            easing: 'easeInOutSine'
+        });
+    }
+
+    function cleanPhoneNumber(number) {
+        return number.replace(/[^\d+]/g, '');
+    }
+
+    async function saveUserData() {
+        const userData = {
+            name: playerName,
+            whatsappNumber: whatsappNumber,
+            registrationDate: new Date().toISOString(),
+            testStartTime: new Date().toISOString(),
+            hasStartedTest: true
+        };
+        
+        try {
+            const docRef = await db.collection("users").add(userData);
+            userId = docRef.id;
+            localStorage.setItem('userId', userId);
+            console.log("Données utilisateur sauvegardées avec ID: ", userId);
+        } catch (error) {
+            console.error("Erreur lors de la sauvegarde: ", error);
+        }
+    }
+
+    function transitionToQuestionScreen() {
+        anime({
+            targets: elements.welcomeScreen,
+            opacity: 0,
+            scale: 0.9,
+            duration: 500,
+            easing: 'easeInOutQuad',
+            complete: () => {
+                elements.welcomeScreen.classList.add('hidden');
+                elements.questionScreen.classList.remove('hidden');
+                showQuestion();
+                startTimer();
                 
-                // Animation de réussite
                 anime({
-                    targets: currentScoreElement,
-                    scale: [1, 1.5, 1],
+                    targets: elements.questionScreen,
+                    opacity: [0, 1],
+                    scale: [0.9, 1],
                     duration: 500,
-                    easing: 'easeOutElastic(1, .8)'
+                    easing: 'easeOutQuad'
                 });
             }
-            
-            // Passer à la question suivante
-            currentQuestionIndex++;
-            
-            if (currentQuestionIndex < questions.length) {
-                // Transition vers la question suivante
+        });
+    }
+
+    // Afficher une question
+    function showQuestion() {
+        const question = questions[currentQuestionIndex];
+        
+        elements.currentQuestionElement.textContent = currentQuestionIndex + 1;
+        elements.currentScoreElement.textContent = score;
+        elements.questionTextElement.textContent = question.question;
+        
+        elements.answersContainer.innerHTML = '';
+        
+        question.answers.forEach((answer, index) => {
+            createAnswerButton(answer, index);
+        });
+        
+        animateAnswers();
+    }
+
+    function createAnswerButton(answer, index) {
+        const answerButton = document.createElement('button');
+        answerButton.className = 'w-full text-left p-4 bg-gray-100 hover:bg-indigo-100 border border-gray-200 rounded-lg transition duration-300 flex items-center';
+        answerButton.innerHTML = `
+            <span class="bg-indigo-500 text-white rounded-full w-8 h-8 flex items-center justify-center mr-3">${String.fromCharCode(65 + index)}</span>
+            <span>${answer.text}</span>
+        `;
+        
+        answerButton.addEventListener('click', () => selectAnswer(answer.correct));
+        elements.answersContainer.appendChild(answerButton);
+    }
+
+    function animateAnswers() {
+        anime({
+            targets: elements.answersContainer.children,
+            opacity: [0, 1],
+            translateY: [20, 0],
+            delay: anime.stagger(100),
+            duration: 500,
+            easing: 'easeOutQuad'
+        });
+    }
+
+    // Sélectionner une réponse
+    function selectAnswer(isCorrect) {
+        playAnswerSound(isCorrect);
+        updateScore(isCorrect);
+        moveToNextQuestion();
+    }
+
+    function playAnswerSound(isCorrect) {
+        if (!isSoundEnabled) return;
+        
+        const sound = isCorrect ? sounds.correctSound : sounds.wrongSound;
+        sound.currentTime = 0;
+        sound.play();
+    }
+
+    function updateScore(isCorrect) {
+        if (isCorrect) {
+            score++;
+            elements.currentScoreElement.textContent = score;
+            animateScore();
+        }
+    }
+
+    function animateScore() {
+        anime({
+            targets: elements.currentScoreElement,
+            scale: [1, 1.5, 1],
+            duration: 500,
+            easing: 'easeOutElastic(1, .8)'
+        });
+    }
+
+    function moveToNextQuestion() {
+        currentQuestionIndex++;
+        
+        if (currentQuestionIndex < questions.length) {
+            transitionToNextQuestion();
+        } else {
+            finishQuiz();
+        }
+    }
+
+    function transitionToNextQuestion() {
+        anime({
+            targets: elements.questionScreen,
+            opacity: 0,
+            scale: 0.9,
+            duration: 400,
+            easing: 'easeInOutQuad',
+            complete: () => {
+                showQuestion();
                 anime({
-                    targets: questionScreen,
-                    opacity: 0,
-                    scale: 0.9,
+                    targets: elements.questionScreen,
+                    opacity: [0, 1],
+                    scale: [0.9, 1],
                     duration: 400,
-                    easing: 'easeInOutQuad',
-                    complete: function() {
-                        showQuestion();
-                        
-                        anime({
-                            targets: questionScreen,
-                            opacity: [0, 1],
-                            scale: [0.9, 1],
-                            duration: 400,
-                            easing: 'easeOutQuad'
-                        });
-                    }
+                    easing: 'easeOutQuad'
                 });
+            }
+        });
+    }
+
+    function finishQuiz() {
+        clearInterval(timerInterval);
+        playCompletionSound();
+        saveResultsToFirebase();
+        showResults();
+    }
+
+    function playCompletionSound() {
+        if (isSoundEnabled) {
+            sounds.completionSound.currentTime = 0;
+            sounds.completionSound.play();
+        }
+    }
+
+    // Sauvegarder les résultats dans Firebase
+    async function saveResultsToFirebase() {
+        const resultData = {
+            name: playerName,
+            whatsappNumber: whatsappNumber,
+            score: score,
+            timeSpent: timer,
+            testCompletionDate: new Date().toISOString()
+        };
+        
+        try {
+            if (userId) {
+                await db.collection("users").doc(userId).update(resultData);
+                console.log("Résultats sauvegardés avec succès");
             } else {
-                // Fin du quiz
-                clearInterval(timerInterval);
+                const docRef = await db.collection("testResults").add(resultData);
+                console.log("Résultats sauvegardés dans testResults avec ID: ", docRef.id);
+            }
+        } catch (error) {
+            console.error("Erreur lors de la sauvegarde: ", error);
+            // Sauvegarde de secours
+            try {
+                const docRef = await db.collection("testResults").add(resultData);
+                console.log("Sauvegarde de secours réussie avec ID: ", docRef.id);
+            } catch (backupError) {
+                console.error("Erreur de sauvegarde de secours: ", backupError);
+            }
+        }
+    }
+
+    // Afficher les résultats
+    function showResults() {
+        elements.playerResultName.textContent = playerName;
+        elements.finalScoreElement.textContent = score;
+        
+        const { message, messageClass } = getResultMessage();
+        elements.resultMessage.textContent = message;
+        elements.resultMessage.className = `text-xl font-medium mb-6 p-4 rounded-lg ${messageClass}`;
+        
+        transitionToResultScreen();
+    }
+
+    function getResultMessage() {
+        if (score <= 3) {
+            return {
+                message: `Pas grave ${playerName}, tu feras mieux la prochaine fois 😄`,
+                messageClass: 'bg-blue-100 text-blue-800'
+            };
+        } else if (score <= 7) {
+            return {
+                message: `Bien joué ${playerName} ! Ton intelligence est en pleine forme 🧠`,
+                messageClass: 'bg-green-100 text-green-800'
+            };
+        } else {
+            return {
+                message: `Impressionnant ${playerName} ! Ton esprit est vif et logique 🔥`,
+                messageClass: 'bg-yellow-100 text-yellow-800'
+            };
+        }
+    }
+
+    function transitionToResultScreen() {
+        anime({
+            targets: elements.questionScreen,
+            opacity: 0,
+            scale: 0.9,
+            duration: 500,
+            easing: 'easeInOutQuad',
+            complete: () => {
+                elements.questionScreen.classList.add('hidden');
+                elements.resultScreen.classList.remove('hidden');
                 
-                // Jouer le son de fin
-                if (isSoundEnabled) {
-                    completionSound.currentTime = 0;
-                    completionSound.play();
-                }
+                anime({
+                    targets: elements.resultScreen,
+                    opacity: [0, 1],
+                    scale: [0.9, 1],
+                    duration: 500,
+                    easing: 'easeOutQuad'
+                });
                 
-                showResults();
+                animateFinalScore();
             }
-        }
+        });
+    }
 
-        // Afficher les résultats
-        function showResults() {
-            playerResultName.textContent = playerName;
-            finalScoreElement.textContent = score;
-            
-            // Déterminer le message en fonction du score
-            let message = '';
-            let messageClass = '';
-            
-            if (score <= 3) {
-                message = `Pas grave ${playerName}, tu feras mieux la prochaine fois 😄`;
-                messageClass = 'bg-blue-100 text-blue-800';
-            } else if (score <= 7) {
-                message = `Bien joué ${playerName} ! Ton intelligence est en pleine forme 🧠`;
-                messageClass = 'bg-green-100 text-green-800';
-            } else {
-                message = `Impressionnant ${playerName} ! Ton esprit est vif et logique 🔥`;
-                messageClass = 'bg-yellow-100 text-yellow-800';
+    function animateFinalScore() {
+        anime({
+            targets: elements.finalScoreElement,
+            innerHTML: [0, score],
+            round: 1,
+            duration: 1500,
+            easing: 'easeOutExpo'
+        });
+    }
+
+    // Démarrer le chronomètre
+    function startTimer() {
+        timer = 0;
+        elements.timerElement.textContent = timer;
+        
+        clearInterval(timerInterval);
+        timerInterval = setInterval(() => {
+            timer++;
+            elements.timerElement.textContent = timer;
+        }, 1000);
+    }
+
+    // Activer/désactiver le son
+    function toggleSound() {
+        isSoundEnabled = !isSoundEnabled;
+        
+        if (isSoundEnabled) {
+            elements.soundControl.innerHTML = '<i class="fas fa-volume-up mr-1"></i> Son';
+            sounds.backgroundMusic.volume = 0.3;
+            sounds.backgroundMusic.play().catch(e => console.log("Lecture automatique bloquée"));
+        } else {
+            elements.soundControl.innerHTML = '<i class="fas fa-volume-mute mr-1"></i> Son';
+            sounds.backgroundMusic.volume = 0;
+        }
+    }
+
+    // Partager les résultats sur WhatsApp
+    function shareResults() {
+        const shareText = `💡 J'ai obtenu ${score}/10 à un test d'intelligence ! Et toi, tu feras mieux ? 👉 Fais le test toi aussi et compare ton résultat !`;
+        const shareUrl = `https://wa.me/?text=${encodeURIComponent(shareText)}`;
+        window.open(shareUrl, '_blank');
+    }
+
+    // Redémarrer le quiz
+    function restartQuiz() {
+        currentQuestionIndex = 0;
+        score = 0;
+        
+        transitionToWelcomeScreen();
+    }
+
+    function transitionToWelcomeScreen() {
+        anime({
+            targets: elements.resultScreen,
+            opacity: 0,
+            scale: 0.9,
+            duration: 500,
+            easing: 'easeInOutQuad',
+            complete: () => {
+                elements.resultScreen.classList.add('hidden');
+                elements.welcomeScreen.classList.remove('hidden');
+                
+                // Réinitialiser le formulaire
+                elements.playerNameInput.value = '';
+                elements.whatsappNumberInput.value = '';
+                
+                anime({
+                    targets: elements.welcomeScreen,
+                    opacity: [0, 1],
+                    scale: [0.9, 1],
+                    duration: 500,
+                    easing: 'easeOutQuad'
+                });
             }
-            
-            resultMessage.textContent = message;
-            resultMessage.className = `text-xl font-medium mb-6 p-4 rounded-lg ${messageClass}`;
-            
-            // Transition vers l'écran de résultats
-            anime({
-                targets: questionScreen,
-                opacity: 0,
-                scale: 0.9,
-                duration: 500,
-                easing: 'easeInOutQuad',
-                complete: function() {
-                    questionScreen.classList.add('hidden');
-                    resultScreen.classList.remove('hidden');
-                    
-                    anime({
-                        targets: resultScreen,
-                        opacity: [0, 1],
-                        scale: [0.9, 1],
-                        duration: 500,
-                        easing: 'easeOutQuad'
-                    });
-                    
-                    // Animation du score
-                    anime({
-                        targets: finalScoreElement,
-                        innerHTML: [0, score],
-                        round: 1,
-                        duration: 1500,
-                        easing: 'easeOutExpo'
-                    });
-                }
-            });
-        }
-
-        // Démarrer le chronomètre
-        function startTimer() {
-            timer = 0;
-            timerElement.textContent = timer;
-            
-            clearInterval(timerInterval);
-            timerInterval = setInterval(() => {
-                timer++;
-                timerElement.textContent = timer;
-            }, 1000);
-        }
-
-        // Activer/désactiver le son
-        function toggleSound() {
-            isSoundEnabled = !isSoundEnabled;
-            
-            if (isSoundEnabled) {
-                soundControl.innerHTML = '<i class="fas fa-volume-up mr-1"></i> Son';
-                backgroundMusic.volume = 0.3;
-                backgroundMusic.play().catch(e => console.log("Lecture automatique blobloquée"));
-            } else {
-                soundControl.innerHTML = '<i class="fas fa-volume-mute mr-1"></i> Son';
-                backgroundMusic.volume = 0;
-            }
-        }
-
-        // Partager les résultats sur WhatsApp
-        function shareResults() {
-            const shareText = `💡 J'ai obtenu ${score}/10 à un test d'intelligence ! Et toi, tu feras mieux ? 👉 Fais le test toi aussi et compare ton résultat !`;
-            const shareUrl = `https://wa.me/?text=${encodeURIComponent(shareText)}`;
-            window.open(shareUrl, '_blank');
-        }
-
-        // Redémarrer le quiz
-        function restartQuiz() {
-            currentQuestionIndex = 0;
-            score = 0;
-            
-            // Transition vers l'écran d'accueil
-            anime({
-                targets: resultScreen,
-                opacity: 0,
-                scale: 0.9,
-                duration: 500,
-                easing: 'easeInOutQuad',
-                complete: function() {
-                    resultScreen.classList.add('hidden');
-                    welcomeScreen.classList.remove('hidden');
-                    
-                    // Réinitialiser le formulaire
-                    playerNameInput.value = '';
-                    
-                    anime({
-                        targets: welcomeScreen,
-                        opacity: [0, 1],
-                        scale: [0.9, 1],
-                        duration: 500,
-                        easing: 'easeOutQuad'
-                    });
-                }
-            });
-        }
-    </script>
+        });
+    }
+</script>
 </body>
 </html>
