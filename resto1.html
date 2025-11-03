@@ -1,0 +1,1150 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Goûté Pam - Là où Santé et Goût s'allient</title>
+    <meta name="description" content="Découvrez Goûté Pam, une expérience culinaire unique alliant santé et saveurs locales. Produits frais, recettes innovantes et service premium.">
+    
+    <!-- Tailwind CSS via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#FF9F66',    // Jaune abricot
+                        secondary: '#1E40AF',  // Bleu roi
+                        accent: '#DC2626',     // Rouge
+                        light: '#F8FAFC',      // Blanc cassé
+                        dark: '#1E293B'        // Noir bleuté
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.5s ease-out forwards',
+                        'slide-up': 'slideUp 0.7s ease-out forwards',
+                        'scale-in': 'scaleIn 0.8s ease-out forwards',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' }
+                        },
+                        slideUp: {
+                            '0%': { transform: 'translateY(100px)', opacity: '0' },
+                            '100%': { transform: 'translateY(0)', opacity: '1' }
+                        },
+                        scaleIn: {
+                            '0%': { transform: 'scale(0.9)', opacity: '0' },
+                            '100%': { transform: 'scale(1)', opacity: '1' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Anime.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    
+    <style>
+        :root {
+            --primary: #FF9F66;
+            --secondary: #1E40AF;
+            --accent: #DC2626;
+            --light: #F8FAFC;
+            --dark: #1E293B;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            color: var(--dark);
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+        
+        h1, h2, h3, h4, h5 {
+            font-family: 'Playfair Display', serif;
+        }
+        
+        /* Animations de base */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+        
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* Animation futuriste pour les sections */
+        .future-fade {
+            opacity: 0;
+            transform: perspective(1000px) rotateX(10deg) translateY(100px) scale(0.95);
+            transform-origin: center bottom;
+            transition: all 1.2s cubic-bezier(0.17, 0.55, 0.55, 1);
+        }
+        
+        .future-fade.visible {
+            opacity: 1;
+            transform: perspective(1000px) rotateX(0) translateY(0) scale(1);
+        }
+        
+        /* Effet de particules futuristes */
+        .particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 2;
+        }
+        
+        .particle {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+            opacity: 0;
+        }
+        
+        /* Loader élégant */
+        #loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--light);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease-out;
+        }
+        
+        .loader-circle {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            border: 3px solid transparent;
+            border-top: 3px solid var(--primary);
+            border-right: 3px solid var(--secondary);
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Navigation sticky */
+        .sticky-nav {
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+        }
+        
+        .sticky-nav.scrolled {
+            padding-top: 0.5rem;
+            padding-bottom: 0.5rem;
+            background: rgba(255, 255, 255, 0.98);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Hero section */
+        .hero {
+            position: relative;
+            height: 100vh;
+            min-height: 600px;
+            overflow: hidden;
+        }
+        
+        .hero-video {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            min-width: 100%;
+            min-height: 100%;
+            width: auto;
+            height: auto;
+            transform: translateX(-50%) translateY(-50%);
+            object-fit: cover;
+        }
+        
+        .hero-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.5) 100%);
+        }
+        
+        /* Section styles */
+        .section {
+            padding: 6rem 0;
+            position: relative;
+        }
+        
+        .section-title {
+            position: relative;
+            display: inline-block;
+            margin-bottom: 3rem;
+        }
+        
+        .section-title:after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 60px;
+            height: 3px;
+            background: var(--primary);
+        }
+        
+        /* Product card */
+        .product-card {
+            transition: all 0.3s ease;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+        
+        .product-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        }
+        
+        /* Timeline */
+        .timeline {
+            position: relative;
+            padding: 2rem 0;
+        }
+        
+        .timeline:before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: var(--primary);
+            transform: translateX(-50%);
+        }
+        
+        .timeline-item {
+            position: relative;
+            margin-bottom: 3rem;
+            width: 50%;
+            padding: 0 40px;
+        }
+        
+        .timeline-item:nth-child(odd) {
+            left: 0;
+            padding-right: 60px;
+        }
+        
+        .timeline-item:nth-child(even) {
+            left: 50%;
+            padding-left: 60px;
+        }
+        
+        .timeline-dot {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--secondary);
+            top: 20px;
+        }
+        
+        .timeline-item:nth-child(odd) .timeline-dot {
+            right: -10px;
+        }
+        
+        .timeline-item:nth-child(even) .timeline-dot {
+            left: -10px;
+        }
+        
+        /* Testimonial slider */
+        .testimonial-slider {
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .testimonial-track {
+            display: flex;
+            transition: transform 0.5s ease;
+        }
+        
+        .testimonial-slide {
+            flex: 0 0 100%;
+            padding: 0 15px;
+        }
+        
+        /* Mobile menu */
+        .mobile-menu {
+            transform: translateX(100%);
+            transition: transform 0.4s ease;
+        }
+        
+        .mobile-menu.open {
+            transform: translateX(0);
+        }
+        
+        /* CTA flottant */
+        .floating-cta {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 90;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            transition: all 0.3s ease;
+        }
+        
+        .floating-cta:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .timeline:before {
+                left: 20px;
+            }
+            
+            .timeline-item {
+                width: 100%;
+                padding-left: 50px;
+                padding-right: 0;
+            }
+            
+            .timeline-item:nth-child(even) {
+                left: 0;
+                padding-left: 50px;
+                padding-right: 0;
+            }
+            
+            .timeline-dot {
+                left: 10px !important;
+                right: auto !important;
+            }
+            
+            .hero {
+                height: 80vh;
+            }
+            
+            .section {
+                padding: 4rem 0;
+            }
+        }
+    </style>
+</head>
+<body class="bg-light text-dark antialiased">
+    <!-- Loader -->
+    <div id="loader">
+        <div class="loader-circle"></div>
+    </div>
+
+    <!-- Header & Navigation -->
+    <header class="fixed w-full z-50">
+        <nav id="mainNav" class="sticky-nav py-4">
+            <div class="container mx-auto px-4">
+                <div class="flex justify-between items-center">
+                    <!-- Logo -->
+                    <a href="#" class="flex items-center space-x-2">
+                        <div class="w-10 h-10 bg-primary rounded-full flex items-center justify-center">
+                            <span class="text-white font-bold text-xl">GP</span>
+                        </div>
+                        <span class="font-bold text-xl text-secondary">Goûté Pam</span>
+                    </a>
+
+                    <!-- Desktop Menu -->
+                    <div class="hidden md:flex items-center space-x-8">
+                        <a href="#" class="text-dark hover:text-primary transition-colors duration-300">Accueil</a>
+                        <a href="#about" class="text-dark hover:text-primary transition-colors duration-300">À propos</a>
+                        <a href="#services" class="text-dark hover:text-primary transition-colors duration-300">Services</a>
+                        <a href="#products" class="text-dark hover:text-primary transition-colors duration-300">Boutique</a>
+                        <a href="#testimonials" class="text-dark hover:text-primary transition-colors duration-300">Témoignages</a>
+                        <a href="#blog" class="text-dark hover:text-primary transition-colors duration-300">Blog</a>
+                        <a href="#contact" class="text-dark hover:text-primary transition-colors duration-300">Contact</a>
+                        
+                        <!-- Language selector -->
+                        <div class="relative group ml-4">
+                            <button class="flex items-center text-dark group-hover:text-primary transition-colors">
+                                <span class="fi fi-fr mr-1"></span>
+                                FR
+                                <i class="fas fa-chevron-down ml-1 text-xs"></i>
+                            </button>
+                            <div class="absolute right-0 mt-2 w-32 bg-white rounded-md shadow-lg py-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300">
+                                <a href="#" class="block px-4 py-2 text-dark hover:bg-light hover:text-primary transition-colors">
+                                    <span class="fi fi-gb mr-2"></span> EN
+                                </a>
+                                <a href="#" class="block px-4 py-2 text-dark hover:bg-light hover:text-primary transition-colors">
+                                    <span class="fi fi-es mr-2"></span> ES
+                                </a>
+                            </div>
+                        </div>
+                        
+                        <!-- Search icon -->
+                        <button class="ml-4 text-dark hover:text-primary transition-colors">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+
+                    <!-- CTA Desktop -->
+                    <div class="hidden md:block">
+                        <a href="#order" class="bg-primary hover:bg-opacity-90 text-white font-medium px-5 py-2.5 rounded-full transition-all duration-300 transform hover:-translate-y-1 shadow-md hover:shadow-lg">
+                            Commander
+                        </a>
+                    </div>
+
+                    <!-- Mobile menu button -->
+                    <button id="mobileMenuButton" class="md:hidden text-dark">
+                        <i class="fas fa-bars text-2xl"></i>
+                    </button>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Mobile Menu -->
+        <div id="mobileMenu" class="mobile-menu fixed top-0 right-0 h-full w-64 bg-white shadow-2xl z-50 p-6">
+            <button id="closeMobileMenu" class="absolute top-4 right-4 text-dark">
+                <i class="fas fa-times text-2xl"></i>
+            </button>
+            
+            <div class="mt-12 flex flex-col space-y-6">
+                <a href="#" class="text-dark hover:text-primary text-lg font-medium">Accueil</a>
+                <a href="#about" class="text-dark hover:text-primary text-lg font-medium">À propos</a>
+                <a href="#services" class="text-dark hover:text-primary text-lg font-medium">Services</a>
+                <a href="#products" class="text-dark hover:text-primary text-lg font-medium">Boutique</a>
+                <a href="#testimonials" class="text-dark hover:text-primary text-lg font-medium">Témoignages</a>
+                <a href="#blog" class="text-dark hover:text-primary text-lg font-medium">Blog</a>
+                <a href="#contact" class="text-dark hover:text-primary text-lg font-medium">Contact</a>
+                
+                <div class="pt-6 border-t border-gray-100">
+                    <a href="#order" class="bg-primary hover:bg-opacity-90 text-white font-medium px-5 py-2.5 rounded-full inline-block transition-all duration-300">
+                        Commander
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-overlay"></div>
+        
+        <!-- Video background (remplacé par une image en attendant) -->
+        <div class="absolute inset-0 bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1504674900247-0877df9cc836?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80')"></div>
+        
+        <div class="particles" id="heroParticles"></div>
+        
+        <div class="container mx-auto px-4 h-full flex items-center relative z-10">
+            <div class="max-w-2xl text-white">
+                <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 future-fade">Là où Santé et Goût s'allient pour faire votre bonheur</h1>
+                <p class="text-xl mb-8 opacity-90 future-fade">Découvrez une expérience culinaire unique avec des produits locaux et des recettes innovantes.</p>
+                <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 future-fade">
+                    <a href="#order" class="bg-primary hover:bg-opacity-90 text-white font-medium px-8 py-4 rounded-full text-center transition-all duration-300 transform hover:-translate-y-1 shadow-lg hover:shadow-xl">
+                        Commander maintenant
+                    </a>
+                    <a href="#products" class="bg-white bg-opacity-10 hover:bg-opacity-20 text-white font-medium px-8 py-4 rounded-full text-center backdrop-filter backdrop-blur-sm transition-all duration-300 border border-white border-opacity-20">
+                        Découvrir nos produits
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-10">
+            <a href="#about" class="text-white animate-bounce inline-flex items-center justify-center w-10 h-10 rounded-full bg-white bg-opacity-10 backdrop-filter backdrop-blur-sm">
+                <i class="fas fa-chevron-down"></i>
+            </a>
+        </div>
+    </section>
+
+    <!-- Featured Products Section -->
+    <section id="products" class="section bg-white">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4 section-title mx-auto future-fade">Nos produits phares</h2>
+                <p class="text-lg text-dark text-opacity-70 max-w-2xl mx-auto future-fade">Découvrez une sélection de nos meilleures créations culinaires, préparées avec des ingrédients locaux et de saison.</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Product 1 -->
+                <div class="product-card future-fade">
+                    <div class="relative overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1555939594-58d7cb561ad1?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Plateau de charcuterie artisanale" class="w-full h-64 object-cover transition-transform duration-500 hover:scale-110">
+                        <div class="absolute top-4 right-4 bg-accent text-white text-xs font-bold px-3 py-1 rounded-full">
+                            Nouveauté
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="text-xl font-bold">Plateau Signature</h3>
+                            <span class="text-secondary font-bold">24,90 €</span>
+                        </div>
+                        <p class="text-dark text-opacity-70 mb-4">Charcuterie et fromages sélectionnés avec accompagnements maison.</p>
+                        <div class="flex justify-between items-center">
+                            <button class="text-primary hover:text-secondary transition-colors">
+                                <i class="fas fa-eye mr-2"></i> Voir détails
+                            </button>
+                            <button class="bg-primary hover:bg-secondary text-white w-10 h-10 rounded-full flex items-center justify-center transition-colors shadow-md">
+                                <i class="fas fa-shopping-cart"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Product 2 -->
+                <div class="product-card future-fade">
+                    <div class="relative overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1513104890138-7c749659a591?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Pizza artisanale" class="w-full h-64 object-cover transition-transform duration-500 hover:scale-110">
+                        <div class="absolute top-4 right-4 bg-green-500 text-white text-xs font-bold px-3 py-1 rounded-full">
+                            Local
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="text-xl font-bold">Pizza du Marché</h3>
+                            <span class="text-secondary font-bold">16,50 €</span>
+                        </div>
+                        <p class="text-dark text-opacity-70 mb-4">Pizza fine avec légumes de saison et fromage de chèvre local.</p>
+                        <div class="flex justify-between items-center">
+                            <button class="text-primary hover:text-secondary transition-colors">
+                                <i class="fas fa-eye mr-2"></i> Voir détails
+                            </button>
+                            <button class="bg-primary hover:bg-secondary text-white w-10 h-10 rounded-full flex items-center justify-center transition-colors shadow-md">
+                                <i class="fas fa-shopping-cart"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Product 3 -->
+                <div class="product-card future-fade">
+                    <div class="relative overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1559715745-e1b33a271c8f?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Dessert gourmand" class="w-full h-64 object-cover transition-transform duration-500 hover:scale-110">
+                        <div class="absolute top-4 right-4 bg-secondary text-white text-xs font-bold px-3 py-1 rounded-full">
+                            Populaire
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="text-xl font-bold">Pâtisserie du Jour</h3>
+                            <span class="text-secondary font-bold">8,90 €</span>
+                        </div>
+                        <p class="text-dark text-opacity-70 mb-4">Délicieux dessert préparé quotidiennement par notre chef pâtissier.</p>
+                        <div class="flex justify-between items-center">
+                            <button class="text-primary hover:text-secondary transition-colors">
+                                <i class="fas fa-eye mr-2"></i> Voir détails
+                            </button>
+                            <button class="bg-primary hover:bg-secondary text-white w-10 h-10 rounded-full flex items-center justify-center transition-colors shadow-md">
+                                <i class="fas fa-shopping-cart"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center mt-12 future-fade">
+                <a href="#shop" class="inline-flex items-center text-secondary hover:text-primary font-medium transition-colors">
+                    Voir tous nos produits
+                    <i class="fas fa-arrow-right ml-2"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="section bg-light">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4 section-title mx-auto future-fade">Notre histoire</h2>
+                <p class="text-lg text-dark text-opacity-70 max-w-2xl mx-auto future-fade">De notre ferme à votre table, une aventure culinaire née de la passion des produits authentiques.</p>
+            </div>
+            
+            <div class="timeline">
+                <!-- Timeline Item 1 -->
+                <div class="timeline-item future-fade">
+                    <div class="timeline-dot"></div>
+                    <div class="bg-white p-6 rounded-lg shadow-lg">
+                        <div class="text-primary font-bold mb-2">2010</div>
+                        <h3 class="text-xl font-bold mb-2">Les débuts</h3>
+                        <p class="text-dark text-opacity-70">Création de notre première ferme avec l'ambition de proposer une alimentation saine et savoureuse.</p>
+                    </div>
+                </div>
+                
+                <!-- Timeline Item 2 -->
+                <div class="timeline-item future-fade">
+                    <div class="timeline-dot"></div>
+                    <div class="bg-white p-6 rounded-lg shadow-lg">
+                        <div class="text-primary font-bold mb-2">2014</div>
+                        <h3 class="text-xl font-bold mb-2">Premier restaurant</h3>
+                        <p class="text-dark text-opacity-70">Ouverture de notre premier espace culinaire pour partager notre vision de la gastronomie responsable.</p>
+                    </div>
+                </div>
+                
+                <!-- Timeline Item 3 -->
+                <div class="timeline-item future-fade">
+                    <div class="timeline-dot"></div>
+                    <div class="bg-white p-6 rounded-lg shadow-lg">
+                        <div class="text-primary font-bold mb-2">2018</div>
+                        <h3 class="text-xl font-bold mb-2">Expansion</h3>
+                        <p class="text-dark text-opacity-70">Développement de notre réseau de producteurs locaux et lancement de notre service traiteur.</p>
+                    </div>
+                </div>
+                
+                <!-- Timeline Item 4 -->
+                <div class="timeline-item future-fade">
+                    <div class="timeline-dot"></div>
+                    <div class="bg-white p-6 rounded-lg shadow-lg">
+                        <div class="text-primary font-bold mb-2">2023</div>
+                        <h3 class="text-xl font-bold mb-2">Reconnaissance</h3>
+                        <p class="text-dark text-opacity-70">Obtention du prix de l'innovation culinaire durable pour notre engagement envers une gastronomie éthique.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+                <div class="future-fade">
+                    <div class="w-16 h-16 bg-primary bg-opacity-10 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-heart text-primary text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Santé</h3>
+                    <p class="text-dark text-opacity-70">Des recettes équilibrées qui prennent soin de votre bien-être.</p>
+                </div>
+                
+                <div class="future-fade">
+                    <div class="w-16 h-16 bg-primary bg-opacity-10 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-leaf text-primary text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Local</h3>
+                    <p class="text-dark text-opacity-70">Un réseau de producteurs locaux sélectionnés avec exigence.</p>
+                </div>
+                
+                <div class="future-fade">
+                    <div class="w-16 h-16 bg-primary bg-opacity-10 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-lightbulb text-primary text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Innovation</h3>
+                    <p class="text-dark text-opacity-70">Une créativité constante pour vous surprendre et vous ravir.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section id="testimonials" class="section bg-white">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4 section-title mx-auto future-fade">Ils nous font confiance</h2>
+                <p class="text-lg text-dark text-opacity-70 max-w-2xl mx-auto future-fade">Découvrez les expériences de nos clients satisfaits à travers la France.</p>
+            </div>
+            
+            <div class="testimonial-slider future-fade">
+                <div class="testimonial-track" id="testimonialTrack">
+                    <!-- Testimonial 1 -->
+                    <div class="testimonial-slide">
+                        <div class="bg-light p-8 md:p-12 rounded-2xl shadow-md">
+                            <div class="flex items-center mb-6">
+                                <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80" alt="Thomas L." class="w-16 h-16 rounded-full object-cover">
+                                <div class="ml-4">
+                                    <h4 class="font-bold text-lg">Thomas L.</h4>
+                                    <p class="text-primary">Paris</p>
+                                </div>
+                            </div>
+                            <p class="text-lg italic text-dark text-opacity-80">"Une expérience culinaire remarquable ! Les saveurs sont toujours authentiques et les produits d'une fraîcheur incomparable. Le service est attentionné et professionnel. Je recommande vivement !"</p>
+                            <div class="flex mt-4">
+                                <i class="fas fa-star text-yellow-400"></i>
+                                <i class="fas fa-star text-yellow-400"></i>
+                                <i class="fas fa-star text-yellow-400"></i>
+                                <i class="fas fa-star text-yellow-400"></i>
+                                <i class="fas fa-star text-yellow-400"></i>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Testimonial 2 -->
+                    <div class="testimonial-slide">
+                        <div class="bg-light p-8 md:p-12 rounded-2xl shadow-md">
+                            <div class="flex items-center mb-6">
+                                <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80" alt="Sophie M." class="w-16 h-16 rounded-full object-cover">
+                                <div class="ml-4">
+                                    <h4 class="font-bold text-lg">Sophie M.</h4>
+                                    <p class="text-primary">Lyon</p>
+                                </div>
+                            </div>
+                            <p class="text-lg italic text-dark text-opacity-80">"J'ai été conquise par la qualité des produits et la créativité des plats. Le concept 'de la ferme à la table' prend tout son sens ici. Une adresse que je fréquente régulièrement maintenant !"</p>
+                            <div class="flex mt-4">
+                                <i class="fas fa-star text-yellow-400"></i>
+                                <i class="fas fa-star text-yellow-400"></i>
+                                <i class="fas fa-star text-yellow-400"></i>
+                                <i class="fas fa-star text-yellow-400"></i>
+                                <i class="fas fa-star text-yellow-400"></i>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Testimonial 3 -->
+                    <div class="testimonial-slide">
+                        <div class="bg-light p-8 md:p-12 rounded-2xl shadow-md">
+                            <div class="flex items-center mb-6">
+                                <img src="https://images.unsplash.com/photo-1552058544-f2b08422138a?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80" alt="Marc D." class="w-16 h-16 rounded-full object-cover">
+                                <div class="ml-4">
+                                    <h4 class="font-bold text-lg">Marc D.</h4>
+                                    <p class="text-primary">Bordeaux</p>
+                                </div>
+                            </div>
+                            <p class="text-lg italic text-dark text-opacity-80">"Enfin un restaurant qui allie parfaitement gastronomie et respect de l'environnement. Chaque plat raconte une histoire et honore le travail des producteurs locaux. Bravo pour cette initiative !"</p>
+                            <div class="flex mt-4">
+                                <i class="fas fa-star text-yellow-400"></i>
+                                <i class="fas fa-star text-yellow-400"></i>
+                                <i class="fas fa-star text-yellow-400"></i>
+                                <i class="fas fa-star text-yellow-400"></i>
+                                <i class="fas fa-star text-yellow-400"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="flex justify-center mt-8 space-x-2 future-fade">
+                <button class="testimonial-nav w-3 h-3 rounded-full bg-gray-300" data-index="0"></button>
+                <button class="testimonial-nav w-3 h-3 rounded-full bg-gray-300" data-index="1"></button>
+                <button class="testimonial-nav w-3 h-3 rounded-full bg-gray-300" data-index="2"></button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Blog Section -->
+    <section id="blog" class="section bg-light">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4 section-title mx-auto future-fade">Notre blog</h2>
+                <p class="text-lg text-dark text-opacity-70 max-w-2xl mx-auto future-fade">Actualités, conseils nutritionnels et recettes exclusives pour une alimentation savoureuse et saine.</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Article 1 -->
+                <article class="future-fade">
+                    <div class="bg-white rounded-lg overflow-hidden shadow-md transition-transform duration-300 hover:shadow-lg">
+                        <div class="h-48 overflow-hidden">
+                            <img src="https://images.unsplash.com/photo-1490645935967-10de6ba17061?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Conseils nutritionnels" class="w-full h-full object-cover transition-transform duration-500 hover:scale-110">
+                        </div>
+                        <div class="p-6">
+                            <span class="text-xs font-semibold text-primary">Nutrition</span>
+                            <h3 class="text-xl font-bold mt-2 mb-3">5 astuces pour une alimentation équilibrée au quotidien</h3>
+                            <p class="text-dark text-opacity-70 mb-4">Découvrez nos conseils pratiques pour adopter une routine alimentaire saine sans renoncer au plaisir.</p>
+                            <a href="#" class="text-secondary hover:text-primary font-medium inline-flex items-center transition-colors">
+                                Lire la suite
+                                <i class="fas fa-arrow-right ml-2 text-xs"></i>
+                            </a>
+                        </div>
+                    </div>
+                </article>
+                
+                <!-- Article 2 -->
+                <article class="future-fade">
+                    <div class="bg-white rounded-lg overflow-hidden shadow-md transition-transform duration-300 hover:shadow-lg">
+                        <div class="h-48 overflow-hidden">
+                            <img src="https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Recette de saison" class="w-full h-full object-cover transition-transform duration-500 hover:scale-110">
+                        </div>
+                        <div class="p-6">
+                            <span class="text-xs font-semibold text-primary">Recette</span>
+                            <h3 class="text-xl font-bold mt-2 mb-3">Tarte fine aux légumes d'été et fromage de chèvre</h3>
+                            <p class="text-dark text-opacity-70 mb-4">Une recette estivale simple et raffinée qui met à l'honneur les produits de saison.</p>
+                            <a href="#" class="text-secondary hover:text-primary font-medium inline-flex items-center transition-colors">
+                                Lire la suite
+                                <i class="fas fa-arrow-right ml-2 text-xs"></i>
+                            </a>
+                        </div>
+                    </div>
+                </article>
+                
+                <!-- Article 3 -->
+                <article class="future-fade">
+                    <div class="bg-white rounded-lg overflow-hidden shadow-md transition-transform duration-300 hover:shadow-lg">
+                        <div class="h-48 overflow-hidden">
+                            <img src="https://images.unsplash.com/photo-1518837695005-2083093ee35b?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Producteurs locaux" class="w-full h-full object-cover transition-transform duration-500 hover:scale-110">
+                        </div>
+                        <div class="p-6">
+                            <span class="text-xs font-semibold text-primary">Rencontre</span>
+                            <h3 class="text-xl font-bold mt-2 mb-3">Portrait de Mathilde, productrice de fromages bio</h3>
+                            <p class="text-dark text-opacity-70 mb-4">Découvrez le parcours inspirant de Mathilde qui élève ses chèvres dans le respect de la nature.</p>
+                            <a href="#" class="text-secondary hover:text-primary font-medium inline-flex items-center transition-colors">
+                                Lire la suite
+                                <i class="fas fa-arrow-right ml-2 text-xs"></i>
+                            </a>
+                        </div>
+                    </div>
+                </article>
+            </div>
+            
+            <div class="text-center mt-12 future-fade">
+                <a href="#" class="bg-primary hover:bg-secondary text-white font-medium px-8 py-3 rounded-full transition-colors duration-300 inline-flex items-center">
+                    Voir tous les articles
+                    <i class="fas fa-arrow-right ml-2"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="section bg-white">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4 section-title mx-auto future-fade">Contactez-nous</h2>
+                <p class="text-lg text-dark text-opacity-70 max-w-2xl mx-auto future-fade">Une question, une suggestion ou une commande spéciale ? Notre équipe est à votre écoute.</p>
+            </div>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                <div class="future-fade">
+                    <form class="space-y-6">
+                        <div>
+                            <label for="name" class="block text-sm font-medium text-dark mb-2">Votre nom</label>
+                            <input type="text" id="name" class="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-colors" placeholder="Votre nom complet">
+                        </div>
+                        
+                        <div>
+                            <label for="email" class="block text-sm font-medium text-dark mb-2">Votre email</label>
+                            <input type="email" id="email" class="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-colors" placeholder="adresse@email.com">
+                        </div>
+                        
+                        <div>
+                            <label for="message" class="block text-sm font-medium text-dark mb-2">Votre message</label>
+                            <textarea id="message" rows="5" class="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-colors" placeholder="Comment pouvons-nous vous aider ?"></textarea>
+                        </div>
+                        
+                        <button type="submit" class="w-full bg-primary hover:bg-secondary text-white font-medium py-3 px-6 rounded-lg transition-colors duration-300 transform hover:-translate-y-1 shadow-md hover:shadow-lg">
+                            Envoyer le message
+                        </button>
+                    </form>
+                </div>
+                
+                <div class="future-fade">
+                    <div class="bg-light p-8 rounded-2xl shadow-md h-full">
+                        <h3 class="text-xl font-bold mb-6">Coordonnées</h3>
+                        
+                        <div class="space-y-4">
+                            <div class="flex items-start">
+                                <div class="w-10 h-10 bg-primary bg-opacity-10 rounded-full flex items-center justify-center mr-4 mt-1">
+                                    <i class="fas fa-map-marker-alt text-primary"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-medium">Adresse</h4>
+                                    <p class="text-dark text-opacity-70">123 Rue du Goût, 75000 Paris</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-start">
+                                <div class="w-10 h-10 bg-primary bg-opacity-10 rounded-full flex items-center justify-center mr-4 mt-1">
+                                    <i class="fas fa-phone text-primary"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-medium">Téléphone</h4>
+                                    <p class="text-dark text-opacity-70">+33 1 23 45 67 89</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-start">
+                                <div class="w-10 h-10 bg-primary bg-opacity-10 rounded-full flex items-center justify-center mr-4 mt-1">
+                                    <i class="fas fa-envelope text-primary"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-medium">Email</h4>
+                                    <p class="text-dark text-opacity-70">contact@goutepam.fr</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-start">
+                                <div class="w-10 h-10 bg-primary bg-opacity-10 rounded-full flex items-center justify-center mr-4 mt-1">
+                                    <i class="fas fa-clock text-primary"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-medium">Horaires</h4>
+                                    <p class="text-dark text-opacity-70">Lun-Sam: 9h-20h<br>Dimanche: 10h-18h</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-8">
+                            <h4 class="font-medium mb-4">Suivez-nous</h4>
+                            <div class="flex space-x-4">
+                                <a href="#" class="w-10 h-10 bg-white rounded-full flex items-center justify-center text-dark hover:text-primary shadow-sm transition-colors">
+                                    <i class="fab fa-facebook-f"></i>
+                                </a>
+                                <a href="#" class="w-10 h-10 bg-white rounded-full flex items-center justify-center text-dark hover:text-primary shadow-sm transition-colors">
+                                    <i class="fab fa-instagram"></i>
+                                </a>
+                                <a href="#" class="w-10 h-10 bg-white rounded-full flex items-center justify-center text-dark hover:text-primary shadow-sm transition-colors">
+                                    <i class="fab fa-twitter"></i>
+                                </a>
+                                <a href="#" class="w-10 h-10 bg-white rounded-full flex items-center justify-center text-dark hover:text-primary shadow-sm transition-colors">
+                                    <i class="fab fa-linkedin-in"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white py-12">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div>
+                    <a href="#" class="flex items-center space-x-2 mb-6">
+                        <div class="w-10 h-10 bg-primary rounded-full flex items-center justify-center">
+                            <span class="text-white font-bold text-xl">GP</span>
+                        </div>
+                        <span class="font-bold text-xl text-white">Goûté Pam</span>
+                    </a>
+                    <p class="text-white text-opacity-70 mb-6">Là où Santé et Goût s'allient pour faire votre bonheur.</p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-white text-opacity-70 hover:text-primary transition-colors">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" class="text-white text-opacity-70 hover:text-primary transition-colors">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="#" class="text-white text-opacity-70 hover:text-primary transition-colors">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="text-white text-opacity-70 hover:text-primary transition-colors">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <div>
+                    <h4 class="text-lg font-bold mb-6">Liens rapides</h4>
+                    <ul class="space-y-3">
+                        <li><a href="#" class="text-white text-opacity-70 hover:text-primary transition-colors">Accueil</a></li>
+                        <li><a href="#about" class="text-white text-opacity-70 hover:text-primary transition-colors">À propos</a></li>
+                        <li><a href="#services" class="text-white text-opacity-70 hover:text-primary transition-colors">Services</a></li>
+                        <li><a href="#products" class="text-white text-opacity-70 hover:text-primary transition-colors">Boutique</a></li>
+                        <li><a href="#testimonials" class="text-white text-opacity-70 hover:text-primary transition-colors">Témoignages</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="text-lg font-bold mb-6">Informations</h4>
+                    <ul class="space-y-3">
+                        <li><a href="#" class="text-white text-opacity-70 hover:text-primary transition-colors">Mentions légales</a></li>
+                        <li><a href="#" class="text-white text-opacity-70 hover:text-primary transition-colors">Politique de confidentialité</a></li>
+                        <li><a href="#" class="text-white text-opacity-70 hover:text-primary transition-colors">Conditions générales</a></li>
+                        <li><a href="#" class="text-white text-opacity-70 hover:text-primary transition-colors">FAQ</a></li>
+                        <li><a href="#contact" class="text-white text-opacity-70 hover:text-primary transition-colors">Contact</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="text-lg font-bold mb-6">Newsletter</h4>
+                    <p class="text-white text-opacity-70 mb-4">Inscrivez-vous pour recevoir nos actualités et offres exclusives.</p>
+                    <form class="space-y-3">
+                        <input type="email" placeholder="Votre email" class="w-full px-4 py-3 bg-dark bg-opacity-50 border border-white border-opacity-20 rounded-lg text-white placeholder-white placeholder-opacity-50 focus:ring-2 focus:ring-primary focus:border-transparent transition-colors">
+                        <button type="submit" class="w-full bg-primary hover:bg-secondary text-white font-medium py-3 px-6 rounded-lg transition-colors duration-300">
+                            S'inscrire
+                        </button>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="border-t border-white border-opacity-10 mt-12 pt-8 text-center text-white text-opacity-50">
+                <p>© 2023 Goûté Pam. Tous droits réservés.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Floating CTA (mobile) -->
+    <a href="#order" class="floating-cta md:hidden bg-primary text-white w-14 h-14 rounded-full flex items-center justify-center shadow-lg">
+        <i class="fas fa-shopping-cart text-xl"></i>
+    </a>
+
+    <!-- JavaScript -->
+    <script>
+        // Wait for DOM to be fully loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            // Hide loader
+            setTimeout(() => {
+                const loader = document.getElementById('loader');
+                loader.style.opacity = '0';
+                setTimeout(() => {
+                    loader.style.display = 'none';
+                }, 500);
+            }, 1000);
+            
+            // Mobile menu toggle
+            const mobileMenuButton = document.getElementById('mobileMenuButton');
+            const closeMobileMenu = document.getElementById('closeMobileMenu');
+            const mobileMenu = document.getElementById('mobileMenu');
+            
+            mobileMenuButton.addEventListener('click', () => {
+                mobileMenu.classList.add('open');
+                document.body.style.overflow = 'hidden';
+            });
+            
+            closeMobileMenu.addEventListener('click', () => {
+                mobileMenu.classList.remove('open');
+                document.body.style.overflow = 'auto';
+            });
+            
+            // Sticky navigation
+            const mainNav = document.getElementById('mainNav');
+            
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 50) {
+                    mainNav.classList.add('scrolled');
+                } else {
+                    mainNav.classList.remove('scrolled');
+                }
+            });
+            
+            // Testimonial slider
+            const testimonialTrack = document.getElementById('testimonialTrack');
+            const testimonialNavs = document.querySelectorAll('.testimonial-nav');
+            let currentSlide = 0;
+            
+            testimonialNavs.forEach(nav => {
+                nav.addEventListener('click', () => {
+                    const index = parseInt(nav.getAttribute('data-index'));
+                    goToSlide(index);
+                });
+            });
+            
+            function goToSlide(index) {
+                currentSlide = index;
+                testimonialTrack.style.transform = `translateX(-${currentSlide * 100}%)`;
+                
+                // Update nav indicators
+                testimonialNavs.forEach((nav, i) => {
+                    if (i === currentSlide) {
+                        nav.classList.add('bg-primary');
+                        nav.classList.remove('bg-gray-300');
+                    } else {
+                        nav.classList.remove('bg-primary');
+                        nav.classList.add('bg-gray-300');
+                    }
+                });
+            }
+            
+            // Auto slide testimonials
+            setInterval(() => {
+                currentSlide = (currentSlide + 1) % testimonialNavs.length;
+                goToSlide(currentSlide);
+            }, 5000);
+            
+            // Scroll animations with Intersection Observer
+            const animatedElements = document.querySelectorAll('.future-fade');
+            
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.1
+            };
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                        
+                        // Add particles animation for hero section
+                        if (entry.target.classList.contains('hero')) {
+                            createParticles();
+                        }
+                    }
+                });
+            }, observerOptions);
+            
+            animatedElements.forEach(el => {
+                observer.observe(el);
+            });
+            
+            // Create particles for hero section
+            function createParticles() {
+                const particlesContainer = document.getElementById('heroParticles');
+                particlesContainer.innerHTML = '';
+                
+                for (let i = 0; i < 30; i++) {
+                    const particle = document.createElement('div');
+                    particle.classList.add('particle');
+                    
+                    // Random properties
+                    const size = Math.random() * 4 + 1;
+                    const posX = Math.random() * 100;
+                    const posY = Math.random() * 100;
+                    const delay = Math.random() * 2;
+                    const duration = Math.random() * 3 + 2;
+                    
+                    particle.style.width = `${size}px`;
+                    particle.style.height = `${size}px`;
+                    particle.style.left = `${posX}%`;
+                    particle.style.top = `${posY}%`;
+                    
+                    particlesContainer.appendChild(particle);
+                    
+                    // Animate with anime.js
+                    anime({
+                        targets: particle,
+                        opacity: [
+                            { value: 0.8, duration: 500 },
+                            { value: 0, duration: 500 }
+                        ],
+                        translateX: () => {
+                            return anime.random(-20, 20);
+                        },
+                        translateY: () => {
+                            return anime.random(-20, 20);
+                        },
+                        scale: () => {
+                            return anime.random(0.5, 1.5);
+                        },
+                        easing: 'easeOutQuad',
+                        delay: delay * 1000,
+                        duration: duration * 1000,
+                        loop: true
+                    });
+                }
+            }
+            
+            // Smooth scroll for anchor links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    const targetId = this.getAttribute('href');
+                    if (targetId === '#') return;
+                    
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 80,
+                            behavior: 'smooth'
+                        });
+                        
+                        // Close mobile menu if open
+                        if (mobileMenu.classList.contains('open')) {
+                            mobileMenu.classList.remove('open');
+                            document.body.style.overflow = 'auto';
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

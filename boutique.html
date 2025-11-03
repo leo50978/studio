@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TechStore - Votre boutique en ligne</title>
+    
+    <!-- CDN Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- CDN Google Fonts (Poppins) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- CDN Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- CDN Anime.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    
+    <style>
+        /* Appliquer la police Poppins à tout le document */
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        /* Animation personnalisée pour les cartes produits */
+        .product-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Animation pour le panier latéral */
+        .cart-sidebar {
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+        }
+        
+        .cart-sidebar.open {
+            transform: translateX(0);
+        }
+        
+        /* Animation pour l'overlay */
+        .overlay {
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        
+        .overlay.open {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        /* Animation pour le badge du panier */
+        .cart-badge {
+            transition: transform 0.3s ease;
+        }
+        
+        .cart-badge.pulse {
+            animation: pulse 0.5s ease;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- En-tête fixe -->
+    <header class="bg-white shadow-md sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <!-- Logo -->
+            <div class="flex items-center">
+                <i class="fas fa-laptop-code text-purple-600 text-2xl mr-2"></i>
+                <span class="text-xl font-bold text-gray-800">TechStore</span>
+            </div>
+            
+            <!-- Navigation -->
+            <nav class="hidden md:flex space-x-8">
+                <a href="#" class="text-gray-700 hover:text-purple-600 font-medium transition-colors">Accueil</a>
+                <a href="#" class="text-gray-700 hover:text-purple-600 font-medium transition-colors">Produits</a>
+                <a href="#" class="text-gray-700 hover:text-purple-600 font-medium transition-colors">Nouveautés</a>
+            </nav>
+            
+            <!-- Panier avec compteur -->
+            <div class="relative">
+                <button id="cart-toggle" class="text-gray-700 hover:text-purple-600 transition-colors">
+                    <i class="fas fa-shopping-cart text-xl"></i>
+                    <span id="cart-count" class="cart-badge absolute -top-2 -right-2 bg-purple-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">0</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Section Hero -->
+    <section class="bg-gradient-to-r from-purple-600 to-indigo-700 text-white py-16">
+        <div class="container mx-auto px-4 text-center">
+            <h1 class="text-4xl md:text-5xl font-bold mb-4">Découvrez nos produits high-tech</h1>
+            <p class="text-xl mb-8 max-w-2xl mx-auto">Des produits innovants pour améliorer votre quotidien numérique</p>
+            <a href="#featured-products" class="bg-white text-purple-600 font-semibold py-3 px-8 rounded-lg shadow-lg hover:bg-gray-100 transition-colors inline-block">
+                Voir les produits
+            </a>
+        </div>
+    </section>
+
+    <!-- Section Produits en vedette -->
+    <section id="featured-products" class="py-16">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center text-gray-800 mb-12">Produits en vedette</h2>
+            
+            <div id="products-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <!-- Les produits seront générés dynamiquement par JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Panier latéral -->
+    <div id="cart-overlay" class="overlay fixed inset-0 bg-black bg-opacity-50 z-50"></div>
+    
+    <div id="cart-sidebar" class="cart-sidebar fixed top-0 right-0 h-full w-full md:w-96 bg-white shadow-xl z-50 overflow-y-auto">
+        <div class="p-6">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold text-gray-800">Votre Panier</h2>
+                <button id="cart-close" class="text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+            
+            <div id="cart-items" class="mb-6">
+                <!-- Les articles du panier seront ajoutés ici -->
+                <p id="empty-cart-message" class="text-gray-500 text-center py-8">Votre panier est vide</p>
+            </div>
+            
+            <div class="border-t pt-4">
+                <div class="flex justify-between items-center mb-4">
+                    <span class="text-lg font-semibold">Total:</span>
+                    <span id="cart-total" class="text-xl font-bold text-purple-600">0,00 €</span>
+                </div>
+                <button id="checkout-btn" class="w-full bg-purple-600 text-white py-3 rounded-lg font-semibold hover:bg-purple-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+                    Commander
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pied de page -->
+    <footer class="bg-gray-800 text-white py-8">
+        <div class="container mx-auto px-4 text-center">
+            <p>&copy; 2023 TechStore. Tous droits réservés.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Données des produits
+        const products = [
+            {
+                id: 1,
+                name: "Smartphone Pro",
+                price: 899.99,
+                image: "https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80",
+                description: "Le dernier smartphone avec écran OLED et triple appareil photo."
+            },
+            {
+                id: 2,
+                name: "Écouteurs Sans Fil",
+                price: 249.99,
+                image: "https://images.unsplash.com/photo-1583394838336-acd977736f90?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80",
+                description: "Écouteurs sans fil avec réduction de bruit active."
+            },
+            {
+                id: 3,
+                name: "Montre Connectée",
+                price: 349.99,
+                image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80",
+                description: "Montre connectée avec suivi d'activité et notifications."
+            },
+            {
+                id: 4,
+                name: "Tablette Ultra",
+                price: 649.99,
+                image: "https://images.unsplash.com/photo-1561154464-82e9adf32764?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80",
+                description: "Tablette performante avec écran Retina et stylet inclus."
+            },
+            {
+                id: 5,
+                name: "Casque VR",
+                price: 499.99,
+                image: "https://images.unsplash.com/photo-1593113598332-cd288d649433?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80",
+                description: "Casque de réalité virtuelle avec écran 4K et tracking précis."
+            },
+            {
+                id: 6,
+                name: "Enceinte Intelligente",
+                price: 129.99,
+                image: "https://images.unsplash.com/photo-1543512214-318c7553f230?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80",
+                description: "Enceinte intelligente avec assistant vocal intégré."
+            }
+        ];
+
+        // Variables globales
+        let cart = [];
+        let cartCount = 0;
+        let cartTotal = 0;
+
+        // Éléments DOM
+        const productsGrid = document.getElementById('products-grid');
+        const cartCountElement = document.getElementById('cart-count');
+        const cartItemsElement = document.getElementById('cart-items');
+        const cartTotalElement = document.getElementById('cart-total');
+        const emptyCartMessage = document.getElementById('empty-cart-message');
+        const checkoutBtn = document.getElementById('checkout-btn');
+        const cartToggle = document.getElementById('cart-toggle');
+        const cartClose = document.getElementById('cart-close');
+        const cartSidebar = document.getElementById('cart-sidebar');
+        const cartOverlay = document.getElementById('cart-overlay');
+
+        // Initialisation
+        document.addEventListener('DOMContentLoaded', function() {
+            renderProducts();
+            setupEventListeners();
+            animateProducts();
+        });
+
+        // Rendu des produits
+        function renderProducts() {
+            productsGrid.innerHTML = '';
+            
+            products.forEach(product => {
+                const productCard = document.createElement('div');
+                productCard.className = 'product-card bg-white rounded-xl shadow-md overflow-hidden';
+                productCard.innerHTML = `
+                    <div class="h-48 overflow-hidden">
+                        <img src="${product.image}" alt="${product.name}" class="w-full h-full object-cover">
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold text-gray-800 mb-2">${product.name}</h3>
+                        <p class="text-gray-600 mb-4">${product.description}</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-2xl font-bold text-purple-600">${product.price.toFixed(2)} €</span>
+                            <button class="add-to-cart-btn bg-purple-600 text-white py-2 px-4 rounded-lg hover:bg-purple-700 transition-colors" data-id="${product.id}">
+                                <i class="fas fa-cart-plus mr-2"></i>Ajouter
+                            </button>
+                        </div>
+                    </div>
+                `;
+                productsGrid.appendChild(productCard);
+            });
+        }
+
+        // Configuration des écouteurs d'événements
+        function setupEventListeners() {
+            // Boutons "Ajouter au panier"
+            document.addEventListener('click', function(e) {
+                if (e.target.classList.contains('add-to-cart-btn') || e.target.closest('.add-to-cart-btn')) {
+                    const button = e.target.classList.contains('add-to-cart-btn') ? e.target : e.target.closest('.add-to-cart-btn');
+                    const productId = parseInt(button.getAttribute('data-id'));
+                    addToCart(productId);
+                }
+            });
+
+            // Bouton de suppression d'article
+            cartItemsElement.addEventListener('click', function(e) {
+                if (e.target.classList.contains('remove-item') || e.target.closest('.remove-item')) {
+                    const button = e.target.classList.contains('remove-item') ? e.target : e.target.closest('.remove-item');
+                    const productId = parseInt(button.getAttribute('data-id'));
+                    removeFromCart(productId);
+                }
+            });
+
+            // Ouverture/fermeture du panier
+            cartToggle.addEventListener('click', openCart);
+            cartClose.addEventListener('click', closeCart);
+            cartOverlay.addEventListener('click', closeCart);
+
+            // Bouton de commande
+            checkoutBtn.addEventListener('click', function() {
+                if (cart.length > 0) {
+                    alert('Merci pour votre commande ! Total: ' + cartTotal.toFixed(2) + ' €');
+                    cart = [];
+                    updateCart();
+                    closeCart();
+                }
+            });
+        }
+
+        // Ajouter un produit au panier
+        function addToCart(productId) {
+            const product = products.find(p => p.id === productId);
+            
+            if (product) {
+                const existingItem = cart.find(item => item.id === productId);
+                
+                if (existingItem) {
+                    existingItem.quantity += 1;
+                } else {
+                    cart.push({
+                        id: product.id,
+                        name: product.name,
+                        price: product.price,
+                        image: product.image,
+                        quantity: 1
+                    });
+                }
+                
+                updateCart();
+                animateCartBadge();
+                
+                // Animation de confirmation
+                anime({
+                    targets: '.add-to-cart-btn[data-id="' + productId + '"]',
+                    scale: [1, 1.2, 1],
+                    duration: 300,
+                    easing: 'easeInOutQuad'
+                });
+            }
+        }
+
+        // Supprimer un article du panier
+        function removeFromCart(productId) {
+            cart = cart.filter(item => item.id !== productId);
+            updateCart();
+        }
+
+        // Mettre à jour le panier
+        function updateCart() {
+            // Calculer le nombre total d'articles et le prix total
+            cartCount = cart.reduce((total, item) => total + item.quantity, 0);
+            cartTotal = cart.reduce((total, item) => total + (item.price * item.quantity), 0);
+            
+            // Mettre à jour le compteur du panier
+            cartCountElement.textContent = cartCount;
+            
+            // Mettre à jour l'affichage des articles du panier
+            if (cart.length === 0) {
+                emptyCartMessage.style.display = 'block';
+                cartItemsElement.innerHTML = '';
+                checkoutBtn.disabled = true;
+            } else {
+                emptyCartMessage.style.display = 'none';
+                cartItemsElement.innerHTML = '';
+                
+                cart.forEach(item => {
+                    const cartItem = document.createElement('div');
+                    cartItem.className = 'flex items-center py-4 border-b';
+                    cartItem.innerHTML = `
+                        <div class="w-16 h-16 rounded-lg overflow-hidden mr-4">
+                            <img src="${item.image}" alt="${item.name}" class="w-full h-full object-cover">
+                        </div>
+                        <div class="flex-1">
+                            <h4 class="font-semibold text-gray-800">${item.name}</h4>
+                            <div class="flex justify-between items-center mt-1">
+                                <span class="text-purple-600 font-semibold">${item.price.toFixed(2)} €</span>
+                                <span class="text-gray-600">x${item.quantity}</span>
+                            </div>
+                        </div>
+                        <button class="remove-item text-red-500 hover:text-red-700 ml-4" data-id="${item.id}">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    `;
+                    cartItemsElement.appendChild(cartItem);
+                });
+                
+                checkoutBtn.disabled = false;
+            }
+            
+            // Mettre à jour le total
+            cartTotalElement.textContent = cartTotal.toFixed(2) + ' €';
+        }
+
+        // Ouvrir le panier
+        function openCart() {
+            cartSidebar.classList.add('open');
+            cartOverlay.classList.add('open');
+            document.body.style.overflow = 'hidden';
+        }
+
+        // Fermer le panier
+        function closeCart() {
+            cartSidebar.classList.remove('open');
+            cartOverlay.classList.remove('open');
+            document.body.style.overflow = 'auto';
+        }
+
+        // Animation du badge du panier
+        function animateCartBadge() {
+            cartCountElement.classList.add('pulse');
+            setTimeout(() => {
+                cartCountElement.classList.remove('pulse');
+            }, 500);
+        }
+
+        // Animation des produits avec Anime.js
+        function animateProducts() {
+            anime({
+                targets: '.product-card',
+                translateY: [50, 0],
+                opacity: [0, 1],
+                delay: anime.stagger(100),
+                duration: 800,
+                easing: 'easeOutQuad'
+            });
+        }
+    </script>
+</body>
+</html>

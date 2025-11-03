@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="fr" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>nouss - L'École des Leaders | Formation en ligne premium</title>
+    <meta name="description" content="Formez-vous depuis chez vous avec nouss, l'école des leaders. Formations en ligne flexibles et accessibles partout en Haïti.">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Tailwind CSS via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Montserrat', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                    },
+                    colors: {
+                        primary: {
+                            DEFAULT: '#2563eb',
+                            dark: '#1d4ed8',
+                        },
+                        secondary: {
+                            DEFAULT: '#f59e0b',
+                            dark: '#d97706',
+                        },
+                        dark: '#1e293b',
+                        light: '#f8fafc',
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 1s ease-in-out',
+                        'slide-up': 'slideUp 0.8s ease-out',
+                        'scale-in': 'scaleIn 0.7s ease-out',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' },
+                        },
+                        slideUp: {
+                            '0%': { transform: 'translateY(20px)', opacity: '0' },
+                            '100%': { transform: 'translateY(0)', opacity: '1' },
+                        },
+                        scaleIn: {
+                            '0%': { transform: 'scale(0.95)', opacity: '0' },
+                            '100%': { transform: 'scale(1)', opacity: '1' },
+                        },
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Anime.js via CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    
+    <style>
+        /* Styles personnalisés */
+        .clip-hero {
+            clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
+        }
+        
+        @media (max-width: 768px) {
+            .clip-hero {
+                clip-path: polygon(0 0, 100% 0, 100% 95%, 0 100%);
+            }
+        }
+        
+        .clip-feature {
+            clip-path: circle(75% at 50% 50%);
+            transition: clip-path 0.8s ease;
+        }
+        
+        .clip-feature:hover {
+            clip-path: circle(100% at 50% 50%);
+        }
+        
+        .clip-testimonial {
+            clip-path: polygon(0 0, 100% 0, 100% 85%, 50% 100%, 0 85%);
+        }
+        
+        /* Animation de base pour les sections */
+        .section-animate {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+        
+        .section-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* Animation futuriste pour les éléments */
+        .futuristic-box {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .futuristic-box::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                to bottom right,
+                rgba(255, 255, 255, 0.1),
+                rgba(255, 255, 255, 0)
+            );
+            transform: rotate(30deg);
+            transition: all 0.6s ease;
+            opacity: 0;
+        }
+        
+        .futuristic-box:hover::before {
+            animation: futuristicGlow 1.5s ease;
+        }
+        
+        @keyframes futuristicGlow {
+            0% {
+                opacity: 0;
+                transform: rotate(30deg) translate(-30%, -30%);
+            }
+            50% {
+                opacity: 0.8;
+            }
+            100% {
+                opacity: 0;
+                transform: rotate(30deg) translate(30%, 30%);
+            }
+        }
+        
+        /* Animation de dégradé futuriste */
+        .futuristic-bg {
+            background: linear-gradient(135deg, #1e293b 0%, #2563eb 50%, #f59e0b 100%);
+            background-size: 200% 200%;
+            animation: gradientShift 12s ease infinite;
+        }
+        
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+    </style>
+</head>
+<body class="bg-light text-dark font-sans antialiased">
+    <!-- Header -->
+    <header class="fixed w-full bg-white shadow-md z-50">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <!-- Logo -->
+            <a href="#" class="flex items-center">
+                <img src="logonouss.jpeg" alt="" width="55px" height="25">
+            </a>
+            
+            <!-- Menu principal -->
+            <nav class="hidden md:flex items-center space-x-8">
+                <a href="#accueil" class="text-dark hover:text-primary font-medium transition">Accueil</a>
+                <a href="#apropos" class="text-dark hover:text-primary font-medium transition">À propos</a>
+                <a href="#formations" class="text-dark hover:text-primary font-medium transition">Formations</a>
+                <a href="#temoignages" class="text-dark hover:text-primary font-medium transition">Témoignages</a>
+                <a href="#contact" class="text-dark hover:text-primary font-medium transition">Contact</a>
+                
+                <div class="flex items-center space-x-4 ml-6">
+                    <a href="#contact" class="bg-primary text-white px-4 py-2 rounded-lg font-medium hover:bg-primary-dark transition">S'inscrire</a>
+                    <div class="flex space-x-3">
+                        <a href="#" class="text-dark hover:text-primary transition"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="text-dark hover:text-primary transition"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="text-dark hover:text-primary transition"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+            </nav>
+            
+            <!-- Menu mobile -->
+            <button class="md:hidden text-dark focus:outline-none" id="mobile-menu-button">
+                <i class="fas fa-bars text-2xl"></i>
+            </button>
+        </div>
+        
+        <!-- Menu mobile déroulant -->
+        <div class="hidden md:hidden bg-white w-full px-4 py-3 shadow-lg" id="mobile-menu">
+            <div class="flex flex-col space-y-4">
+                <a href="#accueil" class="text-dark hover:text-primary font-medium transition">Accueil</a>
+                <a href="#apropos" class="text-dark hover:text-primary font-medium transition">À propos</a>
+                <a href="#formations" class="text-dark hover:text-primary font-medium transition">Formations</a>
+                <a href="#temoignages" class="text-dark hover:text-primary font-medium transition">Témoignages</a>
+                <a href="#contact" class="text-dark hover:text-primary font-medium transition">Contact</a>
+                
+                <a href="#contact" class="bg-primary text-white px-4 py-2 rounded-lg font-medium hover:bg-primary-dark transition text-center">S'inscrire</a>
+                
+                <div class="flex justify-center space-x-4 pt-2">
+                    <a href="#" class="text-dark hover:text-primary transition"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="text-dark hover:text-primary transition"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="text-dark hover:text-primary transition"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Section 1 - Hero Banner -->
+    <section class="pt-24 pb-20 md:pt-32 md:pb-28 clip-hero futuristic-bg relative overflow-hidden">
+        <section id="accueil" class="py-16 bg-white"></section>
+        <div class="absolute inset-0 bg-black opacity-40"></div>
+        <div class="container mx-auto px-4 relative z-10">
+            <div class="max-w-4xl mx-auto text-center section-animate" id="hero-section">
+                <h1 class="text-4xl md:text-5xl lg:text-6xl font-serif font-bold text-white mb-6">Apprenez depuis chez vous, devenez un leader.</h1>
+                <p class="text-xl text-white opacity-90 mb-8">nouss : L'école des Leaders vous forme où que vous soyez, à votre rythme.</p>
+                
+                <div class="flex flex-col sm:flex-row justify-center gap-4 mb-10">
+                    <a href="#formations" class="bg-white text-primary px-6 py-3 rounded-lg font-medium hover:bg-opacity-90 transition">Découvrir les formations</a>
+                    <a href="#contact" class="bg-secondary text-white px-6 py-3 rounded-lg font-medium hover:bg-secondary-dark transition">S'inscrire maintenant</a>
+                </div>
+                
+                <p class="text-white opacity-80 text-sm">Déjà +500 apprenants satisfaits</p>
+            </div>
+        </div>
+        
+        <!-- Animation futuriste -->
+        <div class="absolute top-0 left-0 w-full h-full overflow-hidden z-0">
+            <div class="absolute top-1/4 left-1/4 w-32 h-32 rounded-full bg-primary opacity-20 blur-xl animate-pulse"></div>
+            <div class="absolute top-1/3 right-1/4 w-40 h-40 rounded-full bg-secondary opacity-20 blur-xl animate-pulse delay-300"></div>
+            <div class="absolute bottom-1/4 right-1/3 w-28 h-28 rounded-full bg-white opacity-15 blur-xl animate-pulse delay-700"></div>
+        </div>
+    </section>
+
+    <!-- Section 2 - À propos -->
+    <section class="py-16 bg-white">
+       <section id="apropos" class="py-16 bg-white"></section> 
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16 section-animate" id="about-title">
+                <h2 class="text-3xl md:text-4xl font-serif font-bold mb-4">Pourquoi nouss ?</h2>
+                <div class="w-20 h-1 bg-primary mx-auto"></div>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+                <!-- Feature 1 -->
+                <div class="bg-light p-8 rounded-xl shadow-sm hover:shadow-md transition futuristic-box section-animate" id="feature-1">
+                    <div class="w-16 h-16 bg-primary bg-opacity-10 rounded-full flex items-center justify-center mb-6 mx-auto">
+                        <i class="fas fa-laptop text-primary text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-center mb-3">100% en ligne</h3>
+                    <p class="text-center text-gray-600">Accédez à nos formations depuis n'importe où, sans contraintes géographiques.</p>
+                </div>
+                
+                <!-- Feature 2 -->
+                <div class="bg-light p-8 rounded-xl shadow-sm hover:shadow-md transition futuristic-box section-animate" id="feature-2">
+                    <div class="w-16 h-16 bg-primary bg-opacity-10 rounded-full flex items-center justify-center mb-6 mx-auto">
+                        <i class="fas fa-clock text-primary text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-center mb-3">Flexible et accessible</h3>
+                    <p class="text-center text-gray-600">Apprenez à votre rythme, selon vos disponibilités, sans pression.</p>
+                </div>
+                
+                <!-- Feature 3 -->
+                <div class="bg-light p-8 rounded-xl shadow-sm hover:shadow-md transition futuristic-box section-animate" id="feature-3">
+                    <div class="w-16 h-16 bg-primary bg-opacity-10 rounded-full flex items-center justify-center mb-6 mx-auto">
+                        <i class="fas fa-globe-americas text-primary text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-center mb-3">Présent partout en Haïti</h3>
+                    <p class="text-center text-gray-600">Nous formons des leaders dans toutes les régions du pays.</p>
+                </div>
+            </div>
+            
+            <div class="max-w-2xl mx-auto text-center section-animate" id="about-text">
+                <p class="text-gray-700 mb-8">Fondée en 2022, nouss a pour mission de démocratiser l'accès à une éducation de qualité en Haïti. Nous croyons que chaque individu mérite d'avoir les outils pour devenir un leader dans son domaine.</p>
+                <a href="#" class="inline-block bg-primary text-white px-6 py-3 rounded-lg font-medium hover:bg-primary-dark transition">En savoir plus</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 3 - Formations vedettes -->
+    <section class="py-16 bg-gray-50">
+        <section id="formations" class="py-16 bg-white"></section>
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16 section-animate" id="courses-title">
+                <h2 class="text-3xl md:text-4xl font-serif font-bold mb-4">Nos formations populaires</h2>
+                <div class="w-20 h-1 bg-primary mx-auto"></div>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+                <!-- Course 1 -->
+                <div class="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition futuristic-box section-animate" id="course-1">
+                    <div class="h-48 bg-gradient-to-r from-primary to-secondary flex items-center justify-center">
+                        <i class="fas fa-chart-line text-white text-5xl"></i>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex justify-between items-start mb-3">
+                            <h3 class="text-xl font-bold">Leadership Organisationnel</h3>
+                            <span class="bg-secondary text-white text-xs px-2 py-1 rounded-full">Populaire</span>
+                        </div>
+                        <p class="text-gray-600 mb-4">Maîtrisez les techniques de gestion d'équipe et de prise de décision stratégique.</p>
+                        <div class="flex justify-between items-center">
+                            <span class="font-bold text-primary">500 HTG</span>
+                            <a href="#" class="text-primary hover:text-primary-dark font-medium">Voir le cours →</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Course 2 -->
+                <div class="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition futuristic-box section-animate" id="course-2">
+                    <div class="h-48 bg-gradient-to-r from-primary to-purple-500 flex items-center justify-center">
+                        <i class="fas fa-code text-white text-5xl"></i>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex justify-between items-start mb-3">
+                            <h3 class="text-xl font-bold">Développement Web</h3>
+                            <span class="bg-green-500 text-white text-xs px-2 py-1 rounded-full">Nouveau</span>
+                        </div>
+                        <p class="text-gray-600 mb-4">Apprenez à créer des sites web modernes avec les dernières technologies.</p>
+                        <div class="flex justify-between items-center">
+                            <span class="font-bold text-primary">750 HTG</span>
+                            <a href="#" class="text-primary hover:text-primary-dark font-medium">Voir le cours →</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Course 3 -->
+                <div class="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition futuristic-box section-animate" id="course-3">
+                    <div class="h-48 bg-gradient-to-r from-primary to-pink-500 flex items-center justify-center">
+                        <i class="fas fa-bullhorn text-white text-5xl"></i>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex justify-between items-start mb-3">
+                            <h3 class="text-xl font-bold">Marketing Digital</h3>
+                            <span class="bg-secondary text-white text-xs px-2 py-1 rounded-full">Populaire</span>
+                        </div>
+                        <p class="text-gray-600 mb-4">Découvrez comment promouvoir votre entreprise en ligne efficacement.</p>
+                        <div class="flex justify-between items-center">
+                            <span class="font-bold text-primary">600 HTG</span>
+                            <a href="#" class="text-primary hover:text-primary-dark font-medium">Voir le cours →</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center section-animate" id="courses-cta">
+                <a href="#" class="inline-block bg-primary text-white px-6 py-3 rounded-lg font-medium hover:bg-primary-dark transition">Voir toutes les formations</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 4 - Témoignages -->
+    <section class="py-16 bg-primary text-white">
+        <section id="temoignages" class="py-16 bg-white"></section>
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16 section-animate" id="testimonials-title">
+                <h2 class="text-3xl md:text-4xl font-serif font-bold mb-4">Ils nous ont fait confiance</h2>
+                <div class="w-20 h-1 bg-white mx-auto"></div>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+                <!-- Testimonial 1 -->
+                <div class="bg-white bg-opacity-10 p-8 rounded-xl backdrop-blur-sm futuristic-box section-animate" id="testimonial-1">
+                    <div class="flex items-center mb-6">
+                        <div class="w-12 h-12 rounded-full bg-white bg-opacity-20 flex items-center justify-center clip-feature">
+                            <span class="text-xl font-bold">JD</span>
+                        </div>
+                        <div class="ml-4">
+                            <h4 class="font-bold">Jean D.</h4>
+                            <p class="text-white text-opacity-70 text-sm">Port-au-Prince</p>
+                        </div>
+                    </div>
+                    <p class="italic">"Grâce à nouss, j'ai pu acquérir des compétences en leadership qui m'ont permis d'obtenir une promotion. Les cours sont très bien structurés."</p>
+                </div>
+                
+                <!-- Testimonial 2 -->
+                <div class="bg-white bg-opacity-10 p-8 rounded-xl backdrop-blur-sm futuristic-box section-animate" id="testimonial-2">
+                    <div class="flex items-center mb-6">
+                        <div class="w-12 h-12 rounded-full bg-white bg-opacity-20 flex items-center justify-center clip-feature">
+                            <span class="text-xl font-bold">MS</span>
+                        </div>
+                        <div class="ml-4">
+                            <h4 class="font-bold">Marie S.</h4>
+                            <p class="text-white text-opacity-70 text-sm">Cap-Haïtien</p>
+                        </div>
+                    </div>
+                    <p class="italic">"La flexibilité des horaires m'a permis de concilier formation et vie de famille. Je recommande vivement nouss à tous ceux qui veulent progresser."</p>
+                </div>
+                
+                <!-- Testimonial 3 -->
+                <div class="bg-white bg-opacity-10 p-8 rounded-xl backdrop-blur-sm futuristic-box section-animate" id="testimonial-3">
+                    <div class="flex items-center mb-6">
+                        <div class="w-12 h-12 rounded-full bg-white bg-opacity-20 flex items-center justify-center clip-feature">
+                            <span class="text-xl font-bold">PL</span>
+                        </div>
+                        <div class="ml-4">
+                            <h4 class="font-bold">Pierre L.</h4>
+                            <p class="text-white text-opacity-70 text-sm">Gonaïves</p>
+                        </div>
+                    </div>
+                    <p class="italic">"Les formateurs sont très compétents et disponibles. J'ai pu créer mon entreprise grâce aux connaissances acquises avec nouss."</p>
+                </div>
+            </div>
+            
+            <!-- Carrousel indicateurs -->
+            <div class="flex justify-center space-x-2 section-animate" id="testimonials-indicators">
+                <button class="w-3 h-3 rounded-full bg-white bg-opacity-30 hover:bg-opacity-100 transition"></button>
+                <button class="w-3 h-3 rounded-full bg-white bg-opacity-30 hover:bg-opacity-100 transition"></button>
+                <button class="w-3 h-3 rounded-full bg-white bg-opacity-100"></button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 5 - Newsletter -->
+    <section class="py-16 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="max-w-3xl mx-auto bg-gradient-to-r from-primary to-secondary rounded-xl p-8 shadow-lg futuristic-box section-animate" id="newsletter-section">
+                <div class="text-center mb-8">
+                    <h2 class="text-2xl md:text-3xl font-serif font-bold text-white mb-3">Recevez nos conseils et nos prochaines formations</h2>
+                    <p class="text-white text-opacity-90">Un email, pas de spam. Juste du contenu utile.</p>
+                </div>
+                
+                <form class="flex flex-col sm:flex-row gap-4">
+                    <input type="email" placeholder="Votre email" class="flex-grow px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-white">
+                    <button type="submit" class="bg-white text-primary px-6 py-3 rounded-lg font-medium hover:bg-opacity-90 transition">Je m'abonne</button>
+                </form>
+                
+                <p class="text-white text-opacity-70 text-xs mt-4 text-center">Vos données sont protégées.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 6 - Contact -->
+    <section class="py-16 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                <!-- Formulaire -->
+                <div class="bg-white p-8 rounded-xl shadow-sm futuristic-box section-animate" id="contact">
+                    <h2 class="text-2xl md:text-3xl font-serif font-bold mb-6">Contactez-nous</h2>
+                    
+                    <form>
+                        <div class="mb-4">
+                            <label for="name" class="block text-gray-700 mb-2">Nom</label>
+                            <input type="text" id="name" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label for="email" class="block text-gray-700 mb-2">Email</label>
+                            <input type="email" id="email" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label for="message" class="block text-gray-700 mb-2">Message</label>
+                            <textarea id="message" rows="4" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"></textarea>
+                        </div>
+                        
+                        <button type="submit" class="bg-primary text-white px-6 py-3 rounded-lg font-medium hover:bg-primary-dark transition w-full">Envoyer</button>
+                    </form>
+                </div>
+                
+                <!-- Coordonnées -->
+                <div class="section-animate" id="contact-info">
+                    <h2 class="text-2xl md:text-3xl font-serif font-bold mb-6">Nos coordonnées</h2>
+                    
+                    <div class="space-y-6">
+                        <div class="flex items-start">
+                            <div class="bg-primary bg-opacity-10 p-3 rounded-full mr-4">
+                                <i class="fas fa-envelope text-primary"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-bold mb-1">Email</h3>
+                                <a href="mailto:sirafrantzie116@gmail.com" class="text-primary hover:underline">sirafrantzie116@gmail.com</a>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start">
+                            <div class="bg-primary bg-opacity-10 p-3 rounded-full mr-4">
+                                <i class="fas fa-phone-alt text-primary"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-bold mb-1">Téléphone</h3>
+                                <p>+509 XX XX XX XX</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start">
+                            <div class="bg-primary bg-opacity-10 p-3 rounded-full mr-4">
+                                <i class="fas fa-share-alt text-primary"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-bold mb-1">Réseaux sociaux</h3>
+                                <div class="flex space-x-4 mt-2">
+                                    <a href="#" class="w-10 h-10 bg-primary bg-opacity-10 rounded-full flex items-center justify-center text-primary hover:bg-opacity-20 transition"><i class="fab fa-facebook-f"></i></a>
+                                    <a href="#" class="w-10 h-10 bg-primary bg-opacity-10 rounded-full flex items-center justify-center text-primary hover:bg-opacity-20 transition"><i class="fab fa-twitter"></i></a>
+                                    <a href="#" class="w-10 h-10 bg-primary bg-opacity-10 rounded-full flex items-center justify-center text-primary hover:bg-opacity-20 transition"><i class="fab fa-instagram"></i></a>
+                                    <a href="#" class="w-10 h-10 bg-primary bg-opacity-10 rounded-full flex items-center justify-center text-primary hover:bg-opacity-20 transition"><i class="fab fa-linkedin-in"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white py-12">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+                <!-- Logo et description -->
+                <div>
+                    <a href="#" class="flex items-center mb-4">
+                        <img src="logonouss.jpeg" alt="" width="55px" height="25">
+                    </a>
+                    <p class="text-gray-400 text-sm">Formez-vous depuis chez vous avec nouss, l'école des leaders. Formations en ligne flexibles et accessibles partout en Haïti.</p>
+                </div>
+                
+                <!-- Liens rapides -->
+                <div>
+                    <h3 class="font-bold mb-4">Liens rapides</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Accueil</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">À propos</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Formations</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Témoignages</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Contact</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Informations -->
+                <div>
+                    <h3 class="font-bold mb-4">Informations</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Mentions légales</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Politique de confidentialité</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Conditions générales</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">FAQ</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Contact -->
+                <div>
+                    <h3 class="font-bold mb-4">Contact</h3>
+                    <ul class="space-y-2">
+                        <li class="flex items-start">
+                            <i class="fas fa-envelope mt-1 mr-2 text-gray-400"></i>
+                            <a href="mailto:sirafrantzie116@gmail.com" class="text-gray-400 hover:text-white transition">sirafrantzie116@gmail.com</a>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-phone-alt mt-1 mr-2 text-gray-400"></i>
+                            <span class="text-gray-400">+509 XX XX XX XX</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="pt-8 border-t border-gray-800 flex flex-col md:flex-row justify-between items-center">
+                <p class="text-gray-400 text-sm mb-4 md:mb-0">© 2025 nouss - L'École des Leaders. Tous droits réservés.</p>
+                
+                <div class="flex space-x-4">
+                    <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-linkedin-in"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bouton WhatsApp flottant -->
+    <a href="#" class="fixed bottom-6 right-6 bg-green-500 text-white w-14 h-14 rounded-full flex items-center justify-center shadow-lg hover:bg-green-600 transition z-50">
+        <i class="fab fa-whatsapp text-2xl"></i>
+    </a>
+
+    <!-- Scripts -->
+    <script>
+        // Menu mobile
+        document.getElementById('mobile-menu-button').addEventListener('click', function() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        });
+        
+        // Animation on scroll
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialiser les éléments animés
+            const animatedElements = document.querySelectorAll('.section-animate');
+            
+            // Fonction pour vérifier si un élément est dans le viewport
+            function isInViewport(element) {
+                const rect = element.getBoundingClientRect();
+                return (
+                    rect.top <= (window.innerHeight || document.documentElement.clientHeight) * 0.75 &&
+                    rect.bottom >= 0
+                );
+            }
+            
+            // Fonction pour déclencher les animations
+            function triggerAnimations() {
+                animatedElements.forEach(element => {
+                    if (isInViewport(element)) {
+                        element.classList.add('section-visible');
+                        
+                        // Animation spécifique avec Anime.js
+                        if (element.id === 'hero-section') {
+                            anime({
+                                targets: '#hero-section h1',
+                                translateY: [30, 0],
+                                opacity: [0, 1],
+                                duration: 1000,
+                                easing: 'easeOutExpo'
+                            });
+                            
+                            anime({
+                                targets: '#hero-section p',
+                                translateY: [30, 0],
+                                opacity: [0, 1],
+                                duration: 1000,
+                                delay: 300,
+                                easing: 'easeOutExpo'
+                            });
+                            
+                            anime({
+                                targets: '#hero-section a',
+                                translateY: [30, 0],
+                                opacity: [0, 1],
+                                duration: 800,
+                                delay: function(el, i) {
+                                    return 600 + (i * 100);
+                                },
+                                easing: 'easeOutExpo'
+                            });
+                        }
+                        
+                        // Animation futuriste pour les boîtes
+                        if (element.classList.contains('futuristic-box')) {
+                            anime({
+                                targets: element,
+                                scale: [0.95, 1],
+                                opacity: [0, 1],
+                                duration: 800,
+                                easing: 'easeOutExpo'
+                            });
+                        }
+                    }
+                });
+            }
+            
+            // Écouter le scroll et le chargement initial
+            window.addEventListener('scroll', triggerAnimations);
+            window.addEventListener('load', triggerAnimations);
+            
+            // Déclencher une première vérification
+            triggerAnimations();
+            
+            // Animation futuriste pour le hero section
+            const heroSection = document.querySelector('.futuristic-bg');
+            if (heroSection) {
+                anime({
+                    targets: '.futuristic-bg',
+                    backgroundPosition: ['0% 50%', '100% 50%'],
+                    duration: 15000,
+                    easing: 'linear',
+                    loop: true,
+                    direction: 'alternate'
+                });
+            }
+            
+            // Animation des éléments clip-path
+            const clipElements = document.querySelectorAll('.clip-feature');
+            clipElements.forEach(el => {
+                el.addEventListener('mouseenter', function() {
+                    anime({
+                        targets: el,
+                        clipPath: [
+                            'circle(75% at 50% 50%)',
+                            'circle(100% at 50% 50%)'
+                        ],
+                        duration: 800,
+                        easing: 'easeOutExpo'
+                    });
+                });
+                
+                el.addEventListener('mouseleave', function() {
+                    anime({
+                        targets: el,
+                        clipPath: [
+                            'circle(100% at 50% 50%)',
+                            'circle(75% at 50% 50%)'
+                        ],
+                        duration: 800,
+                        easing: 'easeOutExpo'
+                    });
+                });
+            });
+        });
+    </script>
+</body>
+</html>

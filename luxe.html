@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="fr" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LuxeStore - Boutique en ligne premium</title>
+    <meta name="description" content="Découvrez nos collections exclusives de produits haut de gamme">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Tailwind CSS via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Montserrat', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                    },
+                    colors: {
+                        primary: {
+                            DEFAULT: '#1a1a1a',
+                            light: '#333333',
+                        },
+                        accent: {
+                            DEFAULT: '#d4af37',
+                            light: '#e8d28a',
+                        },
+                    },
+                }
+            }
+        }
+    </script>
+    
+    <!-- Anime.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    
+    <style>
+        /* Custom CSS */
+       
+    
+        
+        
+        
+        .product-card:hover .product-image {
+            transform: scale(1.05);
+        }
+        
+        .menu-item::after {
+            content: '';
+            display: block;
+            width: 0;
+            height: 2px;
+            background: #d4af37;
+            transition: width 0.3s;
+        }
+        
+        .menu-item:hover::after {
+            width: 100%;
+        }
+        
+        .mobile-menu {
+            transform: translateX(100%);
+            transition: transform 0.3s ease-in-out;
+        }
+        
+        .mobile-menu.open {
+            transform: translateX(0);
+        }
+        
+        /* Smooth scroll behavior */
+        html {
+            scroll-behavior: smooth;
+        }
+    </style>
+</head>
+<body class="font-sans text-gray-800 bg-white antialiased">
+    <!-- Header -->
+    <header class="fixed w-full bg-white shadow-md z-50 transition-all duration-300">
+        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+            <!-- Logo -->
+            <a href="#" class="text-2xl font-serif font-bold text-primary">
+                Luxe<span class="text-accent">Store</span>
+            </a>
+            
+            <!-- Desktop Navigation -->
+            <nav class="hidden md:flex items-center space-x-8">
+                <a href="#" class="menu-item font-medium">Accueil</a>
+                <a href="#collections" class="menu-item font-medium">Collections</a>
+                <a href="#products" class="menu-item font-medium">Boutique</a>
+                <a href="#about" class="menu-item font-medium">À propos</a>
+                <a href="#testimonials" class="menu-item font-medium">Avis</a>
+                
+                <div class="flex items-center space-x-4 ml-6">
+                    <button aria-label="Recherche" class="hover:text-accent transition-colors">
+                        <i class="fas fa-search"></i>
+                    </button>
+                    <button aria-label="Compte" class="hover:text-accent transition-colors">
+                        <i class="far fa-user"></i>
+                    </button>
+                    <button aria-label="Panier" class="hover:text-accent transition-colors relative">
+                        <i class="fas fa-shopping-bag"></i>
+                        <span class="absolute -top-2 -right-2 bg-accent text-white text-xs w-5 h-5 flex items-center justify-center rounded-full">3</span>
+                    </button>
+                </div>
+            </nav>
+            
+            <!-- Mobile Menu Button -->
+            <button id="mobile-menu-button" class="md:hidden text-primary focus:outline-none">
+                <i class="fas fa-bars text-2xl"></i>
+            </button>
+        </div>
+        
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="mobile-menu fixed inset-y-0 right-0 w-64 bg-white shadow-lg z-50 p-6">
+            <div class="flex justify-between items-center mb-8">
+                <a href="#" class="text-xl font-serif font-bold text-primary">
+                    Luxe<span class="text-accent">Store</span>
+                </a>
+                <button id="close-mobile-menu" class="text-primary focus:outline-none">
+                    <i class="fas fa-times text-2xl"></i>
+                </button>
+            </div>
+            
+            <nav class="flex flex-col space-y-4">
+                <a href="#" class="py-2 border-b border-gray-100">Accueil</a>
+                <a href="#collections" class="py-2 border-b border-gray-100">Collections</a>
+                <a href="#products" class="py-2 border-b border-gray-100">Boutique</a>
+                <a href="#about" class="py-2 border-b border-gray-100">À propos</a>
+                <a href="#testimonials" class="py-2 border-b border-gray-100">Avis</a>
+                
+                <div class="pt-4 flex space-x-4">
+                    <button aria-label="Recherche" class="hover:text-accent transition-colors">
+                        <i class="fas fa-search"></i>
+                    </button>
+                    <button aria-label="Compte" class="hover:text-accent transition-colors">
+                        <i class="far fa-user"></i>
+                    </button>
+                    <button aria-label="Panier" class="hover:text-accent transition-colors relative">
+                        <i class="fas fa-shopping-bag"></i>
+                        <span class="absolute -top-2 -right-2 bg-accent text-white text-xs w-5 h-5 flex items-center justify-center rounded-full">3</span>
+                    </button>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="clip-path-hero no-clip-path:clip-path-none pt-24 bg-gray-100 relative overflow-hidden">
+        <div class="container mx-auto px-4 py-20 md:py-32 flex flex-col md:flex-row items-center">
+            <div class="md:w-1/2 mb-10 md:mb-0">
+                <h1 class="text-4xl md:text-5xl lg:text-6xl font-serif font-bold leading-tight mb-6">
+                    Élégance intemporelle, <span class="text-accent">craftsmanship</span> moderne
+                </h1>
+                <p class="text-lg md:text-xl text-gray-600 mb-8 max-w-lg">
+                    Découvrez notre collection exclusive de produits artisanaux conçus pour durer.
+                </p>
+                <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
+                    <a href="#products" class="bg-primary hover:bg-primary-light text-white px-8 py-3 rounded-full text-center font-medium transition-colors duration-300">
+                        Voir la collection
+                    </a>
+                    <a href="#collections" class="border-2 border-primary text-primary hover:bg-gray-100 px-8 py-3 rounded-full text-center font-medium transition-colors duration-300">
+                        Explorer
+                    </a>
+                </div>
+            </div>
+            
+            <div class="md:w-1/2 relative">
+                <div class="relative" style="padding-bottom: 100%;">
+                    <img src="https://images.unsplash.com/photo-1590874103328-eac38a683ce7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" 
+                         alt="Produit phare de la collection" 
+                         class="absolute inset-0 w-full h-full object-cover rounded-lg shadow-xl">
+                </div>
+        
+            </div>
+        </div>
+        
+        <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce">
+            <a href="#collections" class="text-gray-500 hover:text-primary transition-colors">
+                <i class="fas fa-chevron-down text-2xl"></i>
+            </a>
+        </div>
+    </section>
+
+    <!-- Brands Section -->
+  
+
+    <!-- Collections Section -->
+    <section id="collections" class="py-20 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-serif font-bold mb-4">Nos collections</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto">Explorez nos gammes soigneusement sélectionnées pour chaque style et occasion.</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Collection 1 -->
+                <a href="#" class="group relative overflow-hidden rounded-xl shadow-lg h-96">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent z-10"></div>
+                    <img src="https://images.unsplash.com/photo-1551232864-3f0890e580d9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" 
+                         alt="Collection Homme" 
+                         class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+                    <div class="absolute bottom-0 left-0 p-8 z-20">
+                        <h3 class="text-2xl font-serif font-bold text-white mb-2">Collection Homme</h3>
+                        <p class="text-gray-200">Élégance et sophistication</p>
+                    </div>
+                </a>
+                
+                <!-- Collection 2 -->
+                <a href="#" class="group relative overflow-hidden rounded-xl shadow-lg h-96">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent z-10"></div>
+                    <img src="https://images.unsplash.com/photo-1551232864-3f0890e580d9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" 
+                         alt="Collection Femme" 
+                         class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+                    <div class="absolute bottom-0 left-0 p-8 z-20">
+                        <h3 class="text-2xl font-serif font-bold text-white mb-2">Collection Femme</h3>
+                        <p class="text-gray-200">Féminité intemporelle</p>
+                    </div>
+                </a>
+                
+                <!-- Collection 3 -->
+                <a href="#" class="group relative overflow-hidden rounded-xl shadow-lg h-96">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent z-10"></div>
+                    <img src="https://images.unsplash.com/photo-1551232864-3f0890e580d9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" 
+                         alt="Collection Accessoires" 
+                         class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+                    <div class="absolute bottom-0 left-0 p-8 z-20">
+                        <h3 class="text-2xl font-serif font-bold text-white mb-2">Accessoires</h3>
+                        <p class="text-gray-200">Les détails qui comptent</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Products -->
+    <section id="products" class="py-20 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-serif font-bold mb-4">Nos produits vedettes</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto">Découvrez nos best-sellers et nouveautés soigneusement sélectionnés.</p>
+            </div>
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+                <!-- Product 1 -->
+                <div class="product-card group relative bg-white rounded-xl shadow-md overflow-hidden transition-all duration-300 hover:shadow-xl">
+                    <div class="relative overflow-hidden" style="padding-bottom: 100%;">
+                        <img src="https://images.unsplash.com/photo-1591047139829-d91aecb6caea?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" 
+                             alt="Montre de luxe" 
+                             class="product-image absolute inset-0 w-full h-full object-cover transition-transform duration-500">
+                        <div class="absolute inset-0 bg-black/10 group-hover:bg-black/20 transition-colors duration-300"></div>
+                        <button class="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-white text-primary px-6 py-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 font-medium">
+                            Voir les détails
+                        </button>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="font-medium text-lg mb-1">Montre Classique</h3>
+                        <p class="text-gray-500 text-sm mb-3">Collection Signature</p>
+                        <div class="flex justify-between items-center">
+                            <span class="font-bold text-primary">GDS450</span>
+                            <button class="text-accent hover:text-accent-light transition-colors">
+                                <i class="fas fa-shopping-bag"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Product 2 -->
+                <div class="product-card group relative bg-white rounded-xl shadow-md overflow-hidden transition-all duration-300 hover:shadow-xl">
+                    <div class="relative overflow-hidden" style="padding-bottom: 100%;">
+                        <img src="https://images.unsplash.com/photo-1523170335258-f5ed11844a49?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" 
+                             alt="Bague en or" 
+                             class="product-image absolute inset-0 w-full h-full object-cover transition-transform duration-500">
+                        <div class="absolute inset-0 bg-black/10 group-hover:bg-black/20 transition-colors duration-300"></div>
+                        <button class="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-white text-primary px-6 py-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 font-medium">
+                            Voir les détails
+                        </button>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="font-medium text-lg mb-1">Bague Or 18K</h3>
+                        <p class="text-gray-500 text-sm mb-3">Collection Éternelle</p>
+                        <div class="flex justify-between items-center">
+                            <span class="font-bold text-primary">GDS890</span>
+                            <button class="text-accent hover:text-accent-light transition-colors">
+                                <i class="fas fa-shopping-bag"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Product 3 -->
+                <div class="product-card group relative bg-white rounded-xl shadow-md overflow-hidden transition-all duration-300 hover:shadow-xl">
+                    <div class="relative overflow-hidden" style="padding-bottom: 100%;">
+                        <img src="https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" 
+                             alt="Portefeuille en cuir" 
+                             class="product-image absolute inset-0 w-full h-full object-cover transition-transform duration-500">
+                        <div class="absolute inset-0 bg-black/10 group-hover:bg-black/20 transition-colors duration-300"></div>
+                        <button class="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-white text-primary px-6 py-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 font-medium">
+                            Voir les détails
+                        </button>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="font-medium text-lg mb-1">Portefeuille Cuir</h3>
+                        <p class="text-gray-500 text-sm mb-3">Collection Essentiels</p>
+                        <div class="flex justify-between items-center">
+                            <span class="font-bold text-primary">GDS220</span>
+                            <button class="text-accent hover:text-accent-light transition-colors">
+                                <i class="fas fa-shopping-bag"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Product 4 -->
+                <div class="product-card group relative bg-white rounded-xl shadow-md overflow-hidden transition-all duration-300 hover:shadow-xl">
+                    <div class="relative overflow-hidden" style="padding-bottom: 100%;">
+                        <img src="https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" 
+                             alt="Écharpe en soie" 
+                             class="product-image absolute inset-0 w-full h-full object-cover transition-transform duration-500">
+                        <div class="absolute inset-0 bg-black/10 group-hover:bg-black/20 transition-colors duration-300"></div>
+                        <button class="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-white text-primary px-6 py-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 font-medium">
+                            Voir les détails
+                        </button>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="font-medium text-lg mb-1">Écharpe Soie</h3>
+                        <p class="text-gray-500 text-sm mb-3">Collection Signature</p>
+                        <div class="flex justify-between items-center">
+                            <span class="font-bold text-primary">GDS180</span>
+                            <button class="text-accent hover:text-accent-light transition-colors">
+                                <i class="fas fa-shopping-bag"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center mt-12">
+                <a href="#" class="inline-block border-2 border-primary text-primary hover:bg-primary hover:text-white px-8 py-3 rounded-full font-medium transition-colors duration-300">
+                    Voir toute la boutique
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Promo Banner -->
+    <section class="clip-path-promo no-clip-path:clip-path-none py-20 md:py-32 bg-primary text-white relative overflow-hidden">
+        <div class="container mx-auto px-4 text-center relative z-10">
+            <h2 class="text-3xl md:text-5xl font-serif font-bold mb-6">Été 2025</h2>
+            <p class="text-xl md:text-2xl max-w-3xl mx-auto mb-8">Profitez de notre collection estivale avec -20% sur votre première commande</p>
+            <a href="#" class="inline-block bg-accent hover:bg-accent-light text-white px-8 py-3 rounded-full font-medium transition-colors duration-300">
+                Découvrir l'offre
+            </a>
+        </div>
+        
+        <div class="absolute inset-0 opacity-10">
+            <div class="absolute top-0 left-0 w-64 h-64 bg-accent rounded-full filter blur-3xl"></div>
+            <div class="absolute bottom-0 right-0 w-64 h-64 bg-accent rounded-full filter blur-3xl"></div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-20 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row items-center">
+                <div class="md:w-1/2 mb-10 md:mb-0 md:pr-10">
+                    <div class="relative" style="padding-bottom: 100%;">
+                        <img src="f.jpg" 
+                             alt="Notre histoire" 
+                             class="absolute inset-0 w-full h-full object-cover rounded-xl shadow-lg">
+                    </div>
+                </div>
+                
+                <div class="md:w-1/2">
+                    <h2 class="text-3xl md:text-4xl font-serif font-bold mb-6">Notre histoire</h2>
+                    <p class="text-gray-600 mb-6">
+                        Fondée en 2010, LuxeStore est née de la passion pour l'artisanat de qualité et le design intemporel. 
+                        Notre mission est de proposer des pièces uniques qui transcendent les tendances éphémères.
+                    </p>
+                    
+                    <ul class="space-y-3 mb-8">
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-accent mt-1 mr-3"></i>
+                            <span class="text-gray-700">Artisans sélectionnés avec soin</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-accent mt-1 mr-3"></i>
+                            <span class="text-gray-700">Matériaux premium et durables</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-accent mt-1 mr-3"></i>
+                            <span class="text-gray-700">Service client exceptionnel</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-accent mt-1 mr-3"></i>
+                            <span class="text-gray-700">Engagement éco-responsable</span>
+                        </li>
+                    </ul>
+                    
+                    <a href="#" class="inline-block border-2 border-primary text-primary hover:bg-primary hover:text-white px-6 py-2 rounded-full font-medium transition-colors duration-300">
+                        En savoir plus
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section id="testimonials" class="py-20 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-serif font-bold mb-4">Ce que disent nos clients</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto">Découvrez les témoignages de ceux qui ont choisi LuxeStore.</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Testimonial 1 -->
+                <div class="bg-gray-50 p-8 rounded-xl shadow-sm">
+                    <div class="flex items-center mb-4">
+                        <div class="flex items-center text-yellow-400 mr-2">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                    </div>
+                    <p class="text-gray-600 italic mb-6">
+                        "La qualité des produits est exceptionnelle. Ma montre fonctionne parfaitement après 5 ans d'utilisation quotidienne."
+                    </p>
+                    <div class="flex items-center">
+                       
+                        <div>
+                            <h4 class="font-medium">Sophie Martin</h4>
+                            <p class="text-gray-500 text-sm">Paris, </p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Testimonial 2 -->
+                <div class="bg-gray-50 p-8 rounded-xl shadow-sm">
+                    <div class="flex items-center mb-4">
+                        <div class="flex items-center text-yellow-400 mr-2">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                    </div>
+                    <p class="text-gray-600 italic mb-6">
+                        "Service client impeccable. Ils ont su me conseiller pour trouver le cadeau parfait pour mon épouse."
+                    </p>
+                    <div class="flex items-center">
+                        
+                        <div>
+                            <h4 class="font-medium">Thomas Leroy</h4>
+                            <p class="text-gray-500 text-sm">Lyon, </p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Testimonial 3 -->
+                <div class="bg-gray-50 p-8 rounded-xl shadow-sm">
+                    <div class="flex items-center mb-4">
+                        <div class="flex items-center text-yellow-400 mr-2">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                        </div>
+                    </div>
+                    <p class="text-gray-600 italic mb-6">
+                        "Livraison rapide et emballage soigné. Le portefeuille en cuir est encore plus beau en vrai que sur les photos."
+                    </p>
+                    <div class="flex items-center">
+                
+                            <h4 class="font-medium">Émilie Dubois</h4>
+                            <p class="text-gray-500 text-sm">Bruxelles, </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Newsletter -->
+    <section class="py-16 bg-gray-100">
+        <div class="container mx-auto px-4 max-w-4xl">
+            <div class="bg-white p-8 md:p-12 rounded-xl shadow-sm text-center">
+                <h2 class="text-2xl md:text-3xl font-serif font-bold mb-4">Restez informés</h2>
+                <p class="text-gray-600 mb-8 max-w-2xl mx-auto">
+                    Abonnez-vous à notre newsletter pour recevoir en exclusivité nos nouveautés, offres spéciales et conseils d'experts.
+                </p>
+                
+                <form class="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
+                    <input type="email" placeholder="Votre email" class="flex-grow px-4 py-3 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent">
+                    <button type="submit" class="bg-primary hover:bg-primary-light text-white px-6 py-3 rounded-full font-medium transition-colors duration-300 whitespace-nowrap">
+                        S'abonner
+                    </button>
+                </form>
+                
+                <p class="text-xs text-gray-500 mt-4">
+                    Nous respectons votre vie privée. Désabonnez-vous à tout moment.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-primary text-white pt-16 pb-8">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
+                <!-- Column 1 -->
+                <div>
+                    <a href="#" class="text-2xl font-serif font-bold mb-4 inline-block">
+                        Luxe<span class="text-accent">Store</span>
+                    </a>
+                    <p class="text-gray-300 mb-4">
+                        L'excellence artisanale au service de votre élégance.
+                    </p>
+                    <div class="flex space-x-4">
+                        <a href="#" aria-label="Facebook" class="text-gray-300 hover:text-white transition-colors">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" aria-label="Instagram" class="text-gray-300 hover:text-white transition-colors">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="#" aria-label="Pinterest" class="text-gray-300 hover:text-white transition-colors">
+                            <i class="fab fa-pinterest-p"></i>
+                        </a>
+                        <a href="#" aria-label="Twitter" class="text-gray-300 hover:text-white transition-colors">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Column 2 -->
+                <div>
+                    <h3 class="font-serif font-bold text-lg mb-4">Boutique</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-300 hover:text-white transition-colors">Nouveautés</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white transition-colors">Collections</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white transition-colors">Meilleures ventes</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white transition-colors">Offres spéciales</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white transition-colors">Cadeaux</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Column 3 -->
+                <div>
+                    <h3 class="font-serif font-bold text-lg mb-4">Informations</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-300 hover:text-white transition-colors">À propos</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white transition-colors">Blog</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white transition-colors">Contact</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white transition-colors">FAQ</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white transition-colors">Livraison</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Column 4 -->
+                <div>
+                    <h3 class="font-serif font-bold text-lg mb-4">Service client</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-300 hover:text-white transition-colors">Mon compte</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white transition-colors">Suivi de commande</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white transition-colors">Retours & échanges</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white transition-colors">Paiement sécurisé</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white transition-colors">CGV</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-700 pt-8 flex flex-col md:flex-row justify-between items-center">
+                <p class="text-gray-400 text-sm mb-4 md:mb-0">
+                    © 2025 LuxeStore. Tous droits réservés.
+                </p>
+                <div class="flex space-x-6">
+                    <a href="#" class="text-gray-400 hover:text-white text-sm transition-colors">Confidentialité</a>
+                    <a href="#" class="text-gray-400 hover:text-white text-sm transition-colors">Conditions</a>
+                    <a href="#" class="text-gray-400 hover:text-white text-sm transition-colors">Cookies</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+    
+
+    <!-- JavaScript -->
+    <script>
+        // Mobile Menu Toggle
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const closeMobileMenu = document.getElementById('close-mobile-menu');
+        const mobileMenu = document.getElementById('mobile-menu');
+        
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.add('open');
+            document.body.style.overflow = 'hidden';
+        });
+        
+        closeMobileMenu.addEventListener('click', () => {
+            mobileMenu.classList.remove('open');
+            document.body.style.overflow = '';
+        });
+        
+        // Close mobile menu when clicking on a link
+        const mobileMenuLinks = mobileMenu.querySelectorAll('a');
+        mobileMenuLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.remove('open');
+                document.body.style.overflow = '';
+            });
+        });
+        
+        // Detect clip-path support
+        if (!CSS.supports('clip-path', 'polygon(0 0, 100% 0, 100% 100%, 0 100%)')) {
+            document.documentElement.classList.add('no-clip-path');
+        }
+        
+        // Anime.js animations
+        document.addEventListener('DOMContentLoaded', () => {
+            // Hero section animation
+            anime({
+                targets: '.clip-path-hero .absolute',
+                opacity: [0, 1],
+                translateY: [20, 0],
+                duration: 1000,
+                delay: anime.stagger(200),
+                easing: 'easeOutExpo'
+            });
+            
+            // Product cards animation
+            anime({
+                targets: '.product-card',
+                opacity: [0, 1],
+                translateY: [30, 0],
+                duration: 800,
+                delay: anime.stagger(100),
+                easing: 'easeOutQuad'
+            });
+            
+            // Testimonials animation
+            anime({
+                targets: '#testimonials .bg-gray-50',
+                opacity: [0, 1],
+                translateY: [40, 0],
+                duration: 800,
+                delay: anime.stagger(150),
+                easing: 'easeOutQuad',
+                offset: '-=300'
+            });
+        });
+        
+        // Scroll reveal animation
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    anime({
+                        targets: entry.target,
+                        opacity: [0, 1],
+                        translateY: [30, 0],
+                        duration: 800,
+                        easing: 'easeOutQuad'
+                    });
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, {
+            threshold: 0.1
+        });
+        
+        document.querySelectorAll('section').forEach(section => {
+            observer.observe(section);
+        });
+    </script>
+</body>
+</html> 

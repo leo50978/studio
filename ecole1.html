@@ -1,0 +1,1198 @@
+<!DOCTYPE html>
+<html lang="fr" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CPAH - Formation professionnelle en Haïti</title>
+    <meta name="description" content="Centre de formation technique et professionnelle de qualité en Haïti. Formations certifiées avec 95% d'insertion professionnelle.">
+    
+    <!-- Google Fonts - Typographies premium -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Tailwind CSS via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Montserrat', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                    },
+                    colors: {
+                        primary: {
+                            light: '#3B82F6',
+                            DEFAULT: '#2563EB',
+                            dark: '#1D4ED8',
+                        },
+                        secondary: {
+                            light: '#F59E0B',
+                            DEFAULT: '#D97706',
+                            dark: '#B45309',
+                        },
+                        accent: {
+                            light: '#EF4444',
+                            DEFAULT: '#DC2626',
+                            dark: '#B91C1C',
+                        },
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.8s ease-in-out',
+                        'slide-up': 'slideUp 0.8s ease-out',
+                        'scale-in': 'scaleIn 0.6s ease-out',
+                        'rotate-y': 'rotateY 1s ease-out',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' },
+                        },
+                        slideUp: {
+                            '0%': { transform: 'translateY(50px)', opacity: '0' },
+                            '100%': { transform: 'translateY(0)', opacity: '1' },
+                        },
+                        scaleIn: {
+                            '0%': { transform: 'scale(0.8)', opacity: '0' },
+                            '100%': { transform: 'scale(1)', opacity: '1' },
+                        },
+                        rotateY: {
+                            '0%': { transform: 'rotateY(90deg)', opacity: '0' },
+                            '100%': { transform: 'rotateY(0)', opacity: '1' },
+                        },
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Anime.js via CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    
+    <style>
+        /* Styles personnalisés et animations */
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        /* Clip-path styles */
+        .clip-circle {
+            clip-path: circle(50% at 50% 50%);
+        }
+        
+        .clip-polygon {
+            clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
+        }
+        
+        .clip-wave {
+            clip-path: path('M0,100 C150,200 350,0 500,100 L500,00 L0,0 Z');
+        }
+        
+        /* Animation classes */
+        .animate-on-scroll {
+            opacity: 0;
+            transition: all 0.8s ease-out;
+        }
+        
+        .animated {
+            opacity: 1;
+        }
+        
+        /* Hero section video overlay */
+        .hero-overlay {
+            background: linear-gradient(135deg, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 100%);
+        }
+        
+        /* Timeline styles */
+        .timeline-item:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            left: 7px;
+            top: 24px;
+            height: 100%;
+            width: 2px;
+            background: #2563EB;
+        }
+        
+        /* Testimonial card hover effect */
+        .testimonial-card {
+            transition: all 0.3s ease;
+        }
+        
+        .testimonial-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Form input focus styles */
+        .form-input:focus {
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.3);
+        }
+        
+        /* Mobile menu animation */
+        .mobile-menu {
+            transition: all 0.3s ease-out;
+        }
+        
+        .mobile-menu-hidden {
+            transform: translateX(100%);
+            opacity: 0;
+        }
+        
+        .mobile-menu-visible {
+            transform: translateX(0);
+            opacity: 1;
+        }
+    </style>
+</head>
+<body class="font-sans text-gray-800 bg-white antialiased">
+    <!-- Barre info supérieure -->
+    <div class="bg-primary-dark text-white text-xs md:text-sm py-2 px-4">
+        <div class="container mx-auto flex justify-between items-center">
+            <div class="flex space-x-4">
+                <a href="tel:+509XXXXXXXX" class="hover:text-secondary-light transition"><i class="fas fa-phone-alt mr-1"></i>: 4463-1029 / 4096-6404 / </a>
+                <a href="mailto:antoinemichael263@gmail.com" class="hover:text-secondary-light transition"><i class="fas fa-envelope mr-1"></i>antoinemichael263@gmail.com</a>
+            </div>
+            <div class="flex space-x-3">
+                <a href="#" aria-label="Facebook" class="hover:text-secondary-light transition"><i class="fab fa-facebook-f"></i></a>
+                <a href="#" aria-label="TikTok" class="hover:text-secondary-light transition"><i class="fab fa-tiktok"></i></a>
+                <a href="#" aria-label="Instagram" class="hover:text-secondary-light transition"><i class="fab fa-instagram"></i></a>
+                <a href="#" aria-label="Twitter" class="hover:text-secondary-light transition"><i class="fab fa-twitter"></i></a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Header / Navigation principale -->
+    <header class="sticky top-0 z-50 bg-white shadow-md">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <!-- Logo -->
+            <a href="#" class="flex items-center">
+               <img src="logocaph.jpeg" alt="" width="55px" height="25px">
+            </a>
+            
+            <!-- Menu desktop -->
+            <nav class="hidden md:flex items-center space-x-8">
+                <a href="#" class="text-gray-700 hover:text-primary-dark font-medium transition">Accueil</a>
+                <a href="#about" class="text-gray-700 hover:text-primary-dark font-medium transition">À propos</a>
+                <div class="relative group">
+                    <button class="text-gray-700 hover:text-primary-dark font-medium transition flex items-center">
+                        Formations <i class="fas fa-chevron-down ml-1 text-xs"></i>
+                    </button>
+                    <div class="absolute left-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300">
+                        <a href="#formations" class="block px-4 py-2 text-gray-700 hover:bg-primary-light hover:text-white">Toutes nos formations</a>
+                        <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-primary-light hover:text-white">Informatique</a>
+                        <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-primary-light hover:text-white">Bâtiment</a>
+                        <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-primary-light hover:text-white">Commerce</a>
+                    </div>
+                </div>
+                <a href="#portfolio" class="text-gray-700 hover:text-primary-dark font-medium transition">Portfolio</a>
+                <a href="#testimonials" class="text-gray-700 hover:text-primary-dark font-medium transition">Témoignages</a>
+                <a href="#contact" class="text-gray-700 hover:text-primary-dark font-medium transition">Contact</a>
+            </nav>
+            
+            <!-- Bouton CTA desktop -->
+            <a href="#inscription" class="hidden md:inline-block bg-secondary-light hover:bg-secondary-dark text-white font-medium px-6 py-2 rounded-full transition transform hover:scale-105 shadow-md">
+                S'inscrire maintenant
+            </a>
+            
+            <!-- Bouton menu mobile -->
+            <button id="mobile-menu-button" class="md:hidden text-gray-700 focus:outline-none">
+                <i class="fas fa-bars text-xl"></i>
+            </button>
+        </div>
+        
+        <!-- Menu mobile -->
+        <div id="mobile-menu" class="mobile-menu md:hidden fixed inset-y-0 right-0 w-64 bg-white shadow-xl z-50 mobile-menu-hidden">
+            <div class="flex justify-end p-4">
+                <button id="mobile-menu-close" class="text-gray-700 focus:outline-none">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+            <nav class="px-6 py-4 flex flex-col space-y-4">
+                <a href="#" class="text-gray-700 hover:text-primary-dark font-medium transition">Accueil</a>
+                <a href="#about" class="text-gray-700 hover:text-primary-dark font-medium transition">À propos</a>
+                <div class="flex flex-col space-y-2">
+                    <button id="formations-toggle" class="text-gray-700 hover:text-primary-dark font-medium transition flex items-center justify-between">
+                        Formations <i class="fas fa-chevron-down ml-1 text-xs"></i>
+                    </button>
+                    <div id="formations-menu" class="hidden pl-4 flex flex-col space-y-2">
+                        <a href="#formations" class="text-gray-700 hover:text-primary-dark">Toutes nos formations</a>
+                        <a href="#" class="text-gray-700 hover:text-primary-dark">Informatique</a>
+                        <a href="#" class="text-gray-700 hover:text-primary-dark">Bâtiment</a>
+                        <a href="#" class="text-gray-700 hover:text-primary-dark">Commerce</a>
+                    </div>
+                </div>
+                <a href="#portfolio" class="text-gray-700 hover:text-primary-dark font-medium transition">Portfolio</a>
+                <a href="#testimonials" class="text-gray-700 hover:text-primary-dark font-medium transition">Témoignages</a>
+                <a href="#contact" class="text-gray-700 hover:text-primary-dark font-medium transition">Contact</a>
+                <a href="#inscription" class="mt-4 bg-secondary-light hover:bg-secondary-dark text-white font-medium px-6 py-2 rounded-full text-center transition">
+                    S'inscrire maintenant
+                </a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Section Hero -->
+<section id="hero" class="relative h-screen flex items-center justify-center bg-center bg-cover bg-no-repeat" style="background-image: url('imgcpah/imghero.jpg');">
+    <!-- Overlay sombre -->
+    <div class="absolute inset-0 bg-black/60 z-10"></div>
+
+    <!-- Contenu hero -->
+    <div class="container mx-auto px-4 z-20 text-center animate-on-scroll" data-animation="fade-in">
+        <h1 class="text-4xl md:text-6xl lg:text-7xl font-serif font-bold text-white mb-6 leading-tight">
+            Formation technique et professionnelle <span class="text-secondary-light">de qualité</span>, partout en Haïti
+        </h1>
+        <p class="text-xl md:text-2xl italic text-secondary-light mb-8">
+            CPAH se nou e nou se CPAH
+        </p>
+        <div class="flex flex-col sm:flex-row justify-center gap-4">
+            <a href="#formations" class="bg-secondary-light hover:bg-secondary-dark text-white font-bold px-8 py-3 rounded-full transition transform hover:scale-105 shadow-lg">
+                Voir nos formations
+            </a>
+            <a href="#inscription" class="bg-accent-light hover:bg-accent-dark text-white font-bold px-8 py-3 rounded-full transition transform hover:scale-105 shadow-lg">
+                S'inscrire
+            </a>
+        </div>
+    </div>
+</section>
+
+
+    <!-- Section À propos -->
+    <section id="about" class="py-20 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col lg:flex-row items-center gap-12">
+                <!-- Colonne gauche - Vidéo -->
+                <div class="w-full lg:w-1/2 animate-on-scroll" data-animation="slide-up">
+                    <div class="relative rounded-xl overflow-hidden shadow-2xl clip-polygon">
+                        <div class="aspect-w-16 aspect-h-9 bg-gray-200">
+                            <img src="imgcpah/esctimg.jpg" alt="Mot du directeur CPAH" class="w-full h-full object-cover">
+                            <div class="absolute inset-0 flex items-center justify-center">
+                                <button class="bg-white bg-opacity-80 hover:bg-opacity-100 rounded-full w-16 h-16 flex items-center justify-center transition transform hover:scale-110">
+                                    <i class="fas fa-play text-primary-dark text-xl"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Colonne droite - Texte -->
+                <div class="w-full lg:w-1/2 animate-on-scroll" data-animation="slide-up" data-delay="200">
+                    <h2 class="text-3xl md:text-4xl font-serif font-bold text-primary-dark mb-6">Qui sommes-nous ?</h2>
+                    <p class="text-gray-600 mb-6 leading-relaxed">
+                        Fondé en 2005, le Centre Professionnel d'Apprentissage Haïtien (CPAH) s'est imposé comme un acteur majeur de la formation professionnelle en Haïti. Notre mission est de fournir des compétences pratiques et techniques adaptées aux besoins du marché local et international.
+                    </p>
+                    <p class="text-gray-600 mb-8 leading-relaxed">
+                        Avec plus de 500 diplômés à travers le pays, nous avons bâti une réputation d'excellence grâce à notre approche pédagogique innovante et notre réseau d'experts passionnés. Chaque formation est conçue pour offrir un équilibre parfait entre théorie et pratique, garantissant une insertion professionnelle réussie.
+                    </p>
+                    
+                    <!-- Timeline -->
+                    <div class="mb-8">
+                        <h3 class="text-xl font-semibold text-primary-dark mb-4">Notre parcours</h3>
+                        <div class="space-y-4">
+                            <div class="timeline-item relative pl-8">
+                                <div class="absolute left-0 top-0 w-4 h-4 rounded-full bg-primary-dark border-4 border-white shadow"></div>
+                                <h4 class="font-semibold text-gray-800">2005 - Fondation</h4>
+                                <p class="text-sm text-gray-600">Ouverture de notre premier centre à Port-au-Prince</p>
+                            </div>
+                            <div class="timeline-item relative pl-8">
+                                <div class="absolute left-0 top-0 w-4 h-4 rounded-full bg-primary-dark border-4 border-white shadow"></div>
+                                <h4 class="font-semibold text-gray-800">2010 - Expansion</h4>
+                                <p class="text-sm text-gray-600">Ouverture de 3 nouveaux centres régionaux après le séisme</p>
+                            </div>
+                            <div class="timeline-item relative pl-8">
+                                <div class="absolute left-0 top-0 w-4 h-4 rounded-full bg-primary-dark border-4 border-white shadow"></div>
+                                <h4 class="font-semibold text-gray-800">2018 - Reconnaissance</h4>
+                                <p class="text-sm text-gray-600">Accréditation par le Ministère de l'Éducation Nationale</p>
+                            </div>
+                            <div class="timeline-item relative pl-8">
+                                <div class="absolute left-0 top-0 w-4 h-4 rounded-full bg-primary-dark border-4 border-white shadow"></div>
+                                <h4 class="font-semibold text-gray-800">2023 - Innovation</h4>
+                                <p class="text-sm text-gray-600">Lancement de nos programmes de formation en ligne</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Atouts -->
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="flex items-start">
+                            <div class="bg-primary-light bg-opacity-20 p-3 rounded-full mr-3">
+                                <i class="fas fa-certificate text-primary-dark"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-gray-800">Formations certifiées</h4>
+                                <p class="text-sm text-gray-600">Reconnues par l'État</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start">
+                            <div class="bg-primary-light bg-opacity-20 p-3 rounded-full mr-3">
+                                <i class="fas fa-briefcase text-primary-dark"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-gray-800">Accompagnement</h4>
+                                <p class="text-sm text-gray-600">Après certification</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start">
+                            <div class="bg-primary-light bg-opacity-20 p-3 rounded-full mr-3">
+                                <i class="fas fa-chalkboard-teacher text-primary-dark"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-gray-800">Formateurs experts</h4>
+                                <p class="text-sm text-gray-600">Professionnels en activité</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start">
+                            <div class="bg-primary-light bg-opacity-20 p-3 rounded-full mr-3">
+                                <i class="fas fa-network-wired text-primary-dark"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-gray-800">Réseau national</h4>
+                                <p class="text-sm text-gray-600">Partenariats solides</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section Formations / Services -->
+    <section id="formations" class="py-20 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <!-- Titre et description -->
+            <div class="text-center mb-12 animate-on-scroll" data-animation="fade-in">
+                <h2 class="text-3xl md:text-4xl font-serif font-bold text-primary-dark mb-4">Nos formations et services</h2>
+                <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+                    Apprenez avec des professionnels et boostez votre carrière.
+                </p>
+            </div>
+            
+            <!-- Filtres -->
+            <div class="flex flex-wrap justify-center gap-3 mb-12 animate-on-scroll" data-animation="slide-up">
+                <select class="bg-white px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary-light">
+                    <option>Toutes catégories</option>
+                    <option>Informatique</option>
+                    <option>Bâtiment</option>
+                    <option>Commerce</option>
+                </select>
+                <select class="bg-white px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary-light">
+                    <option>Toutes durées</option>
+                    <option>3 mois</option>
+                    <option>6 mois</option>
+                    <option>1 an</option>
+                </select>
+                <select class="bg-white px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary-light">
+                    <option>Tous niveaux</option>
+                    <option>Débutant</option>
+                    <option>Intermédiaire</option>
+                    <option>Avancé</option>
+                </select>
+            </div>
+            
+            <!-- Grille de formations -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Carte formation 1 -->
+                <div class="bg-white rounded-xl shadow-md overflow-hidden transition transform hover:-translate-y-2 animate-on-scroll" data-animation="scale-in">
+                    <div class="relative">
+                        <img src="imgcpah/infographie.jpg" alt="Formation en informatique" class="w-full h-48 object-cover">
+                        <div class="absolute top-4 right-4 bg-secondary-light text-white text-xs font-bold px-3 py-1 rounded-full">
+                            Nouveau
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center mb-3">
+                            <div class="bg-primary-light bg-opacity-20 p-2 rounded-full mr-3">
+                                <i class="fas fa-laptop-code text-primary-dark"></i>
+                            </div>
+                            <h3 class="text-xl font-semibold text-gray-800">Formation infographie</h3>
+                        </div>
+                        <p class="text-gray-600 mb-4">
+                            Maîtrisez les technologies modernes du moment et devenez expert en 6 mois .
+                        </p>
+                        <div class="flex justify-between items-center">
+                            <span class="font-bold text-primary-dark">3,500 HTG/mois</span>
+                            <button class="text-primary-light hover:text-primary-dark font-medium transition">
+                                En savoir plus <i class="fas fa-arrow-right ml-1"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Carte formation 2 -->
+                <div class="bg-white rounded-xl shadow-md overflow-hidden transition transform hover:-translate-y-2 animate-on-scroll" data-animation="scale-in" data-delay="100">
+                    <div class="relative">
+                        <img src="https://via.placeholder.com/600x400" alt="Formation en bâtiment" class="w-full h-48 object-cover">
+                        <div class="absolute top-4 right-4 bg-accent-light text-white text-xs font-bold px-3 py-1 rounded-full">
+                            Certifié
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center mb-3">
+                            <div class="bg-primary-light bg-opacity-20 p-2 rounded-full mr-3">
+                                <i class="fas fa-hammer text-primary-dark"></i>
+                            </div>
+                            <h3 class="text-xl font-semibold text-gray-800">Techniques de Construction</h3>
+                        </div>
+                        <p class="text-gray-600 mb-4">
+                            Formation complète en techniques de construction parasismique et durable, avec stages pratiques sur chantier.
+                        </p>
+                        <div class="flex justify-between items-center">
+                            <span class="font-bold text-primary-dark">2,800 HTG/mois</span>
+                            <button class="text-primary-light hover:text-primary-dark font-medium transition">
+                                En savoir plus <i class="fas fa-arrow-right ml-1"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Carte formation 3 -->
+                <div class="bg-white rounded-xl shadow-md overflow-hidden transition transform hover:-translate-y-2 animate-on-scroll" data-animation="scale-in" data-delay="200">
+                    <div class="relative">
+                        <img src="https://via.placeholder.com/600x400" alt="Formation en commerce" class="w-full h-48 object-cover">
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center mb-3">
+                            <div class="bg-primary-light bg-opacity-20 p-2 rounded-full mr-3">
+                                <i class="fas fa-chart-line text-primary-dark"></i>
+                            </div>
+                            <h3 class="text-xl font-semibold text-gray-800">Gestion d'Entreprise</h3>
+                        </div>
+                        <p class="text-gray-600 mb-4">
+                            Apprenez à gérer une petite entreprise, de la comptabilité de base au marketing digital, en 4 mois intensifs.
+                        </p>
+                        <div class="flex justify-between items-center">
+                            <span class="font-bold text-primary-dark">2,200 HTG/mois</span>
+                            <button class="text-primary-light hover:text-primary-dark font-medium transition">
+                                En savoir plus <i class="fas fa-arrow-right ml-1"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Carte formation 4 -->
+                <div class="bg-white rounded-xl shadow-md overflow-hidden transition transform hover:-translate-y-2 animate-on-scroll" data-animation="scale-in" data-delay="300">
+                    <div class="relative">
+                        <img src="https://via.placeholder.com/600x400" alt="Formation en électricité" class="w-full h-48 object-cover">
+                        <div class="absolute top-4 right-4 bg-accent-light text-white text-xs font-bold px-3 py-1 rounded-full">
+                            Certifié
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center mb-3">
+                            <div class="bg-primary-light bg-opacity-20 p-2 rounded-full mr-3">
+                                <i class="fas fa-bolt text-primary-dark"></i>
+                            </div>
+                            <h3 class="text-xl font-semibold text-gray-800">Électricité Industrielle</h3>
+                        </div>
+                        <p class="text-gray-600 mb-4">
+                            Formation complète en installation et maintenance électrique pour les bâtiments résidentiels et industriels.
+                        </p>
+                        <div class="flex justify-between items-center">
+                            <span class="font-bold text-primary-dark">3,000 HTG/mois</span>
+                            <button class="text-primary-light hover:text-primary-dark font-medium transition">
+                                En savoir plus <i class="fas fa-arrow-right ml-1"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Carte formation 5 -->
+                <div class="bg-white rounded-xl shadow-md overflow-hidden transition transform hover:-translate-y-2 animate-on-scroll" data-animation="scale-in" data-delay="400">
+                    <div class="relative">
+                        <img src="https://via.placeholder.com/600x400" alt="Formation en cuisine" class="w-full h-48 object-cover">
+                        <div class="absolute top-4 right-4 bg-secondary-light text-white text-xs font-bold px-3 py-1 rounded-full">
+                            Nouveau
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center mb-3">
+                            <div class="bg-primary-light bg-opacity-20 p-2 rounded-full mr-3">
+                                <i class="fas fa-utensils text-primary-dark"></i>
+                            </div>
+                            <h3 class="text-xl font-semibold text-gray-800">Cuisine Professionnelle</h3>
+                        </div>
+                        <p class="text-gray-600 mb-4">
+                            Devenez chef cuisinier avec notre formation intensive de 5 mois, incluant un stage en restaurant partenaire.
+                        </p>
+                        <div class="flex justify-between items-center">
+                            <span class="font-bold text-primary-dark">2,500 HTG/mois</span>
+                            <button class="text-primary-light hover:text-primary-dark font-medium transition">
+                                En savoir plus <i class="fas fa-arrow-right ml-1"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Carte formation 6 -->
+                <div class="bg-white rounded-xl shadow-md overflow-hidden transition transform hover:-translate-y-2 animate-on-scroll" data-animation="scale-in" data-delay="500">
+                    <div class="relative">
+                        <img src="https://via.placeholder.com/600x400" alt="Formation en soudure" class="w-full h-48 object-cover">
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center mb-3">
+                            <div class="bg-primary-light bg-opacity-20 p-2 rounded-full mr-3">
+                                <i class="fas fa-wrench text-primary-dark"></i>
+                            </div>
+                            <h3 class="text-xl font-semibold text-gray-800">Soudure Industrielle</h3>
+                        </div>
+                        <p class="text-gray-600 mb-4">
+                            Formation pratique en techniques de soudure pour les métaux ferreux et non-ferreux, avec certification finale.
+                        </p>
+                        <div class="flex justify-between items-center">
+                            <span class="font-bold text-primary-dark">2,800 HTG/mois</span>
+                            <button class="text-primary-light hover:text-primary-dark font-medium transition">
+                                En savoir plus <i class="fas fa-arrow-right ml-1"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Bouton voir plus -->
+            <div class="text-center mt-12 animate-on-scroll" data-animation="fade-in">
+                <button class="bg-primary-light hover:bg-primary-dark text-white font-bold px-8 py-3 rounded-full transition transform hover:scale-105 shadow-lg">
+                    Voir toutes nos formations
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section Portfolio / Réalisations -->
+    <section id="portfolio" class="py-20 bg-white">
+        <div class="container mx-auto px-4">
+            <!-- Titre et description -->
+            <div class="text-center mb-12 animate-on-scroll" data-animation="fade-in">
+                <h2 class="text-3xl md:text-4xl font-serif font-bold text-primary-dark mb-4">Nos réalisations et succès</h2>
+                <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+                    Découvrez les projets de nos étudiants et l'impact de nos formations.
+                </p>
+            </div>
+            
+            <!-- Carrousel -->
+            <div class="relative animate-on-scroll" data-animation="slide-up">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Item 1 -->
+                    <div class="group relative rounded-xl overflow-hidden shadow-lg">
+                        <img src="imgcpah/p1.jpg" alt="Projet étudiant" class="w-full h-64 object-cover transition transform group-hover:scale-110">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black to-transparent opacity-70"></div>
+                        <div class="absolute bottom-0 left-0 p-6 text-white">
+                            <h3 class="text-xl font-bold mb-2">projets </h3>
+                            <p class="text-sm opacity-80">Projet de fin de formation </p>
+                        </div>
+                        <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition">
+                            <button class="bg-white text-primary-dark p-3 rounded-full shadow-lg">
+                                <i class="fas fa-expand"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Item 2 -->
+                    <div class="group relative rounded-xl overflow-hidden shadow-lg">
+                        <img src="imgcpah/p2.jpg" alt="Projet étudiant" class="w-full h-64 object-cover transition transform group-hover:scale-110">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black to-transparent opacity-70"></div>
+                        <div class="absolute bottom-0 left-0 p-6 text-white">
+                            <h3 class="text-xl font-bold mb-2">remise projet</h3>
+                            <p class="text-sm opacity-80">Projet de fin de formation </p>
+                        </div>
+                        <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition">
+                            <button class="bg-white text-primary-dark p-3 rounded-full shadow-lg">
+                                <i class="fas fa-expand"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Item 3 -->
+                    <div class="group relative rounded-xl overflow-hidden shadow-lg">
+                        <img src="imgcpah/p3.jpg" alt="Remise de diplômes" class="w-full h-64 object-cover transition transform group-hover:scale-110">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black to-transparent opacity-70"></div>
+                        <div class="absolute bottom-0 left-0 p-6 text-white">
+                            <h3 class="text-xl font-bold mb-2">Promotion 2023</h3>
+                            <p class="text-sm opacity-80"></p>
+                        </div>
+                        <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition">
+                            <button class="bg-white text-primary-dark p-3 rounded-full shadow-lg">
+                                <i class="fas fa-expand"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Contrôles carrousel -->
+                <button class="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white p-3 rounded-full shadow-md z-10">
+                    <i class="fas fa-chevron-left text-primary-dark"></i>
+                </button>
+                <button class="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white p-3 rounded-full shadow-md z-10">
+                    <i class="fas fa-chevron-right text-primary-dark"></i>
+                </button>
+            </div>
+            
+            <!-- Bouton voir plus -->
+            <div class="text-center mt-12 animate-on-scroll" data-animation="fade-in">
+                <button class="border-2 border-primary-light text-primary-light hover:bg-primary-light hover:text-white font-bold px-8 py-3 rounded-full transition transform hover:scale-105">
+                    Voir plus de réalisations
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section Témoignages -->
+    <section id="testimonials" class="py-20 bg-primary-light bg-opacity-10">
+        <div class="container mx-auto px-4">
+            <!-- Titre et description -->
+            <div class="text-center mb-12 animate-on-scroll" data-animation="fade-in">
+                <h2 class="text-3xl md:text-4xl font-serif font-bold text-primary-dark mb-4">Ils témoignent</h2>
+                <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+                    Ce que nos étudiants et partenaires disent de nous.
+                </p>
+            </div>
+            
+            <!-- Slider témoignages -->
+            <div class="relative animate-on-scroll" data-animation="slide-up">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- Témoignage 1 -->
+                    <div class="testimonial-card bg-white p-8 rounded-xl shadow-md">
+                        <div class="flex items-center mb-6">
+                            <img src="https://via.placeholder.com/80" alt="Jean D." class="w-16 h-16 rounded-full object-cover mr-4">
+                            <div>
+                                <h4 class="font-bold text-gray-800">Jean D.</h4>
+                                <p class="text-sm text-gray-600">Développement Web - Promotion 2022</p>
+                            </div>
+                        </div>
+                        <div class="mb-4">
+                            <div class="flex text-yellow-400 mb-2">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                            <p class="text-gray-700 italic">
+                                "La formation CPAH m'a permis d'acquérir des compétences concrètes en développement web. J'ai trouvé un emploi dès la fin de ma formation et je travaille maintenant comme développeur front-end pour une entreprise locale."
+                            </p>
+                        </div>
+                        <div class="flex justify-end">
+                            <button class="text-primary-light hover:text-primary-dark">
+                                <i class="fas fa-play-circle text-2xl"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Témoignage 2 -->
+                    <div class="testimonial-card bg-white p-8 rounded-xl shadow-md">
+                        <div class="flex items-center mb-6">
+                            <img src="https://via.placeholder.com/80" alt="Marie L." class="w-16 h-16 rounded-full object-cover mr-4">
+                            <div>
+                                <h4 class="font-bold text-gray-800">Marie L.</h4>
+                                <p class="text-sm text-gray-600">Gestion d'Entreprise - Promotion 2021</p>
+                            </div>
+                        </div>
+                        <div class="mb-4">
+                            <div class="flex text-yellow-400 mb-2">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star-half-alt"></i>
+                            </div>
+                            <p class="text-gray-700 italic">
+                                "Grâce à CPAH, j'ai pu structurer mon petit commerce et augmenter mes revenus de 40% en 6 mois. Les formateurs sont accessibles et les conseils très pratiques."
+                            </p>
+                        </div>
+                        <div class="flex justify-end">
+                            <button class="text-primary-light hover:text-primary-dark">
+                                <i class="fas fa-play-circle text-2xl"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Contrôles slider -->
+                <div class="flex justify-center mt-8 space-x-2">
+                    <button class="w-3 h-3 rounded-full bg-primary-dark"></button>
+                    <button class="w-3 h-3 rounded-full bg-gray-300"></button>
+                    <button class="w-3 h-3 rounded-full bg-gray-300"></button>
+                </div>
+            </div>
+            
+            <!-- Témoignage employeur -->
+            <div class="max-w-4xl mx-auto mt-16 bg-white p-8 rounded-xl shadow-md animate-on-scroll" data-animation="scale-in">
+                <div class="flex flex-col md:flex-row items-center">
+                    <img src="https://via.placeholder.com/120" alt="Entreprise partenaire" class="w-24 h-24 rounded-full object-cover mb-4 md:mb-0 md:mr-6">
+                    <div>
+                        <h4 class="font-bold text-gray-800 mb-2">Techno Solutions Haïti</h4>
+                        <p class="text-sm text-gray-600 mb-4">Entreprise partenaire depuis 2019</p>
+                        <p class="text-gray-700">
+                            "Nous recrutons régulièrement des diplômés de CPAH pour leurs compétences techniques et leur professionnalisme. Leur formation pratique correspond exactement à nos besoins en matière de développement web et mobile."
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section Call to Action -->
+    <section id="cta" class="py-16 bg-primary-dark text-white">
+        <div class="container mx-auto px-4 text-center animate-on-scroll" data-animation="fade-in">
+            <h2 class="text-3xl md:text-4xl font-serif font-bold mb-6">
+                Rejoignez CPAH dès aujourd'hui et construisez votre avenir professionnel
+            </h2>
+            
+            <!-- Compteur dégressif -->
+            <div class="flex justify-center items-center mb-8">
+                <div class="mx-2">
+                    <div class="text-4xl font-bold countdown" id="days">14</div>
+                    <div class="text-sm">jours</div>
+                </div>
+                <div class="text-2xl mx-1">:</div>
+                <div class="mx-2">
+                    <div class="text-4xl font-bold countdown" id="hours">06</div>
+                    <div class="text-sm">heures</div>
+                </div>
+                <div class="text-2xl mx-1">:</div>
+                <div class="mx-2">
+                    <div class="text-4xl font-bold countdown" id="minutes">23</div>
+                    <div class="text-sm">minutes</div>
+                </div>
+            </div>
+            
+            <p class="text-xl mb-8 max-w-3xl mx-auto">
+                Prochaine session dans : 
+            </p>
+            
+            <a href="#inscription" class="inline-block bg-secondary-light hover:bg-secondary-dark text-white font-bold px-8 py-3 rounded-full transition transform hover:scale-105 shadow-lg mb-4">
+                S'inscrire maintenant
+            </a>
+            
+            <p class="text-sm opacity-80">
+                Offre spéciale pour inscriptions rapides - 10% de réduction
+            </p>
+        </div>
+    </section>
+
+    <!-- Section Contact & Réservation -->
+    <section id="contact" class="py-20 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col lg:flex-row gap-12">
+                <!-- Colonne gauche - Formulaire -->
+                <div class="w-full lg:w-1/2 animate-on-scroll" data-animation="slide-up">
+                    <h2 class="text-3xl md:text-4xl font-serif font-bold text-primary-dark mb-6">Contact & Réservation</h2>
+                    <p class="text-gray-600 mb-8">
+                        Vous avez des questions ou souhaitez vous inscrire à une formation ? Remplissez ce formulaire et nous vous répondrons dans les plus brefs délais.
+                    </p>
+                    
+                    <form id="contact-form" class="space-y-4">
+                        <div>
+                            <label for="name" class="block text-gray-700 mb-2">Nom complet</label>
+                            <input type="text" id="name" name="name" required class="w-full px-4 py-2 border border-gray-300 rounded-lg form-input focus:outline-none focus:ring-2 focus:ring-primary-light">
+                        </div>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label for="email" class="block text-gray-700 mb-2">Email</label>
+                                <input type="email" id="email" name="email" required class="w-full px-4 py-2 border border-gray-300 rounded-lg form-input focus:outline-none focus:ring-2 focus:ring-primary-light">
+                            </div>
+                            <div>
+                                <label for="phone" class="block text-gray-700 mb-2">Téléphone</label>
+                                <input type="tel" id="phone" name="phone" class="w-full px-4 py-2 border border-gray-300 rounded-lg form-input focus:outline-none focus:ring-2 focus:ring-primary-light">
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label for="formation" class="block text-gray-700 mb-2">Formation intéressée</label>
+                            <select id="formation" name="formation" class="w-full px-4 py-2 border border-gray-300 rounded-lg form-input focus:outline-none focus:ring-2 focus:ring-primary-light">
+                                <option value="">Sélectionnez une formation</option>
+                                <option value="developpement-web">Développement Web Fullstack</option>
+                                <option value="techniques-construction">Techniques de Construction</option>
+                                <option value="gestion-entreprise">Gestion d'Entreprise</option>
+                                <option value="electricite-industrielle">Électricité Industrielle</option>
+                                <option value="cuisine-professionnelle">Cuisine Professionnelle</option>
+                                <option value="soudure-industrielle">Soudure Industrielle</option>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label for="message" class="block text-gray-700 mb-2">Message</label>
+                            <textarea id="message" name="message" rows="4" class="w-full px-4 py-2 border border-gray-300 rounded-lg form-input focus:outline-none focus:ring-2 focus:ring-primary-light"></textarea>
+                        </div>
+                        
+                        <button type="submit" class="bg-primary-light hover:bg-primary-dark text-white font-bold px-8 py-3 rounded-full transition transform hover:scale-105 shadow-lg w-full">
+                            Envoyer
+                        </button>
+                    </form>
+                    
+                    <!-- Chat WhatsApp -->
+                    <div class="mt-8 flex items-center justify-center bg-green-100 p-4 rounded-lg">
+                        <div class="mr-4 text-green-700">
+                            <i class="fab fa-whatsapp text-2xl"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-gray-800">Chat WhatsApp</h4>
+                            <p class="text-sm text-gray-600">Contactez-nous directement via WhatsApp</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Colonne droite - Carte et coordonnées -->
+                <div class="w-full lg:w-1/2 animate-on-scroll" data-animation="slide-up" data-delay="200">
+                    <!-- Google Maps -->
+                    <div class="rounded-xl overflow-hidden shadow-lg mb-8 h-64">
+                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3783.238715989832!2d-72.3448499243456!3d18.53988298257505!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTjCsDMyJzIzLjYiTiA3MsKwMjAnMzkuNyJX!5e0!3m2!1sen!2sus!4v1620000000000!5m2!1sen!2sus" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+                    </div>
+                    
+                    <!-- Coordonnées -->
+                    <div class="space-y-4">
+                        <div class="flex items-start">
+                            <div class="bg-primary-light bg-opacity-20 p-3 rounded-full mr-4">
+                                <i class="fas fa-map-marker-alt text-primary-dark"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-gray-800">Adresse</h4>
+                                <p class="text-gray-600">123 Avenue N, Port-au-Prince, Haïti</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start">
+                            <div class="bg-primary-light bg-opacity-20 p-3 rounded-full mr-4">
+                                <i class="fas fa-phone-alt text-primary-dark"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-gray-800">Téléphone</h4>
+                                <p class="text-gray-600">509  4096-6404 </p>
+                                <p class="text-gray-600">+509  4463-1029</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start">
+                            <div class="bg-primary-light bg-opacity-20 p-3 rounded-full mr-4">
+                                <i class="fas fa-envelope text-primary-dark"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-gray-800">Email</h4>
+                                <p class="text-gray-600">cpahecoleprofessionnelle@gmail.com </p>
+                                <p class="text-gray-600">antoinemichael263@gmail.com</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start">
+                            <div class="bg-primary-light bg-opacity-20 p-3 rounded-full mr-4">
+                                <i class="fas fa-clock text-primary-dark"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-gray-800">Horaires</h4>
+                                <p class="text-gray-600">Lundi - Vendredi : 8h00 - 17h00</p>
+                                <p class="text-gray-600">Samedi : 8h00 - 13h00</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Réseaux sociaux -->
+                    <div class="mt-8">
+                        <h4 class="font-bold text-gray-800 mb-4">Suivez-nous</h4>
+                        <div class="flex space-x-4">
+                            <a href="#" aria-label="Facebook" class="bg-gray-100 hover:bg-primary-light hover:text-white p-3 rounded-full transition text-gray-700">
+                                <i class="fab fa-facebook-f"></i>
+                            </a>
+                            <a href="#" aria-label="Instagram" class="bg-gray-100 hover:bg-primary-light hover:text-white p-3 rounded-full transition text-gray-700">
+                                <i class="fab fa-instagram"></i>
+                            </a>
+                            <a href="#" aria-label="Twitter" class="bg-gray-100 hover:bg-primary-light hover:text-white p-3 rounded-full transition text-gray-700">
+                                <i class="fab fa-twitter"></i>
+                            </a>
+                            <a href="#" aria-label="YouTube" class="bg-gray-100 hover:bg-primary-light hover:text-white p-3 rounded-full transition text-gray-700">
+                                <i class="fab fa-youtube"></i>
+                            </a>
+                            <a href="#" aria-label="LinkedIn" class="bg-gray-100 hover:bg-primary-light hover:text-white p-3 rounded-full transition text-gray-700">
+                                <i class="fab fa-linkedin-in"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section Paiement en ligne (Modal) -->
+    <div id="payment-modal" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center hidden">
+        <div class="bg-white rounded-xl max-w-md w-full mx-4 p-8 animate-on-scroll" data-animation="scale-in">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-2xl font-bold text-primary-dark">Payer votre formation</h3>
+                <button id="close-payment-modal" class="text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="space-y-6">
+                <div>
+                    <label class="block text-gray-700 mb-2">Montant à payer</label>
+                    <div class="bg-gray-100 p-4 rounded-lg font-bold text-primary-dark text-xl">
+                        3,500 HTG
+                    </div>
+                </div>
+                
+                <div>
+                    <label class="block text-gray-700 mb-2">Formation</label>
+                    <div class="bg-gray-100 p-4 rounded-lg">
+                        Développement Web Fullstack
+                    </div>
+                </div>
+                
+                <div>
+                    <label class="block text-gray-700 mb-2">Moyen de paiement</label>
+                    <div class="grid grid-cols-3 gap-3">
+                        <button class="border border-gray-300 p-3 rounded-lg hover:border-primary-light transition flex flex-col items-center">
+                            <i class="fas fa-credit-card text-primary-dark text-xl mb-2"></i>
+                            <span class="text-sm">Carte</span>
+                        </button>
+                        <button class="border border-gray-300 p-3 rounded-lg hover:border-primary-light transition flex flex-col items-center">
+                            <i class="fas fa-mobile-alt text-primary-dark text-xl mb-2"></i>
+                            <span class="text-sm">Mobile Money</span>
+                        </button>
+                        <button class="border border-gray-300 p-3 rounded-lg hover:border-primary-light transition flex flex-col items-center">
+                            <i class="fas fa-university text-primary-dark text-xl mb-2"></i>
+                            <span class="text-sm">Virement</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="pt-4 border-t border-gray-200">
+                    <div class="flex items-center mb-4">
+                        <i class="fas fa-lock text-primary-dark mr-2"></i>
+                        <span class="text-sm text-gray-600">Paiement sécurisé SSL 256-bit</span>
+                    </div>
+                    <button class="bg-primary-light hover:bg-primary-dark text-white font-bold px-8 py-3 rounded-full transition transform hover:scale-105 shadow-lg w-full">
+                        Payer maintenant
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-primary-dark text-white pt-12 pb-6">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+                <!-- Colonne 1 - Logo et description -->
+                <div>
+                    <div class="flex items-center mb-4">
+                        <span class="text-2xl font-bold">CPAH</span>
+                    </div>
+                    <p class="text-gray-300 mb-4">
+                        Centre Professionnel d'Apprentissage Haïtien - Formations techniques et professionnelles de qualité depuis 2005.
+                    </p>
+                    <a href="#about" class="text-secondary-light hover:text-secondary-dark transition">
+                        En savoir plus sur nous <i class="fas fa-arrow-right ml-1"></i>
+                    </a>
+                </div>
+                
+                <!-- Colonne 2 - Liens rapides -->
+                <div>
+                    <h4 class="text-lg font-bold mb-4">Liens rapides</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-300 hover:text-white transition">Accueil</a></li>
+                        <li><a href="#formations" class="text-gray-300 hover:text-white transition">Formations</a></li>
+                        <li><a href="#portfolio" class="text-gray-300 hover:text-white transition">Portfolio</a></li>
+                        <li><a href="#testimonials" class="text-gray-300 hover:text-white transition">Témoignages</a></li>
+                        <li><a href="#contact" class="text-gray-300 hover:text-white transition">Contact</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Colonne 3 - Coordonnées -->
+                <div>
+                    <h4 class="text-lg font-bold mb-4">Coordonnées</h4>
+                    <address class="not-italic text-gray-300 space-y-2">
+                        <p><i class="fas fa-map-marker-alt mr-2 text-secondary-light"></i> pétion ville rue Chavannes prolongée girado berthé #4</p>
+                        <p><i class="fas fa-phone-alt mr-2 text-secondary-light"></i> : 4463-1029 / 4096-6404 / </p>
+                        <p><i class="fas fa-envelope mr-2 text-secondary-light"></i>antoinemichael263@gmail.com</p>
+                    </address>
+                    
+                    <div class="mt-4">
+                        <h5 class="font-semibold mb-2">Horaires d'ouverture</h5>
+                        <p class="text-gray-300">Lun-Ven : 8h-17h</p>
+                        <p class="text-gray-300">Sam : 8h-13h</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Bandeau inférieur -->
+            <div class="border-t border-gray-700 pt-6 flex flex-col md:flex-row justify-between items-center">
+                <div class="text-gray-300 text-sm mb-4 md:mb-0">
+                    © 2025 CPAH - Tous droits réservés
+                </div>
+                <div class="flex space-x-6">
+                    <a href="#" aria-label="Facebook" class="text-gray-300 hover:text-white transition"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" aria-label="Instagram" class="text-gray-300 hover:text-white transition"><i class="fab fa-instagram"></i></a>
+                    <a href="#" aria-label="Twitter" class="text-gray-300 hover:text-white transition"><i class="fab fa-twitter"></i></a>
+                    <a href="#" aria-label="YouTube" class="text-gray-300 hover:text-white transition"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts JavaScript -->
+    <script>
+        // Menu mobile
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileMenuClose = document.getElementById('mobile-menu-close');
+        const formationsToggle = document.getElementById('formations-toggle');
+        const formationsMenu = document.getElementById('formations-menu');
+        
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.remove('mobile-menu-hidden');
+            mobileMenu.classList.add('mobile-menu-visible');
+        });
+        
+        mobileMenuClose.addEventListener('click', () => {
+            mobileMenu.classList.remove('mobile-menu-visible');
+            mobileMenu.classList.add('mobile-menu-hidden');
+        });
+        
+        formationsToggle.addEventListener('click', () => {
+            formationsMenu.classList.toggle('hidden');
+        });
+        
+        // Compteurs animés
+        const counters = document.querySelectorAll('.counter');
+        const speed = 200;
+        
+        function animateCounters() {
+            counters.forEach(counter => {
+                const target = +counter.getAttribute('data-target');
+                const count = +counter.innerText;
+                const increment = target / speed;
+                
+                if (count < target) {
+                    counter.innerText = Math.ceil(count + increment);
+                    setTimeout(animateCounters, 1);
+                } else {
+                    counter.innerText = target;
+                }
+            });
+        }
+        
+        // Compteur dégressif
+        function updateCountdown() {
+            const now = new Date();
+            const nextSession = new Date();
+            nextSession.setDate(now.getDate() + 14); // Prochaine session dans 14 jours
+            
+            const diff = nextSession - now;
+            
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            
+            document.getElementById('days').textContent = days.toString().padStart(2, '0');
+            document.getElementById('hours').textContent = hours.toString().padStart(2, '0');
+            document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
+        }
+        
+        // Modal de paiement
+        const paymentModal = document.getElementById('payment-modal');
+        const closePaymentModal = document.getElementById('close-payment-modal');
+        
+        function openPaymentModal() {
+            paymentModal.classList.remove('hidden');
+        }
+        
+        closePaymentModal.addEventListener('click', () => {
+            paymentModal.classList.add('hidden');
+        });
+        
+        // Animation on scroll
+        function animateOnScroll() {
+            const elements = document.querySelectorAll('.animate-on-scroll');
+            
+            elements.forEach(element => {
+                const elementPosition = element.getBoundingClientRect().top;
+                const screenPosition = window.innerHeight / 1.2;
+                
+                if (elementPosition < screenPosition) {
+                    const animation = element.getAttribute('data-animation') || 'fade-in';
+                    const delay = element.getAttribute('data-delay') || 0;
+                    
+                    element.style.animation = `${animation} ${delay}ms forwards`;
+                    element.classList.add('animated');
+                }
+            });
+        }
+        
+        // Initialisation
+        document.addEventListener('DOMContentLoaded', () => {
+            // Démarrer les compteurs quand la section hero est visible
+            const observer = new IntersectionObserver((entries) => {
+                if (entries[0].isIntersecting) {
+                    animateCounters();
+                    observer.unobserve(entries[0].target);
+                }
+            }, { threshold: 0.5 });
+            
+            observer.observe(document.getElementById('hero'));
+            
+            // Mettre à jour le compteur dégressif
+            updateCountdown();
+            setInterval(updateCountdown, 60000); // Mise à jour chaque minute
+            
+            // Animation on scroll
+            window.addEventListener('scroll', animateOnScroll);
+            animateOnScroll(); // Pour les éléments déjà visibles au chargement
+            
+            // Anime.js animations
+            // Animation du logo au chargement
+            anime({
+                targets: '.logo',
+                scale: [0.8, 1],
+                opacity: [0, 1],
+                duration: 1000,
+                easing: 'easeOutElastic'
+            });
+            
+            // Animation des cartes formations au survol
+            document.querySelectorAll('.testimonial-card').forEach(card => {
+                card.addEventListener('mouseenter', () => {
+                    anime({
+                        targets: card,
+                        scale: 1.02,
+                        duration: 300,
+                        easing: 'easeOutQuad'
+                    });
+                });
+                
+                card.addEventListener('mouseleave', () => {
+                    anime({
+                        targets: card,
+                        scale: 1,
+                        duration: 300,
+                        easing: 'easeOutQuad'
+                    });
+                });
+            });
+            
+            // Animation des boutons CTA
+            document.querySelectorAll('a[href="#inscription"]').forEach(button => {
+                button.addEventListener('mouseenter', () => {
+                    anime({
+                        targets: button,
+                        scale: 1.05,
+                        duration: 200,
+                        easing: 'easeOutQuad'
+                    });
+                });
+                
+                button.addEventListener('mouseleave', () => {
+                    anime({
+                        targets: button,
+                        scale: 1,
+                        duration: 200,
+                        easing: 'easeOutQuad'
+                    });
+                });
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="ht">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nouvèl Ayiti - Média Enligne Haïtien</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'haiti-blue': '#00209f',
+                        'haiti-red': '#d21034',
+                        'haiti-yellow': '#f1c40f',
+                        'haiti-green': '#27ae60'
+                    },
+                    fontFamily: {
+                        'sans': ['Montserrat', 'sans-serif'],
+                        'serif': ['Merriweather', 'serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .hero-bg {
+            background: linear-gradient(rgba(0, 32, 159, 0.85), rgba(210, 16, 52, 0.8)), url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100" height="50" fill="%2300209f"/><rect y="50" width="100" height="50" fill="%23d21034"/></svg>');
+            background-size: cover;
+            background-position: center;
+        }
+        
+        .news-card:hover {
+            transform: translateY(-5px);
+            transition: transform 0.3s ease;
+        }
+        
+        .animate-fade-in {
+            opacity: 0;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 font-sans">
+    <!-- Header -->
+    <header class="bg-white shadow-md">
+        <div class="container mx-auto px-4 py-3">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center">
+                    <div class="w-12 h-12 bg-haiti-blue rounded-full flex items-center justify-center mr-3">
+                        <span class="text-white font-bold text-xl">NA</span>
+                    </div>
+                    <h1 class="text-2xl font-bold text-haiti-blue">Nouvèl<span class="text-haiti-red">Ayiti</span></h1>
+                </div>
+                
+                <nav class="hidden md:flex space-x-6">
+                    <a href="#" class="text-haiti-blue font-semibold hover:text-haiti-red transition">Aktyalite</a>
+                    <a href="#" class="text-haiti-blue font-semibold hover:text-haiti-red transition">Politik</a>
+                    <a href="#" class="text-haiti-blue font-semibold hover:text-haiti-red transition">Ekonomi</a>
+                    <a href="#" class="text-haiti-blue font-semibold hover:text-haiti-red transition">Kilti</a>
+                    <a href="#" class="text-haiti-blue font-semibold hover:text-haiti-red transition">Espò</a>
+                </nav>
+                
+                <div class="flex items-center space-x-4">
+                    <button class="bg-haiti-blue text-white px-4 py-2 rounded-md hover:bg-blue-800 transition">Konekte</button>
+                    <button class="md:hidden text-haiti-blue">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero-bg text-white py-16 md:py-24">
+        <div class="container mx-auto px-4 text-center animate-fade-in">
+            <h2 class="text-4xl md:text-6xl font-bold mb-4">Nouvèl Ayiti</h2>
+            <p class="text-xl md:text-2xl mb-8 max-w-2xl mx-auto">Platfòm enfòmasyon an kreyòl pou tout Ayisyen nan peyi a ak dyaspora a</p>
+            <div class="flex flex-col md:flex-row justify-center space-y-4 md:space-y-0 md:space-x-4">
+                <button class="bg-haiti-red text-white px-6 py-3 rounded-md font-semibold hover:bg-red-700 transition">Abònman</button>
+                <button class="bg-white text-haiti-blue px-6 py-3 rounded-md font-semibold hover:bg-gray-200 transition">Jwenn Dènye Nouvèl</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Breaking News -->
+    <section class="bg-haiti-red text-white py-2">
+        <div class="container mx-auto px-4">
+            <div class="flex items-center">
+                <span class="bg-white text-haiti-red px-3 py-1 rounded-md font-bold mr-4">BREAKING</span>
+                <marquee behavior="scroll" direction="left">
+                    Nouvo gouvènman an anonse yon seri de refòm ekonomik pou amelyore sitiyasyon an nan peyi a.
+                </marquee>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-8">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Featured Articles -->
+            <div class="lg:col-span-2">
+                <h2 class="text-2xl font-bold text-haiti-blue mb-6 border-b-2 border-haiti-blue pb-2">Atik Enpòtan</h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Article 1 -->
+                    <article class="bg-white rounded-lg shadow-md overflow-hidden news-card">
+                        <div class="h-48 bg-gradient-to-r from-haiti-blue to-haiti-red flex items-center justify-center">
+                            <span class="text-white text-xl font-bold">Imaj Atik</span>
+                        </div>
+                        <div class="p-4">
+                            <span class="text-haiti-red text-sm font-semibold">Politik</span>
+                            <h3 class="text-xl font-bold my-2">Gouvènman an anonse nouvo plan sekirite pou Pòtoprens</h3>
+                            <p class="text-gray-600 mb-4">Premye Minis la prezante yon nouvo plan sekirite pou kapital la apre dènye vag vyolans lan.</p>
+                            <div class="flex justify-between items-center text-sm text-gray-500">
+                                <span><i class="far fa-clock mr-1"></i> 3 è de sa</span>
+                                <span><i class="far fa-eye mr-1"></i> 1.2K</span>
+                            </div>
+                        </div>
+                    </article>
+                    
+                    <!-- Article 2 -->
+                    <article class="bg-white rounded-lg shadow-md overflow-hidden news-card">
+                        <div class="h-48 bg-gradient-to-r from-haiti-green to-haiti-yellow flex items-center justify-center">
+                            <span class="text-white text-xl font-bold">Imaj Atik</span>
+                        </div>
+                        <div class="p-4">
+                            <span class="text-haiti-green text-sm font-semibold">Ekonomi</span>
+                            <h3 class="text-xl font-bold my-2">Nouvo envestisman nan sektè agrikòl la</h3>
+                            <p class="text-gray-600 mb-4">Yon gwoup envestisè entènasyonal anonse yon envestisman $50 milyon dola nan agrikilti ayisyen.</p>
+                            <div class="flex justify-between items-center text-sm text-gray-500">
+                                <span><i class="far fa-clock mr-1"></i> 5 è de sa</span>
+                                <span><i class="far fa-eye mr-1"></i> 894</span>
+                            </div>
+                        </div>
+                    </article>
+                    
+                    <!-- Article 3 -->
+                    <article class="bg-white rounded-lg shadow-md overflow-hidden news-card">
+                        <div class="h-48 bg-gradient-to-r from-haiti-yellow to-haiti-green flex items-center justify-center">
+                            <span class="text-white text-xl font-bold">Imaj Atik</span>
+                        </div>
+                        <div class="p-4">
+                            <span class="text-haiti-yellow text-sm font-semibold">Kilti</span>
+                            <h3 class="text-xl font-bold my-2">Festival Mizik Jakmèl 2023: Programasyon konplè</h3>
+                            <p class="text-gray-600 mb-4">Gade tout atis ki pral patisipe nan edisyon 2025Festival Mizik Jakmèl la.</p>
+                            <div class="flex justify-between items-center text-sm text-gray-500">
+                                <span><i class="far fa-clock mr-1"></i> Yon jou de sa</span>
+                                <span><i class="far fa-eye mr-1"></i> 2.5K</span>
+                            </div>
+                        </div>
+                    </article>
+                    
+                    <!-- Article 4 -->
+                    <article class="bg-white rounded-lg shadow-md overflow-hidden news-card">
+                        <div class="h-48 bg-gradient-to-r from-haiti-red to-haiti-blue flex items-center justify-center">
+                            <span class="text-white text-xl font-bold">Imaj Atik</span>
+                        </div>
+                        <div class="p-4">
+                            <span class="text-haiti-red text-sm font-semibold">Espò</span>
+                            <h3 class="text-xl font-bold my-2">Ekip foutbòl nasyonal la prepare pou match kvalifikasyon</h3>
+                            <p class="text-gray-600 mb-4">Grenadye yo ap prepare pou match enpòtan kont ekip Kanada a nan kvalifikasyon Mondyal la.</p>
+                            <div class="flex justify-between items-center text-sm text-gray-500">
+                                <span><i class="far fa-clock mr-1"></i> 2 jou de sa</span>
+                                <span><i class="far fa-eye mr-1"></i> 3.1K</span>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+            </div>
+            
+            <!-- Sidebar -->
+            <div class="lg:col-span-1">
+                <!-- Weather Widget -->
+                <div class="bg-white rounded-lg shadow-md p-4 mb-6">
+                    <h3 class="text-xl font-bold text-haiti-blue mb-4">Meteo Ayiti</h3>
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center">
+                            <i class="fas fa-sun text-yellow-500 text-3xl mr-3"></i>
+                            <div>
+                                <p class="text-lg font-semibold">Pòtoprens</p>
+                                <p class="text-gray-600">32°C • Klè</p>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-sm text-gray-600">Jodi a</p>
+                            <p class="text-sm text-gray-600">28°C - 34°C</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Trending News -->
+                <div class="bg-white rounded-lg shadow-md p-4 mb-6">
+                    <h3 class="text-xl font-bold text-haiti-blue mb-4">Trending</h3>
+                    <ul class="space-y-3">
+                        <li class="border-l-4 border-haiti-red pl-3">
+                            <a href="#" class="font-semibold hover:text-haiti-red transition">Nouvo pri lwil esansyèl ap monte</a>
+                            <p class="text-sm text-gray-600">1.5K views</p>
+                        </li>
+                        <li class="border-l-4 border-haiti-blue pl-3">
+                            <a href="#" class="font-semibold hover:text-haiti-blue transition">Konferans sou enèji renouvlab nan peyi a</a>
+                            <p class="text-sm text-gray-600">1.2K views</p>
+                        </li>
+                        <li class="border-l-4 border-haiti-green pl-3">
+                            <a href="#" class="font-semibold hover:text-haiti-green transition">Fèt Endepandans: Programasyon aktivite</a>
+                            <p class="text-sm text-gray-600">980 views</p>
+                        </li>
+                        <li class="border-l-4 border-haiti-yellow pl-3">
+                            <a href="#" class="font-semibold hover:text-haiti-yellow transition">Nouvo liv istwa Ayiti pa istoryen renome</a>
+                            <p class="text-sm text-gray-600">875 views</p>
+                        </li>
+                    </ul>
+                </div>
+                
+                <!-- Newsletter -->
+                <div class="bg-gradient-to-r from-haiti-blue to-haiti-red rounded-lg shadow-md p-4 text-white">
+                    <h3 class="text-xl font-bold mb-2">Abònman Newlèt</h3>
+                    <p class="mb-4">Resevwa dènye nouvèl yo dirèk nan boit ou a.</p>
+                    <form class="space-y-3">
+                        <input type="email" placeholder="Antre imèl ou" class="w-full px-3 py-2 rounded-md text-gray-800">
+                        <button type="submit" class="w-full bg-white text-haiti-blue font-semibold py-2 rounded-md hover:bg-gray-200 transition">Abònman</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-haiti-blue text-white pt-8 pb-4">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <h3 class="text-xl font-bold mb-4">Nouvèl Ayiti</h3>
+                    <p class="text-gray-300">Platfòm enfòmasyon an kreyòl pou tout Ayisyen nan peyi a ak dyaspora a.</p>
+                </div>
+                
+                <div>
+                    <h4 class="font-bold mb-4">Kategori</h4>
+                    <ul class="space-y-2 text-gray-300">
+                        <li><a href="#" class="hover:text-white transition">Politik</a></li>
+                        <li><a href="#" class="hover:text-white transition">Ekonomi</a></li>
+                        <li><a href="#" class="hover:text-white transition">Sante</a></li>
+                        <li><a href="#" class="hover:text-white transition">Edikasyon</a></li>
+                        <li><a href="#" class="hover:text-white transition">Kilti</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="font-bold mb-4">Konekte</h4>
+                    <ul class="space-y-2 text-gray-300">
+                        <li><a href="#" class="hover:text-white transition">Sou Nou</a></li>
+                        <li><a href="#" class="hover:text-white transition">Kontakte Nou</a></li>
+                        <li><a href="#" class="hover:text-white transition">Anonse</a></li>
+                        <li><a href="#" class="hover:text-white transition">Karyè</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="font-bold mb-4">Swiv Nou</h4>
+                    <div class="flex space-x-4">
+                        <a href="#" class="bg-white text-haiti-blue w-10 h-10 rounded-full flex items-center justify-center hover:bg-gray-200 transition">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" class="bg-white text-haiti-blue w-10 h-10 rounded-full flex items-center justify-center hover:bg-gray-200 transition">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="bg-white text-haiti-blue w-10 h-10 rounded-full flex items-center justify-center hover:bg-gray-200 transition">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="#" class="bg-white text-haiti-blue w-10 h-10 rounded-full flex items-center justify-center hover:bg-gray-200 transition">
+                            <i class="fab fa-youtube"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-600 mt-8 pt-4 text-center text-gray-300">
+                <p>&copy; 2025Nouvèl Ayiti. Tout dwa rezève.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Animation avec Anime.js
+        document.addEventListener('DOMContentLoaded', function() {
+            // Animation du titre hero
+            anime({
+                targets: '.animate-fade-in',
+                opacity: [0, 1],
+                translateY: [20, 0],
+                duration: 1000,
+                easing: 'easeOutQuad'
+            });
+            
+            // Animation des cartes d'articles
+            anime({
+                targets: '.news-card',
+                opacity: [0, 1],
+                translateY: [30, 0],
+                delay: anime.stagger(200),
+                duration: 800,
+                easing: 'easeOutQuad'
+            });
+            
+            // Animation des éléments de la sidebar
+            anime({
+                targets: '.bg-white.rounded-lg.shadow-md',
+                opacity: [0, 1],
+                translateX: [-30, 0],
+                delay: anime.stagger(100),
+                duration: 800,
+                easing: 'easeOutQuad'
+            });
+        });
+    </script>
+</body>
+</html>

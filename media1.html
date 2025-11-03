@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+<html lang="fr" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VTN Word News - Actualités Premium</title>
+    <meta name="description" content="L'actualité mondiale en temps réel avec exemple Politique, économie, sport, culture et plus encore.">
+    
+    <!-- Tailwind CSS via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#1a365d',
+                        secondary: '#2c5282',
+                        accent: '#e53e3e',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.5s ease-in-out',
+                        'slide-up': 'slideUp 0.6s ease-out',
+                        'scale-in': 'scaleIn 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' },
+                        },
+                        slideUp: {
+                            '0%': { transform: 'translateY(20px)', opacity: '0' },
+                            '100%': { transform: 'translateY(0)', opacity: '1' },
+                        },
+                        scaleIn: {
+                            '0%': { transform: 'scale(0.95)', opacity: '0' },
+                            '100%': { transform: 'scale(1)', opacity: '1' },
+                        },
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Anime.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    
+    <style>
+       
+        
+       
+        
+        .news-card-clip {
+            clip-path: inset(0 round 10px);
+        }
+        
+        .category-clip {
+            clip-path: circle(75% at 50% 50%);
+            transition: clip-path 0.4s ease;
+        }
+        
+        .category-clip:hover {
+            clip-path: circle(85% at 50% 50%);
+        }
+        
+        /* Accessibility focus styles */
+        button:focus, a:focus, input:focus {
+            outline: 2px solid #3182ce;
+            outline-offset: 2px;
+        }
+        
+        /* Scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+        
+        .dark ::-webkit-scrollbar-track {
+            background: #2d3748;
+        }
+        
+        .dark ::-webkit-scrollbar-thumb {
+            background: #4a5568;
+        }
+        
+        .dark ::-webkit-scrollbar-thumb:hover {
+            background: #718096;
+        }
+        
+        /* Animation classes */
+        .animate-on-scroll {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+        
+        .is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* Special futuristic animation */
+        @keyframes futuristicGlow {
+            0% { box-shadow: 0 0 5px rgba(59, 130, 246, 0.5); }
+            50% { box-shadow: 0 0 20px rgba(59, 130, 246, 0.8); }
+            100% { box-shadow: 0 0 5px rgba(59, 130, 246, 0.5); }
+        }
+        
+        .futuristic-animation {
+            animation: futuristicGlow 3s infinite;
+            position: relative;
+        }
+        
+        .futuristic-animation::after {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            border: 2px solid rgba(59, 130, 246, 0.3);
+            border-radius: inherit;
+            pointer-events: none;
+            animation: futuristicGlow 3s infinite 0.5s;
+        }
+    </style>
+</head>
+<body class="bg-white text-gray-800 dark:bg-gray-900 dark:text-gray-100 font-sans antialiased">
+    <!-- Header Global -->
+    <header class="sticky top-0 z-50 shadow-md bg-white dark:bg-gray-800 transition-colors duration-300">
+        <!-- Bandeau supérieur -->
+        <div class="bg-primary text-white py-2 px-4 flex items-center justify-between text-sm">
+            <div class="flex items-center space-x-4">
+                <a href="#" class="font-bold text-white hover:text-accent transition-colors">
+                   <img src="logojuristev.jpeg" width="25px" height="25px" alt="">
+                </a>
+                
+                <!-- Breaking News Ticker -->
+                <div class="overflow-hidden flex-1 mx-4">
+                    <div class="breaking-news-ticker whitespace-nowrap inline-block animate-marquee">
+                        <span class="font-semibold mr-6">BREAKING:</span>
+                        <span class="mr-6">Élection présidentielle: les résultats préliminaires montrent une avance pour le candidat indépendant</span>
+                        <span class="mr-6">Marchés boursiers: forte hausse après l'annonce des taux d'intérêt</span>
+                        <span class="mr-6">Coupe du monde: la finale aura lieu ce dimanche à 16h</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="flex items-center space-x-4">
+                <!-- Sélecteur de langue -->
+                <div class="hidden md:flex items-center space-x-2">
+                    <button class="w-6 h-4 focus:outline-none" aria-label="Français">
+                        <img src="https://flagcdn.com/w20/fr.png" alt="Français" class="w-full h-full object-cover">
+                    </button>
+                    <button class="w-6 h-4 focus:outline-none" aria-label="English">
+                        <img src="https://flagcdn.com/w20/gb.png" alt="English" class="w-full h-full object-cover">
+                    </button>
+                    <button class="w-6 h-4 focus:outline-none" aria-label="Español">
+                        <img src="https://flagcdn.com/w20/es.png" alt="Español" class="w-full h-full object-cover">
+                    </button>
+                </div>
+                
+                <!-- Réseaux sociaux -->
+                <div class="flex items-center space-x-3">
+                    <a href="#" aria-label="Facebook" class="text-white hover:text-accent transition-colors">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                    <a href="#" aria-label="Twitter" class="text-white hover:text-accent transition-colors">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                    <a href="#" aria-label="Instagram" class="text-white hover:text-accent transition-colors">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                    <a href="#" aria-label="YouTube" class="text-white hover:text-accent transition-colors">
+                        <i class="fab fa-youtube"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Bande principale -->
+        <div class="py-4 px-6 flex items-center justify-between">
+            <!-- Logo -->
+            <a href="#" class="flex items-center">
+                <img src="logojuristev.jpeg" alt=" Logo" class="h-12">
+            </a>
+            
+            <div class="flex items-center space-x-6">
+                <!-- Zone de recherche -->
+                <div class="hidden md:block relative">
+                    <input type="text" placeholder="Rechercher..." class="py-2 px-4 pr-10 rounded-full border border-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all w-64">
+                    <button class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 dark:text-gray-400 hover:text-primary dark:hover:text-accent transition-colors">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+                
+                <!-- Mode clair/sombre -->
+                <button id="theme-toggle" aria-label="Toggle dark mode" class="text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-accent transition-colors">
+                    <i class="fas fa-moon hidden dark:inline-block"></i>
+                    <i class="fas fa-sun inline-block dark:hidden"></i>
+                </button>
+                
+                <!-- Menu hamburger mobile -->
+                <button id="mobile-menu-button" class="md:hidden text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-accent transition-colors focus:outline-none">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Barre de navigation -->
+        <nav class="hidden md:block bg-gray-100 dark:bg-gray-700 border-t border-gray-200 dark:border-gray-600">
+            <div class="container mx-auto px-6">
+                <ul class="flex justify-between py-3">
+                    <li><a href="#" class="font-medium text-primary dark:text-white hover:text-accent dark:hover:text-accent transition-colors px-3 py-2">ACCUEIL</a></li>
+                    <li><a href="#" class="font-medium text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-accent transition-colors px-3 py-2">POLITIQUE</a></li>
+                    <li><a href="#" class="font-medium text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-accent transition-colors px-3 py-2">ÉCONOMIE</a></li>
+                    <li><a href="#" class="font-medium text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-accent transition-colors px-3 py-2">SPORT</a></li>
+                    <li><a href="#" class="font-medium text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-accent transition-colors px-3 py-2">CULTURE</a></li>
+                    <li><a href="#" class="font-medium text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-accent transition-colors px-3 py-2">INTERNATIONAL</a></li>
+                    <li><a href="#" class="font-medium text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-accent transition-colors px-3 py-2">NÉCROLOGIE</a></li>
+                    <li><a href="#" class="font-medium text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-accent transition-colors px-3 py-2">CONTACT</a></li>
+                </ul>
+            </div>
+        </nav>
+        
+        <!-- Menu mobile -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white dark:bg-gray-800 shadow-lg absolute w-full z-50">
+            <div class="container mx-auto px-6 py-4">
+                <div class="relative mb-4">
+                    <input type="text" placeholder="Rechercher..." class="w-full py-2 px-4 pr-10 rounded-full border border-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all">
+                    <button class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 dark:text-gray-400 hover:text-primary dark:hover:text-accent transition-colors">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+                <ul class="space-y-2">
+                    <li><a href="#" class="block font-medium text-primary dark:text-white hover:text-accent dark:hover:text-accent transition-colors px-3 py-2">ACCUEIL</a></li>
+                    <li><a href="#" class="block font-medium text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-accent transition-colors px-3 py-2">POLITIQUE</a></li>
+                    <li><a href="#" class="block font-medium text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-accent transition-colors px-3 py-2">ÉCONOMIE</a></li>
+                    <li><a href="#" class="block font-medium text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-accent transition-colors px-3 py-2">SPORT</a></li>
+                    <li><a href="#" class="block font-medium text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-accent transition-colors px-3 py-2">CULTURE</a></li>
+                    <li><a href="#" class="block font-medium text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-accent transition-colors px-3 py-2">INTERNATIONAL</a></li>
+                    <li><a href="#" class="block font-medium text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-accent transition-colors px-3 py-2">NÉCROLOGIE</a></li>
+                    <li><a href="#" class="block font-medium text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-accent transition-colors px-3 py-2">CONTACT</a></li>
+                </ul>
+                <div class="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700 flex justify-center space-x-4">
+                    <a href="#" aria-label="Facebook" class="text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-accent transition-colors">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                    <a href="#" aria-label="Twitter" class="text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-accent transition-colors">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                    <a href="#" aria-label="Instagram" class="text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-accent transition-colors">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                    <a href="#" aria-label="YouTube" class="text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-accent transition-colors">
+                        <i class="fab fa-youtube"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <!-- Zone Hero "À la une" -->
+        <section class="relative hero-clip bg-gradient-to-r from-primary to-secondary overflow-hidden animate-on-scroll">
+            <div class="container mx-auto px-4 py-16 md:py-24 text-white">
+                <div class="max-w-3xl">
+                    <span class="inline-block bg-accent text-white text-sm font-semibold px-3 py-1 rounded-full mb-4">À LA UNE</span>
+                    <h1 class="text-4xl md:text-5xl lg:text-6xl font-serif font-bold mb-6 leading-tight">Élections nationales: les résultats qui vont changer le paysage politique</h1>
+                    <p class="text-lg md:text-xl mb-8 opacity-90">Analyse approfondie des tendances électorales et des implications pour les années à venir.</p>
+                    <div class="flex flex-wrap gap-4">
+                        <a href="#" class="bg-white text-primary hover:bg-gray-100 font-semibold px-6 py-3 rounded-full transition-all duration-300 transform hover:scale-105 shadow-lg">Lire la suite</a>
+                        <a href="#" class="border-2 border-white text-white hover:bg-white hover:text-primary font-semibold px-6 py-3 rounded-full transition-all duration-300 transform hover:scale-105">Voir les autres articles</a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Image de fond -->
+            <div class="absolute inset-0 -z-10">
+                <img src="https://via.placeholder.com/1920x1080?text=Élections+Nationales" alt="Élections nationales" class="w-full h-full object-cover opacity-30">
+            </div>
+            
+            <!-- Navigation slider -->
+            <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex space-x-2">
+                <button class="w-3 h-3 rounded-full bg-white opacity-50 hover:opacity-100 transition-opacity"></button>
+                <button class="w-3 h-3 rounded-full bg-white opacity-50 hover:opacity-100 transition-opacity"></button>
+                <button class="w-3 h-3 rounded-full bg-white opacity-100 transition-opacity"></button>
+                <button class="w-3 h-3 rounded-full bg-white opacity-50 hover:opacity-100 transition-opacity"></button>
+            </div>
+            
+            <!-- Flèches navigation -->
+            <button class="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-30 hover:bg-opacity-50 text-white p-3 rounded-full transition-all">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+            <button class="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-30 hover:bg-opacity-50 text-white p-3 rounded-full transition-all">
+                <i class="fas fa-chevron-right"></i>
+            </button>
+        </section>
+
+        <!-- Dernières actualités -->
+        <section class="py-16 bg-gray-50 dark:bg-gray-800 animate-on-scroll">
+            <div class="container mx-auto px-4">
+                <div class="flex justify-between items-center mb-12">
+                    <h2 class="text-3xl font-serif font-bold">Dernières actualités</h2>
+                    <a href="#" class="text-primary dark:text-accent hover:underline font-medium flex items-center">
+                        Voir toutes les actualités <i class="fas fa-arrow-right ml-2"></i>
+                    </a>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- Article 1 -->
+                    <article class="bg-white dark:bg-gray-700 rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 news-card-clip futuristic-animation">
+                        <div class="relative overflow-hidden h-48">
+                            <img src="https://via.placeholder.com/600x400?text=Politique" alt="Politique" class="w-full h-full object-cover transition-transform duration-500 hover:scale-105">
+                            <span class="absolute top-4 left-4 bg-primary text-white text-xs font-semibold px-3 py-1 rounded-full">POLITIQUE</span>
+                        </div>
+                        <div class="p-6">
+                            <time datetime="2023-05-15" class="text-sm text-gray-500 dark:text-gray-400">15 mai 2023 • Par Jean Dupont</time>
+                            <h3 class="text-xl font-bold mt-2 mb-3 hover:text-primary dark:hover:text-accent transition-colors">
+                                <a href="#">Réforme des retraites: ce qui va changer pour vous</a>
+                            </h3>
+                            <p class="text-gray-600 dark:text-gray-300 mb-4">Le gouvernement dévoile son plan de réforme avec des mesures qui impacteront tous les travailleurs.</p>
+                            <a href="#" class="inline-flex items-center text-primary dark:text-accent font-medium hover:underline">
+                                Lire la suite <i class="fas fa-arrow-right ml-2 text-sm"></i>
+                            </a>
+                        </div>
+                    </article>
+                    
+                    <!-- Article 2 -->
+                    <article class="bg-white dark:bg-gray-700 rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 news-card-clip futuristic-animation">
+                        <div class="relative overflow-hidden h-48">
+                            <img src="https://via.placeholder.com/600x400?text=Économie" alt="Économie" class="w-full h-full object-cover transition-transform duration-500 hover:scale-105">
+                            <span class="absolute top-4 left-4 bg-green-600 text-white text-xs font-semibold px-3 py-1 rounded-full">ÉCONOMIE</span>
+                        </div>
+                        <div class="p-6">
+                            <time datetime="2023-05-14" class="text-sm text-gray-500 dark:text-gray-400">14 mai 2023 • Par Marie Leroy</time>
+                            <h3 class="text-xl font-bold mt-2 mb-3 hover:text-primary dark:hover:text-accent transition-colors">
+                                <a href="#">Inflation: les prévisions pour le second semestre</a>
+                            </h3>
+                            <p class="text-gray-600 dark:text-gray-300 mb-4">Les experts anticipent une légère baisse des prix mais restent prudents sur la durée de cette tendance.</p>
+                            <a href="#" class="inline-flex items-center text-primary dark:text-accent font-medium hover:underline">
+                                Lire la suite <i class="fas fa-arrow-right ml-2 text-sm"></i>
+                            </a>
+                        </div>
+                    </article>
+                    
+                    <!-- Article 3 -->
+                    <article class="bg-white dark:bg-gray-700 rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 news-card-clip futuristic-animation">
+                        <div class="relative overflow-hidden h-48">
+                            <img src="https://via.placeholder.com/600x400?text=Sport" alt="Sport" class="w-full h-full object-cover transition-transform duration-500 hover:scale-105">
+                            <span class="absolute top-4 left-4 bg-red-600 text-white text-xs font-semibold px-3 py-1 rounded-full">SPORT</span>
+                        </div>
+                        <div class="p-6">
+                            <time datetime="2023-05-13" class="text-sm text-gray-500 dark:text-gray-400">13 mai 2023 • Par Thomas Martin</time>
+                            <h3 class="text-xl font-bold mt-2 mb-3 hover:text-primary dark:hover:text-accent transition-colors">
+                                <a href="#">Coupe d'Europe: le parcours historique de l'équipe nationale</a>
+                            </h3>
+                            <p class="text-gray-600 dark:text-gray-300 mb-4">Retour sur les moments clés qui ont mené notre sélection en demi-finale pour la première fois depuis 20 ans.</p>
+                            <a href="#" class="inline-flex items-center text-primary dark:text-accent font-medium hover:underline">
+                                Lire la suite <i class="fas fa-arrow-right ml-2 text-sm"></i>
+                            </a>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <!-- Bloc Politique -->
+        <section class="py-16 animate-on-scroll">
+            <div class="container mx-auto px-4">
+                <div class="flex justify-between items-center mb-12">
+                    <h2 class="text-3xl font-serif font-bold">Politique</h2>
+                    <a href="#" class="text-primary dark:text-accent hover:underline font-medium flex items-center">
+                        Voir plus <i class="fas fa-arrow-right ml-2"></i>
+                    </a>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <!-- Article 1 -->
+                    <article class="group">
+                        <div class="relative overflow-hidden rounded-lg mb-4 h-48 category-clip">
+                            <img src="https://via.placeholder.com/400x300?text=Politique+1" alt="Politique" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        </div>
+                        <time datetime="2023-05-12" class="text-sm text-gray-500 dark:text-gray-400">12 mai 2023</time>
+                        <h3 class="text-lg font-bold mt-1 mb-2 hover:text-primary dark:hover:text-accent transition-colors">
+                            <a href="#">Débat parlementaire houleux sur la nouvelle loi</a>
+                        </h3>
+                        <p class="text-gray-600 dark:text-gray-300 text-sm">Les députés se sont vivement opposés lors de la discussion du projet de loi sur la sécurité.</p>
+                    </article>
+                    
+                    <!-- Article 2 -->
+                    <article class="group">
+                        <div class="relative overflow-hidden rounded-lg mb-4 h-48 category-clip">
+                            <img src="https://via.placeholder.com/400x300?text=Politique+2" alt="Politique" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        </div>
+                        <time datetime="2023-05-11" class="text-sm text-gray-500 dark:text-gray-400">11 mai 2023</time>
+                        <h3 class="text-lg font-bold mt-1 mb-2 hover:text-primary dark:hover:text-accent transition-colors">
+                            <a href="#">Le président annonce un remaniement ministériel</a>
+                        </h3>
+                        <p class="text-gray-600 dark:text-gray-300 text-sm">Plusieurs portefeuilles clés changent de mains dans cette nouvelle configuration gouvernementale.</p>
+                    </article>
+                    
+                    <!-- Article 3 -->
+                    <article class="group">
+                        <div class="relative overflow-hidden rounded-lg mb-4 h-48 category-clip">
+                            <img src="https://via.placeholder.com/400x300?text=Politique+3" alt="Politique" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        </div>
+                        <time datetime="2023-05-10" class="text-sm text-gray-500 dark:text-gray-400">10 mai 2023</time>
+                        <h3 class="text-lg font-bold mt-1 mb-2 hover:text-primary dark:hover:text-accent transition-colors">
+                            <a href="#">Sondage: la cote de popularité du gouvernement en baisse</a>
+                        </h3>
+                        <p class="text-gray-600 dark:text-gray-300 text-sm">Selon notre dernier baromètre, seulement 32% des Français approuvent l'action du gouvernement.</p>
+                    </article>
+                    
+                    <!-- Article 4 -->
+                    <article class="group">
+                        <div class="relative overflow-hidden rounded-lg mb-4 h-48 category-clip">
+                            <img src="https://via.placeholder.com/400x300?text=Politique+4" alt="Politique" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        </div>
+                        <time datetime="2023-05-09" class="text-sm text-gray-500 dark:text-gray-400">09 mai 2023</time>
+                        <h3 class="text-lg font-bold mt-1 mb-2 hover:text-primary dark:hover:text-accent transition-colors">
+                            <a href="#">Les régionales préparent déjà les élections de 2024</a>
+                        </h3>
+                        <p class="text-gray-600 dark:text-gray-300 text-sm">Les partis politiques commencent à dévoiler leurs stratégies et leurs têtes de liste.</p>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <!-- Zone publicitaire -->
+        <section class="py-8 bg-gray-100 dark:bg-gray-700 animate-on-scroll">
+            <div class="container mx-auto px-4">
+                <div class="flex justify-center items-center p-4 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg">
+                    <p class="text-gray-500 dark:text-gray-400">Espace publicitaire 728x90</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Bloc Économie -->
+        <section class="py-16 bg-white dark:bg-gray-800 animate-on-scroll">
+            <div class="container mx-auto px-4">
+                <div class="flex justify-between items-center mb-12">
+                    <h2 class="text-3xl font-serif font-bold">Économie</h2>
+                    <a href="#" class="text-primary dark:text-accent hover:underline font-medium flex items-center">
+                        Voir plus <i class="fas fa-arrow-right ml-2"></i>
+                    </a>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <!-- Article 1 -->
+                    <article class="group">
+                        <div class="relative overflow-hidden rounded-lg mb-4 h-48 category-clip">
+                            <img src="https://via.placeholder.com/400x300?text=Économie+1" alt="Économie" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        </div>
+                        <time datetime="2023-05-12" class="text-sm text-gray-500 dark:text-gray-400">12 mai 2023</time>
+                        <h3 class="text-lg font-bold mt-1 mb-2 hover:text-primary dark:hover:text-accent transition-colors">
+                            <a href="#">La Banque Centrale relève ses taux directeurs</a>
+                        </h3>
+                        <p class="text-gray-600 dark:text-gray-300 text-sm">Une augmentation de 0,5 point décidée pour lutter contre l'inflation persistante.</p>
+                    </article>
+                    
+                    <!-- Article 2 -->
+                    <article class="group">
+                        <div class="relative overflow-hidden rounded-lg mb-4 h-48 category-clip">
+                            <img src="https://via.placeholder.com/400x300?text=Économie+2" alt="Économie" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        </div>
+                        <time datetime="2023-05-11" class="text-sm text-gray-500 dark:text-gray-400">11 mai 2023</time>
+                        <h3 class="text-lg font-bold mt-1 mb-2 hover:text-primary dark:hover:text-accent transition-colors">
+                            <a href="#">Chiffre du chômage: une baisse inattendue</a>
+                        </h3>
+                        <p class="text-gray-600 dark:text-gray-300 text-sm">Le taux de chômage a reculé de 0,3 point ce trimestre, une bonne surprise pour les analystes.</p>
+                    </article>
+                    
+                    <!-- Article 3 -->
+                    <article class="group">
+                        <div class="relative overflow-hidden rounded-lg mb-4 h-48 category-clip">
+                            <img src="https://via.placeholder.com/400x300?text=Économie+3" alt="Économie" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        </div>
+                        <time datetime="2023-05-10" class="text-sm text-gray-500 dark:text-gray-400">10 mai 2023</time>
+                        <h3 class="text-lg font-bold mt-1 mb-2 hover:text-primary dark:hover:text-accent transition-colors">
+                            <a href="#">Fusion historique dans le secteur de l'énergie</a>
+                        </h3>
+                        <p class="text-gray-600 dark:text-gray-300 text-sm">Deux géants annoncent leur rapprochement, créant un leader européen des énergies renouvelables.</p>
+                    </article>
+                    
+                    <!-- Article 4 -->
+                    <article class="group">
+                        <div class="relative overflow-hidden rounded-lg mb-4 h-48 category-clip">
+                            <img src="https://via.placeholder.com/400x300?text=Économie+4" alt="Économie" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        </div>
+                        <time datetime="2023-05-09" class="text-sm text-gray-500 dark:text-gray-400">09 mai 2023</time>
+                        <h3 class="text-lg font-bold mt-1 mb-2 hover:text-primary dark:hover:text-accent transition-colors">
+                            <a href="#">Tech: les nouvelles licornes françaises</a>
+                        </h3>
+                        <p class="text-gray-600 dark:text-gray-300 text-sm">Trois startups tricolores ont atteint le milliard de valorisation ce mois-ci.</p>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <!-- Module "En direct" -->
+        <section class="py-16 bg-gray-50 dark:bg-gray-700 animate-on-scroll">
+            <div class="container mx-auto px-4">
+                <div class="flex justify-between items-center mb-8">
+                    <h2 class="text-3xl font-serif font-bold flex items-center">
+                        <span class="w-3 h-3 bg-red-600 rounded-full mr-3 animate-pulse"></span>
+                        En direct
+                    </h2>
+                    <a href="#" class="text-primary dark:text-accent hover:underline font-medium flex items-center">
+                        Voir le direct complet <i class="fas fa-arrow-right ml-2"></i>
+                    </a>
+                </div>
+                
+                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden futuristic-animation">
+                    <div class="divide-y divide-gray-200 dark:divide-gray-700 max-h-96 overflow-y-auto">
+                        <!-- Live item 1 -->
+                        <div class="p-4 hover:bg-gray-50 dark:hover:bg-gray-750 transition-colors">
+                            <div class="flex">
+                                <time class="text-sm font-medium text-gray-500 dark:text-gray-400 w-16 flex-shrink-0">14:32</time>
+                                <div class="ml-4">
+                                    <h3 class="font-medium">Élections départementales: premiers résultats partiels</h3>
+                                    <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Les bureaux de vote ferment progressivement, les premières tendances apparaissent.</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Live item 2 -->
+                        <div class="p-4 hover:bg-gray-50 dark:hover:bg-gray-750 transition-colors">
+                            <div class="flex">
+                                <time class="text-sm font-medium text-gray-500 dark:text-gray-400 w-16 flex-shrink-0">14:15</time>
+                                <div class="ml-4">
+                                    <h3 class="font-medium">Tennis: Nadal éliminé dès le premier tour à Rome</h3>
+                                    <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Le champion espagnol s'incline en 3 sets contre le Canadien Shapovalov.</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Live item 3 -->
+                        <div class="p-4 hover:bg-gray-50 dark:hover:bg-gray-750 transition-colors">
+                            <div class="flex">
+                                <time class="text-sm font-medium text-gray-500 dark:text-gray-400 w-16 flex-shrink-0">13:58</time>
+                                <div class="ml-4">
+                                    <h3 class="font-medium">Bourse de Paris: le CAC40 en hausse de 1,2%</h3>
+                                    <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Les valeurs bancaires et technologiques tirent l'indice vers le haut.</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Live item 4 -->
+                        <div class="p-4 hover:bg-gray-50 dark:hover:bg-gray-750 transition-colors">
+                            <div class="flex">
+                                <time class="text-sm font-medium text-gray-500 dark:text-gray-400 w-16 flex-shrink-0">13:42</time>
+                                <div class="ml-4">
+                                    <h3 class="font-medium">Grèves: perturbations attendues dans les transports demain</h3>
+                                    <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Un syndicat majoritaire appelle à une journée de grève contre la réforme des retraites.</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Live item 5 -->
+                        <div class="p-4 hover:bg-gray-50 dark:hover:bg-gray-750 transition-colors">
+                            <div class="flex">
+                                <time class="text-sm font-medium text-gray-500 dark:text-gray-400 w-16 flex-shrink-0">13:25</time>
+                                <div class="ml-4">
+                                    <h3 class="font-medium">Festival de Cannes: les premières réactions à la projection de "Anatomie d'une chute"</h3>
+                                    <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Le film de Justine Triet reçoit un accueil très favorable de la part de la critique.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Bloc Vidéo / Reportage -->
+        <section class="py-16 animate-on-scroll">
+            <div class="container mx-auto px-4">
+                <div class="flex justify-between items-center mb-12">
+                    <h2 class="text-3xl font-serif font-bold">Vidéos & Reportages</h2>
+                    <a href="#" class="text-primary dark:text-accent hover:underline font-medium flex items-center">
+                        Voir plus <i class="fas fa-arrow-right ml-2"></i>
+                    </a>
+                </div>
+                
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    <!-- Video principale -->
+                    <div class="lg:col-span-2">
+                        <div class="relative pt-[56.25%] bg-black rounded-xl overflow-hidden shadow-lg futuristic-animation">
+                            <iframe class="absolute top-0 left-0 w-full h-full" src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                        </div>
+                        <h3 class="text-xl font-bold mt-4 mb-2 hover:text-primary dark:hover:text-accent transition-colors">
+                            <a href="#">Reportage exclusif: dans les coulisses du sommet européen</a>
+                        </h3>
+                        <p class="text-gray-600 dark:text-gray-300">Notre équipe a pu suivre les négociations entre les dirigeants européens sur le nouveau pacte migratoire.</p>
+                    </div>
+                    
+                    <!-- Miniatures vidéos -->
+                    <div class="space-y-6">
+                        <!-- Miniature 1 -->
+                        <a href="#" class="group flex items-start space-x-4">
+                            <div class="relative w-1/3 flex-shrink-0 rounded-lg overflow-hidden">
+                                <img src="https://via.placeholder.com/300x200?text=Video+1" alt="Video 1" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                                <div class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-30 group-hover:bg-opacity-50 transition-colors">
+                                    <div class="w-10 h-10 bg-white bg-opacity-80 rounded-full flex items-center justify-center">
+                                        <i class="fas fa-play text-primary"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="flex-1">
+                                <h4 class="font-bold group-hover:text-primary dark:group-hover:text-accent transition-colors">Interview exclusive du ministre de l'Économie</h4>
+                                <time class="text-sm text-gray-500 dark:text-gray-400 mt-1 block">12 mai 2023</time>
+                            </div>
+                        </a>
+                        
+                        <!-- Miniature 2 -->
+                        <a href="#" class="group flex items-start space-x-4">
+                            <div class="relative w-1/3 flex-shrink-0 rounded-lg overflow-hidden">
+                                <img src="https://via.placeholder.com/300x200?text=Video+2" alt="Video 2" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                                <div class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-30 group-hover:bg-opacity-50 transition-colors">
+                                    <div class="w-10 h-10 bg-white bg-opacity-80 rounded-full flex items-center justify-center">
+                                        <i class="fas fa-play text-primary"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="flex-1">
+                                <h4 class="font-bold group-hover:text-primary dark:group-hover:text-accent transition-colors">Enquête: le business florissant des influenceurs</h4>
+                                <time class="text-sm text-gray-500 dark:text-gray-400 mt-1 block">11 mai 2023</time>
+                            </div>
+                        </a>
+                        
+                        <!-- Miniature 3 -->
+                        <a href="#" class="group flex items-start space-x-4">
+                            <div class="relative w-1/3 flex-shrink-0 rounded-lg overflow-hidden">
+                                <img src="https://via.placeholder.com/300x200?text=Video+3" alt="Video 3" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                                <div class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-30 group-hover:bg-opacity-50 transition-colors">
+                                    <div class="w-10 h-10 bg-white bg-opacity-80 rounded-full flex items-center justify-center">
+                                        <i class="fas fa-play text-primary"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="flex-1">
+                                <h4 class="font-bold group-hover:text-primary dark:group-hover:text-accent transition-colors">Découverte: le village français qui mise tout sur l'écologie</h4>
+                                <time class="text-sm text-gray-500 dark:text-gray-400 mt-1 block">10 mai 2023</time>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Newsletter & Interaction -->
+        <section class="py-16 bg-primary text-white animate-on-scroll">
+            <div class="container mx-auto px-4">
+                <div class="max-w-4xl mx-auto text-center">
+                    <h2 class="text-3xl md:text-4xl font-serif font-bold mb-6">Restez informé</h2>
+                    <p class="text-lg opacity-90 mb-8">Abonnez-vous à notre newsletter pour recevoir les dernières actualités directement dans votre boîte mail.</p>
+                    
+                    <form class="flex flex-col sm:flex-row gap-4 max-w-lg mx-auto">
+                        <input type="email" placeholder="Votre adresse email" required class="flex-1 px-4 py-3 rounded-full text-gray-900 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-primary">
+                        <button type="submit" class="bg-white text-primary hover:bg-gray-100 font-semibold px-6 py-3 rounded-full transition-all duration-300 transform hover:scale-105 shadow-lg">S'abonner</button>
+                    </form>
+                    
+                    <p class="text-sm opacity-75 mt-4">Nous respectons votre vie privée. Vous pouvez vous désabonner à tout moment.</p>
+                    
+                    <div class="mt-8">
+                        <button class="bg-accent hover:bg-red-700 text-white font-semibold px-6 py-3 rounded-full transition-all duration-300 transform hover:scale-105 shadow-lg flex items-center mx-auto">
+                            <i class="fas fa-bell mr-2"></i> Activer les notifications push
+                        </button>
+                        <p class="text-xs mt-2 opacity-75">Recevez les alertes breaking news directement sur votre appareil.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-gray-300 pt-16 pb-8 animate-on-scroll">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
+                <!-- Colonne 1 -->
+                <div>
+                    <a href="#" class="mb-4 inline-block">
+                        <img src="https://via.placeholder.com/150x60?text=VTN+News" alt=" Logo" class="h-10">
+                    </a>
+                    <p class="mb-4">VTN Word News vous apporte une information fiable, vérifiée et en temps réel sur l'actualité mondiale.</p>
+                    <div class="flex space-x-4">
+                        <a href="#" aria-label="Facebook" class="text-gray-400 hover:text-white transition-colors">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" aria-label="Twitter" class="text-gray-400 hover:text-white transition-colors">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" aria-label="Instagram" class="text-gray-400 hover:text-white transition-colors">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="#" aria-label="YouTube" class="text-gray-400 hover:text-white transition-colors">
+                            <i class="fab fa-youtube"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Colonne 2 -->
+                <div>
+                    <h3 class="text-white font-bold text-lg mb-4">Liens rapides</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="hover:text-white transition-colors">Accueil</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Mentions légales</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Politique de confidentialité</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Conditions générales</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Contact</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">À propos</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Colonne 3 -->
+                <div>
+                    <h3 class="text-white font-bold text-lg mb-4">Catégories</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="hover:text-white transition-colors">Politique</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Économie</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Sport</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Culture</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">International</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Nécrologie</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Colonne 4 -->
+                <div>
+                    <h3 class="text-white font-bold text-lg mb-4">Newsletter</h3>
+                    <p class="mb-4">Abonnez-vous pour recevoir nos dernières actualités.</p>
+                    <form class="flex">
+                        <input type="email" placeholder="Votre email" class="px-4 py-2 rounded-l-full text-gray-900 focus:outline-none flex-1">
+                        <button type="submit" class="bg-primary hover:bg-secondary text-white px-4 py-2 rounded-r-full transition-colors">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+            
+            <!-- Bande inférieure -->
+            <div class="border-t border-gray-700 pt-8 text-center text-sm text-gray-500">
+                <p>&copy; 2025 exemple Tous droits réservés.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts JavaScript -->
+    <script>
+        // Dark mode toggle
+        const themeToggle = document.getElementById('theme-toggle');
+        const html = document.documentElement;
+        
+        if (localStorage.getItem('theme') === 'dark' || (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            html.classList.add('dark');
+        } else {
+            html.classList.remove('dark');
+        }
+        
+        themeToggle.addEventListener('click', () => {
+            html.classList.toggle('dark');
+            localStorage.setItem('theme', html.classList.contains('dark') ? 'dark' : 'light');
+        });
+        
+        // Mobile menu toggle
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+        
+        // Animation on scroll
+        const animateOnScrollElements = document.querySelectorAll('.animate-on-scroll');
+        
+        const animateOnScroll = () => {
+            animateOnScrollElements.forEach(element => {
+                const elementTop = element.getBoundingClientRect().top;
+                const windowHeight = window.innerHeight;
+                
+                if (elementTop < windowHeight - 100) {
+                    element.classList.add('is-visible');
+                    
+                    // Add futuristic animation with Anime.js
+                    if (element.classList.contains('futuristic-animation')) {
+                        anime({
+                            targets: element,
+                            translateY: [30, 0],
+                            opacity: [0, 1],
+                            duration: 800,
+                            easing: 'easeOutExpo',
+                            delay: anime.stagger(100)
+                        });
+                        
+                        // Add glowing effect
+                        const glow = element.querySelector('.glow') || document.createElement('div');
+                        glow.classList.add('glow', 'absolute', 'inset-0', 'rounded-lg', 'pointer-events-none');
+                        glow.style.background = 'radial-gradient(circle at center, rgba(59, 130, 246, 0.4) 0%, transparent 70%)';
+                        glow.style.opacity = '0';
+                        element.appendChild(glow);
+                        
+                        anime({
+                            targets: glow,
+                            opacity: [0, 0.6, 0],
+                            duration: 2000,
+                            easing: 'easeOutQuad',
+                            loop: true
+                        });
+                    }
+                }
+            });
+        };
+        
+        // Initialize on load
+        window.addEventListener('load', animateOnScroll);
+        
+        // Animate on scroll
+        window.addEventListener('scroll', animateOnScroll);
+        
+        // Breaking news ticker animation
+        const ticker = document.querySelector('.breaking-news-ticker');
+        if (ticker) {
+            const tickerWidth = ticker.scrollWidth;
+            const duration = tickerWidth / 50; // Adjust speed here
+            
+            anime({
+                targets: ticker,
+                translateX: [-tickerWidth, 0],
+                duration: duration * 1000,
+                easing: 'linear',
+                loop: true
+            });
+        }
+        
+        // Hero section animations
+        const heroSection = document.querySelector('.hero-clip');
+        if (heroSection) {
+            // Text animation
+            anime({
+                targets: heroSection.querySelector('h1'),
+                translateY: [50, 0],
+                opacity: [0, 1],
+                duration: 800,
+                delay: 300,
+                easing: 'easeOutExpo'
+            });
+            
+            anime({
+                targets: heroSection.querySelector('p'),
+                translateY: [30, 0],
+                opacity: [0, 1],
+                duration: 800,
+                delay: 500,
+                easing: 'easeOutExpo'
+            });
+            
+            anime({
+                targets: heroSection.querySelectorAll('a'),
+                translateY: [40, 0],
+                opacity: [0, 1],
+                duration: 800,
+                delay: anime.stagger(100, {start: 700}),
+                easing: 'easeOutExpo'
+            });
+            
+            // Background animation
+            anime({
+                targets: heroSection.querySelector('img'),
+                scale: [1.1, 1],
+                opacity: [0, 0.3],
+                duration: 1000,
+                easing: 'easeOutExpo'
+            });
+        }
+        
+        // Special futuristic animation for cards
+        document.querySelectorAll('.futuristic-animation').forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                anime({
+                    targets: card,
+                    scale: 1.02,
+                    duration: 300,
+                    easing: 'easeOutExpo'
+                });
+            });
+            
+            card.addEventListener('mouseleave', () => {
+                anime({
+                    targets: card,
+                    scale: 1,
+                    duration: 300,
+                    easing: 'easeOutExpo'
+                });
+            });
+        });
+    </script>
+</body>
+</html>
