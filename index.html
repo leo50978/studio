@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Les meilleurs templates de sites web au meilleur prix">
-    <title>TemplateHub - Templates de sites web à vendre</title>
+    <title>vitch studio - Templates de sites web à vendre</title>
     
     <!-- CDN Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -21,33 +21,30 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
     
     <style>
-        /* Styles personnalisés */
+        /* Styles personnalisés - Mobile First */
+        :root {
+            --primary-color: #4f46e5;
+            --primary-dark: #4338ca;
+            --text-light: #f8fafc;
+            --text-dark: #1e293b;
+            --bg-dark: #0f172a;
+            --bg-card: #1e293b;
+        }
+        
+        * {
+            box-sizing: border-box;
+        }
+        
         body {
             font-family: 'Inter', sans-serif;
-            overflow: hidden;
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
         }
         
-        .scroll-container {
-            scroll-snap-type: y mandatory;
-            overflow-y: scroll;
-            height: 100vh;
-        }
-        
-        .template-card {
-            scroll-snap-align: start;
-            height: 100vh;
-        }
-        
-        .blur-load {
-            filter: blur(10px);
-            transition: filter 0.3s ease;
-        }
-        
-        .blur-load.loaded {
-            filter: blur(0);
-        }
-        
-        /* Animation pour le splash screen */
+        /* Splash Screen */
         .splash-screen {
             position: fixed;
             top: 0;
@@ -68,71 +65,90 @@
             pointer-events: none;
         }
         
-        /* Styles pour la modal */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.7);
+        /* Layout principal */
+        .main-container {
             display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 50;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.3s ease;
+            flex-direction: column;
+            min-height: 100vh;
         }
         
-        .modal-overlay.active {
-            opacity: 1;
-            pointer-events: all;
+        /* Filtres */
+        .filter-container {
+            position: sticky;
+            top: 0;
+            z-index: 40;
+            background-color: var(--bg-dark);
+            padding: 1rem 0.5rem;
+            border-bottom: 1px solid #334155;
         }
         
-        .modal-content {
-            background-color: white;
-            border-radius: 12px;
-            max-width: 90%;
-            max-height: 90%;
-            overflow-y: auto;
-            transform: scale(0.9);
-            transition: transform 0.3s ease;
-        }
-        
-        .modal-overlay.active .modal-content {
-            transform: scale(1);
-        }
-        
-        /* Animation pour le cœur de like */
-        .heart-burst {
-            position: absolute;
-            pointer-events: none;
-            z-index: 10;
-        }
-        
-        /* Cacher la barre de défilement */
-        .hide-scrollbar {
-            -ms-overflow-style: none;
+        .filter-scroll {
+            display: flex;
+            overflow-x: auto;
+            gap: 0.75rem;
+            padding-bottom: 0.5rem;
             scrollbar-width: none;
         }
         
-        .hide-scrollbar::-webkit-scrollbar {
+        .filter-scroll::-webkit-scrollbar {
             display: none;
         }
         
-        /* Styles pour le carrousel d'images */
+        .filter-btn {
+            padding: 0.5rem 1rem;
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            white-space: nowrap;
+            transition: all 0.2s ease;
+            border: 1px solid #334155;
+            background-color: var(--bg-card);
+            color: var(--text-light);
+        }
+        
+        .filter-btn.active {
+            background-color: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+        
+        /* Grille des templates */
+        .templates-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            padding: 1rem;
+            flex: 1;
+        }
+        
+        /* Carte de template */
+        .template-card {
+            background-color: var(--bg-card);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .template-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        /* Carrousel d'images */
         .carousel-container {
             position: relative;
             width: 100%;
-            height: 100%;
+            height: 200px;
             overflow: hidden;
         }
         
         .carousel-track {
             display: flex;
-            transition: transform 0.5s ease;
             height: 100%;
+            transition: transform 0.3s ease;
         }
         
         .carousel-slide {
@@ -141,24 +157,29 @@
             position: relative;
         }
         
+        .carousel-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
         .carousel-nav {
             position: absolute;
-            bottom: 20px;
+            bottom: 12px;
             left: 0;
             right: 0;
             display: flex;
             justify-content: center;
-            gap: 8px;
-            z-index: 20;
+            gap: 6px;
+            z-index: 10;
         }
         
         .carousel-dot {
-            width: 8px;
-            height: 8px;
+            width: 6px;
+            height: 6px;
             border-radius: 50%;
             background-color: rgba(255, 255, 255, 0.5);
             transition: all 0.3s ease;
-            cursor: pointer;
         }
         
         .carousel-dot.active {
@@ -173,14 +194,14 @@
             background-color: rgba(0, 0, 0, 0.5);
             color: white;
             border: none;
-            width: 40px;
-            height: 40px;
+            width: 32px;
+            height: 32px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            z-index: 20;
+            z-index: 10;
             opacity: 0;
             transition: opacity 0.3s ease;
         }
@@ -190,153 +211,481 @@
         }
         
         .carousel-arrow-left {
-            left: 20px;
+            left: 8px;
         }
         
         .carousel-arrow-right {
-            right: 20px;
+            right: 8px;
         }
         
         .slide-indicator {
             position: absolute;
-            top: 20px;
-            right: 20px;
+            top: 12px;
+            right: 12px;
             background-color: rgba(0, 0, 0, 0.7);
             color: white;
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 14px;
-            z-index: 20;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            z-index: 10;
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 4px;
         }
         
-        /* Styles pour les images responsives */
-        .image-container {
-            position: relative;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background-color: #000;
-        }
-        
-        .responsive-image {
-            width: auto;
-            height: auto;
-            max-width: 100%;
-            max-height: 100%;
-            object-fit: contain;
-        }
-        
-        /* Styles pour le message de filtre vide */
-        .empty-filter {
+        /* Contenu de la carte */
+        .card-content {
+            padding: 1rem;
+            flex: 1;
             display: flex;
             flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            color: white;
-            text-align: center;
-            padding: 20px;
         }
         
-        .empty-filter i {
-            font-size: 48px;
-            margin-bottom: 16px;
-            opacity: 0.7;
+        .card-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            line-height: 1.3;
         }
         
-        /* Optimisations de performance */
-        .template-card:not(.active) .carousel-track,
-        .template-card:not(.active) .carousel-arrow,
-        .template-card:not(.active) .carousel-nav {
-            display: none;
+        .card-description {
+            color: #94a3b8;
+            font-size: 0.875rem;
+            margin-bottom: 1rem;
+            flex: 1;
         }
         
-        .template-card.active .carousel-track,
-        .template-card.active .carousel-arrow,
-        .template-card.active .carousel-nav {
+        .card-footer {
             display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: auto;
         }
         
-        /* Indicateur de chargement */
-        .loading-indicator {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
+        .price-container {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .current-price {
+            font-size: 1.125rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+        
+        .old-price {
+            font-size: 0.875rem;
+            text-decoration: line-through;
+            color: #ef4444;
+        }
+        
+        .order-count {
+            font-size: 0.875rem;
+            color: #94a3b8;
+        }
+        
+        /* Actions de la carte */
+        .card-actions {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.75rem 1rem;
+            border-top: 1px solid #334155;
+            gap: 0.5rem;
+        }
+        
+        .action-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 0.75rem;
+            border-radius: 6px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            border: none;
+            cursor: pointer;
+            flex: 1;
+            justify-content: center;
+        }
+        
+        .like-btn {
+            background-color: transparent;
+            color: #94a3b8;
+            flex: 0.5;
+        }
+        
+        .like-btn.liked {
+            color: #ef4444;
+        }
+        
+        .order-btn {
+            background-color: var(--primary-color);
             color: white;
-            z-index: 5;
+            flex: 1;
         }
         
-        /* Image de placeholder */
-        .image-placeholder {
-            background: linear-gradient(45deg, #333 25%, #444 25%, #444 50%, #333 50%, #333 75%, #444 75%, #444 100%);
-            background-size: 40px 40px;
+        .order-btn:hover {
+            background-color: var(--primary-dark);
+        }
+        
+        .visit-btn {
+            background-color: #059669;
+            color: white;
+            flex: 1;
+        }
+        
+        .visit-btn:hover {
+            background-color: #047857;
+        }
+        
+        /* Modal de commande */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
             width: 100%;
             height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 50;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+            padding: 1rem;
+        }
+        
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+        
+        .modal-content {
+            background-color: white;
+            border-radius: 12px;
+            width: 100%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+            color: var(--text-dark);
+        }
+        
+        .modal-overlay.active .modal-content {
+            transform: scale(1);
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .modal-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+        
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.25rem;
+            color: #64748b;
+            cursor: pointer;
+            padding: 0;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 6px;
+        }
+        
+        .close-modal:hover {
+            background-color: #f1f5f9;
+        }
+        
+        .modal-body {
+            padding: 1.5rem;
+        }
+        
+        .modal-carousel {
+            margin-bottom: 1.5rem;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .modal-price {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+        
+        .modal-description {
+            color: #64748b;
+            margin-bottom: 1.5rem;
+            line-height: 1.5;
+        }
+        
+        .modal-section {
+            margin-bottom: 1.5rem;
+        }
+        
+        .section-title {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+        }
+        
+        .reasons-list {
+            list-style-type: disc;
+            padding-left: 1.25rem;
+            color: #64748b;
+        }
+        
+        .reasons-list li {
+            margin-bottom: 0.5rem;
+        }
+        
+        .options-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+        
+        .option-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .option-checkbox {
+            width: 18px;
+            height: 18px;
+            border-radius: 4px;
+            border: 1px solid #cbd5e1;
+            cursor: pointer;
+        }
+        
+        .confirm-order-btn {
+            width: 100%;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 0.875rem 1rem;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+            margin-top: 1rem;
+        }
+        
+        .confirm-order-btn:hover {
+            background-color: var(--primary-dark);
+        }
+        
+        /* Compteur global */
+        .total-orders {
+            position: fixed;
+            bottom: 1rem;
+            left: 1rem;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            z-index: 30;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        /* États de chargement et d'erreur */
+        .image-placeholder {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, #333 25%, #444 25%, #444 50%, #333 50%, #333 75%, #444 75%, #444 100%);
+            background-size: 40px 40px;
             display: flex;
             align-items: center;
             justify-content: center;
             color: #777;
         }
+        
+        .image-error {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #777;
+            text-align: center;
+            padding: 1rem;
+        }
+        
+        /* Animation pour le cœur de like */
+        .heart-burst {
+            position: absolute;
+            pointer-events: none;
+            z-index: 10;
+        }
+        
+        /* Message de filtre vide */
+        .empty-filter {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 3rem 1rem;
+            text-align: center;
+            grid-column: 1 / -1;
+        }
+        
+        .empty-filter i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.7;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 640px) {
+            .templates-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+                padding: 0.75rem;
+            }
+            
+            .carousel-container {
+                height: 180px;
+            }
+            
+            .modal-content {
+                margin: 0.5rem;
+            }
+            
+            .modal-body {
+                padding: 1.25rem;
+            }
+            
+            .card-actions {
+                flex-wrap: wrap;
+            }
+            
+            .like-btn {
+                flex: 0.3;
+            }
+            
+            .order-btn, .visit-btn {
+                flex: 1;
+                min-width: 45%;
+            }
+        }
+        
+        @media (min-width: 768px) {
+            .templates-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .carousel-container {
+                height: 220px;
+            }
+        }
+        
+        @media (min-width: 1024px) {
+            .templates-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+        
+        @media (min-width: 1280px) {
+            .templates-grid {
+                grid-template-columns: repeat(4, 1fr);
+                gap: 2rem;
+                padding: 1.5rem;
+            }
+        }
+        
+        /* Améliorations d'accessibilité */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+        
+        /* Focus visible pour l'accessibilité */
+        button:focus-visible,
+        input:focus-visible {
+            outline: 2px solid var(--primary-color);
+            outline-offset: 2px;
+        }
     </style>
 </head>
-<body class="bg-black text-white">
+<body>
     <!-- Splash Screen -->
     <div id="splashScreen" class="splash-screen">
         <div class="flex flex-col items-center">
             <div class="w-24 h-24 bg-indigo-600 rounded-full flex items-center justify-center mb-4">
                 <i class="fas fa-code text-white text-3xl"></i>
             </div>
-            <h1 class="text-3xl font-bold text-gray-800 mb-2">TemplateHub</h1>
+            <h1 class="text-3xl font-bold text-gray-800 mb-2">Vitch studio</h1>
             <p class="text-xl text-gray-700">Les meilleurs sites web au meilleur prix</p>
         </div>
     </div>
 
     <!-- Interface principale -->
-    <main class="hidden" id="mainContent">
-        <!-- Filtres en haut -->
-        <div class="fixed top-0 left-0 right-0 z-30 bg-gradient-to-b from-black to-transparent pt-4 pb-2 px-4">
-            <div class="flex overflow-x-auto space-x-2 pb-2 hide-scrollbar">
-                <button class="filter-btn px-4 py-2 bg-white text-black rounded-full text-sm font-medium whitespace-nowrap" data-category="all">Tous</button>
-                <button class="filter-btn px-4 py-2 bg-gray-800 text-white rounded-full text-sm font-medium whitespace-nowrap" data-category="ecommerce">E-commerce</button>
-                <button class="filter-btn px-4 py-2 bg-gray-800 text-white rounded-full text-sm font-medium whitespace-nowrap" data-category="portfolio">Ecole</button>
-                <button class="filter-btn px-4 py-2 bg-gray-800 text-white rounded-full text-sm font-medium whitespace-nowrap" data-category="blog">Media</button>
-                <button class="filter-btn px-4 py-2 bg-gray-800 text-white rounded-full text-sm font-medium whitespace-nowrap" data-category="landing">Autres</button>
+    <div class="main-container hidden" id="mainContent">
+        <!-- Filtres -->
+        <div class="filter-container">
+            <div class="filter-scroll">
+                <button class="filter-btn active" data-category="all">Tous</button>
+                <button class="filter-btn" data-category="ecommerce">E-commerce</button>
+                <button class="filter-btn" data-category="portfolio">École</button>
+                <button class="filter-btn" data-category="blog">Média</button>
+                <button class="filter-btn" data-category="landing">Autres</button>
             </div>
         </div>
 
-        <!-- Conteneur principal avec scroll snap -->
-        <div id="scrollContainer" class="scroll-container">
+        <!-- Grille des templates -->
+        <div id="templatesGrid" class="templates-grid">
             <!-- Les cartes de templates seront générées ici par JavaScript -->
         </div>
 
         <!-- Compteur global de templates vendus -->
-        <div class="fixed bottom-4 left-4 z-20 bg-black bg-opacity-70 px-3 py-2 rounded-full text-sm">
-            <i class="fas fa-shopping-cart mr-1"></i>
-            <span id="totalOrders">0</span> commandes
+        <div class="total-orders">
+            
+            <span hidden id="totalOrders">0</span> 
         </div>
-    </main>
+    </div>
 
     <!-- Modal de commande -->
     <div id="orderModal" class="modal-overlay" aria-hidden="true" role="dialog" aria-labelledby="modalTitle">
-        <div class="modal-content w-full max-w-md mx-4">
-            <div class="p-6">
-                <div class="flex justify-between items-center mb-4">
-                    <h2 id="modalTitle" class="text-xl font-bold text-gray-800">Template</h2>
-                    <button id="closeModal" class="text-gray-500 hover:text-gray-700" aria-label="Fermer">
-                        <i class="fas fa-times text-xl"></i>
-                    </button>
-                </div>
-                
-                <div id="modalCarousel" class="relative mb-4 rounded-lg overflow-hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle" class="modal-title">Template</h2>
+                <button id="closeModal" class="close-modal" aria-label="Fermer">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="modal-body">
+                <div id="modalCarousel" class="modal-carousel">
                     <!-- Carrousel pour la modal -->
-                    <div class="carousel-container h-48">
-                        <div class="carousel-track h-full"></div>
+                    <div class="carousel-container">
+                        <div class="carousel-track"></div>
                         <button class="carousel-arrow carousel-arrow-left" aria-label="Image précédente">
                             <i class="fas fa-chevron-left"></i>
                         </button>
@@ -347,37 +696,36 @@
                     </div>
                 </div>
                 
-                <div class="mb-4">
-                    <p id="modalDescription" class="text-gray-600 mb-2"></p>
-                    <p id="modalPrice" class="text-xl font-bold text-indigo-600"></p>
-                </div>
+                <div class="modal-price" id="modalPrice"></div>
                 
-                <div class="mb-4">
-                    <h3 class="font-medium text-gray-800 mb-2">Pourquoi acheter ce template ?</h3>
-                    <ul id="modalReasons" class="text-gray-600 list-disc pl-5 space-y-1">
+                <p id="modalDescription" class="modal-description"></p>
+                
+                <div class="modal-section">
+                    <h3 class="section-title">Pourquoi acheter ce template ?</h3>
+                    <ul id="modalReasons" class="reasons-list">
                         <!-- Les raisons seront ajoutées dynamiquement -->
                     </ul>
                 </div>
                 
-                <div class="mb-4">
-                    <h3 class="font-medium text-gray-800 mb-2">Options disponibles</h3>
-                    <div class="space-y-2">
-                        <label class="flex items-center">
-                            <input type="checkbox" class="option-checkbox mr-2" value="Installation">
-                            <span class="text-gray-700">Installation et configuration</span>
+                <div class="modal-section">
+                    <h3 class="section-title">Options disponibles</h3>
+                    <div class="options-list">
+                        <label class="option-item">
+                            <input type="checkbox" class="option-checkbox" value="Installation">
+                            <span>Installation et configuration</span>
                         </label>
-                        <label class="flex items-center">
-                            <input type="checkbox" class="option-checkbox mr-2" value="Personnalisation">
-                            <span class="text-gray-700">Personnalisation du contenu</span>
+                        <label class="option-item">
+                            <input type="checkbox" class="option-checkbox" value="Personnalisation">
+                            <span>Personnalisation du contenu</span>
                         </label>
-                        <label class="flex items-center">
-                            <input type="checkbox" class="option-checkbox mr-2" value="Support">
-                            <span class="text-gray-700">Support 30 jours</span>
+                        <label class="option-item">
+                            <input type="checkbox" class="option-checkbox" value="Support">
+                            <span>Support 30 jours</span>
                         </label>
                     </div>
                 </div>
                 
-                <button id="confirmOrder" class="w-full bg-indigo-600 text-white py-3 rounded-lg font-medium hover:bg-indigo-700 transition-colors">
+                <button id="confirmOrder" class="confirm-order-btn">
                     Commander maintenant
                 </button>
             </div>
@@ -390,12 +738,13 @@
             {
                 id: 1,
                 title: "Boutique Élégante",
+                oldPrice: "35 000 HTG",
                 category: "ecommerce",
                 price: "25 000 HTG",
                 shortDescription: "Template e-commerce moderne avec panier et paiement",
                 images: [
-                    "luxeshopimg1.png",
                     "luxeshopimg2.png",
+                    "luxeshopimg1.png",
                     "luxeshopimg3.png"
                 ],
                 demoUrl: "luxe.html",
@@ -415,9 +764,9 @@
                 price: "18 000 HTG",
                 shortDescription: "École élégant pour créatifs et freelances",
                 images: [
-                    "https://via.placeholder.com/800x600/7c3aed/ffffff?text=École+en+ligne+1",
-                    "https://via.placeholder.com/800x600/7c3aed/ffffff?text=École+en+ligne+2",
-                    "https://via.placeholder.com/800x600/7c3aed/ffffff?text=École+en+ligne+3"
+                    "ecole2img1.png",
+                    "ecole2img2.png",
+                    "ecole2mg3.png"
                 ],
                 demoUrl: "ecole2.html",
                 likes: 18,
@@ -431,14 +780,14 @@
             },
             {
                 id: 3,
-                title: "Media en ligne",
+                title: "Média en ligne",
                 category: "blog",
                 price: "12 000 HTG",
                 shortDescription: "Blog épuré avec système de commentaires",
                 images: [
-                    "https://via.placeholder.com/800x600/059669/ffffff?text=Media+en+ligne+1",
-                    "https://via.placeholder.com/800x600/059669/ffffff?text=Media+en+ligne+2",
-                    "https://via.placeholder.com/800x600/059669/ffffff?text=Media+en+ligne+3"
+                    "media1img1.png",
+                    "media1img2.png",
+                    "media1img2.png"
                 ],
                 demoUrl: "media1.html",
                 likes: 32,
@@ -457,9 +806,9 @@
                 price: "1 000 HTG",
                 shortDescription: "Formulaire d'inscription en ligne",
                 images: [
-                    "https://via.placeholder.com/800x600/dc2626/ffffff?text=Formulaire+1",
-                    "https://via.placeholder.com/800x600/dc2626/ffffff?text=Formulaire+2",
-                    "https://via.placeholder.com/800x600/dc2626/ffffff?text=Formulaire+3"
+                    "formulaireinscriptionimg1.png",
+                    "formulaireinscriptionimg2.png",
+                    "formulaireinscriptionimg3.png"
                 ],
                 demoUrl: "formulaire.html",
                 likes: 15,
@@ -478,9 +827,9 @@
                 price: "28 000 HTG",
                 shortDescription: "Site e-commerce spécialisé dans la mode",
                 images: [
-                    "https://via.placeholder.com/800x600/1e40af/ffffff?text=Boutique+Mode+1",
-                    "https://via.placeholder.com/800x600/1e40af/ffffff?text=Boutique+Mode+2",
-                    "https://via.placeholder.com/800x600/1e40af/ffffff?text=Boutique+Mode+3"
+                    "techstoreimg2.png",
+                    "techstoreimg3.png",
+                    "techstoreimg4.png"
                 ],
                 demoUrl: "boutique.html",
                 likes: 21,
@@ -499,9 +848,9 @@
                 price: "22 000 HTG",
                 shortDescription: "Pour école professionnel",
                 images: [
-                    "https://via.placeholder.com/800x600/7c3aed/ffffff?text=École+Pro+1",
-                    "https://via.placeholder.com/800x600/7c3aed/ffffff?text=École+Pro+2",
-                    "https://via.placeholder.com/800x600/7c3aed/ffffff?text=École+Pro+3"
+                    "ecole1img1.png",
+                    "ecole1img2.png",
+                    "ecole1img3.png"
                 ],
                 demoUrl: "ecole1.html",
                 likes: 29,
@@ -515,14 +864,14 @@
             },
             {
                 id: 7,
-                title: "Media Haitienne",
+                title: "Média Haïtienne",
                 category: "blog",
                 price: "15 000 HTG",
                 shortDescription: "Blog spécialisé",
                 images: [
-                    "https://via.placeholder.com/800x600/059669/ffffff?text=Media+Haitienne+1",
-                    "https://via.placeholder.com/800x600/059669/ffffff?text=Media+Haitienne+2",
-                    "https://via.placeholder.com/800x600/059669/ffffff?text=Media+Haitienne+3"
+                    "media2img1.png",
+                    "media2img2.png",
+                    "media2img3.png"
                 ],
                 demoUrl: "media2.html",
                 likes: 27,
@@ -531,7 +880,7 @@
                     "Design appétissant et chaleureux",
                     "Mise en forme des articles",
                     "Notation et commentaires",
-                    "Recherche par categories"
+                    "Recherche par catégories"
                 ]
             },
             {
@@ -541,9 +890,9 @@
                 price: "25 000 HTG",
                 shortDescription: "Page de vente Resto",
                 images: [
-                    "https://via.placeholder.com/800x600/dc2626/ffffff?text=Restaurant+1",
-                    "https://via.placeholder.com/800x600/dc2626/ffffff?text=Restaurant+2",
-                    "https://via.placeholder.com/800x600/dc2626/ffffff?text=Restaurant+3"
+                    "resto1img1.png",
+                    "resto1img3.png",
+                    "retso1img2.png"
                 ],
                 demoUrl: "resto.html",
                 likes: 19,
@@ -560,9 +909,8 @@
         // Variables globales
         let currentTemplateId = null;
         let filteredTemplates = [...templates];
-        let carouselStates = {}; // Stocker l'état de chaque carrousel
-        let currentCategory = 'all'; // Catégorie active
-        let activeTemplateCard = null; // Carte de template active
+        let carouselStates = {};
+        let currentCategory = 'all';
 
         // Initialisation au chargement de la page
         document.addEventListener('DOMContentLoaded', function() {
@@ -623,16 +971,13 @@
             // Initialiser les écouteurs d'événements
             initEventListeners();
             
-            // Initialiser l'IntersectionObserver pour le lazy loading
-            initLazyLoading();
-            
             // Mettre à jour le compteur global
             updateTotalOrders();
         }
 
         // Générer les cartes de templates
         function generateTemplateCards() {
-            const container = document.getElementById('scrollContainer');
+            const container = document.getElementById('templatesGrid');
             container.innerHTML = '';
             
             // Afficher un message si aucun template ne correspond au filtre
@@ -650,103 +995,100 @@
             filteredTemplates.forEach(template => {
                 const likes = localStorage.getItem(`likes_${template.id}`) || template.likes;
                 const orders = localStorage.getItem(`orders_${template.id}`) || template.orders;
+                const isLiked = localStorage.getItem(`liked_${template.id}`) === 'true';
+                
+                // Afficher le prix barré si disponible
+                const oldPriceHtml = template.oldPrice ? 
+                    `<span class="old-price">${template.oldPrice}</span>` : '';
                 
                 const card = document.createElement('div');
-                card.className = 'template-card relative';
+                card.className = 'template-card';
                 card.dataset.id = template.id;
                 card.dataset.category = template.category;
                 
-                // Ne charger que la première image initialement
                 card.innerHTML = `
-                    <div class="relative w-full h-full">
-                        <!-- Carrousel d'images -->
-                        <div class="carousel-container" id="carousel-${template.id}">
-                            <div class="carousel-track">
+                    <div class="carousel-container" id="carousel-${template.id}">
+                        <div class="carousel-track">
+                            ${template.images.map((image, index) => `
                                 <div class="carousel-slide">
                                     <div class="image-container">
-                                        <div class="image-placeholder">
-                                            <div class="loading-indicator">
-                                                <i class="fas fa-spinner fa-spin text-2xl"></i>
-                                                <p class="mt-2">Chargement...</p>
-                                            </div>
-                                        </div>
                                         <img 
-                                            data-src="${template.images[0]}" 
-                                            alt="${template.title} - Image 1" 
-                                            class="responsive-image blur-load hidden"
+                                            src="${image}" 
+                                            alt="${template.title} - Image ${index + 1}" 
+                                            class="carousel-image"
                                             loading="lazy"
-                                            onload="this.classList.remove('hidden'); this.previousElementSibling.style.display='none'; this.classList.add('loaded')"
+                                            onerror="handleImageError(this)"
                                         >
                                     </div>
                                 </div>
-                            </div>
-                            
-                            <!-- Indicateur de slide -->
-                            <div class="slide-indicator">
-                                <i class="fas fa-images"></i>
-                                <span>${template.images.length} images</span>
-                            </div>
-                            
-                            <!-- Flèches de navigation -->
-                            <button class="carousel-arrow carousel-arrow-left" aria-label="Image précédente">
-                                <i class="fas fa-chevron-left"></i>
-                            </button>
-                            <button class="carousel-arrow carousel-arrow-right" aria-label="Image suivante">
-                                <i class="fas fa-chevron-right"></i>
-                            </button>
-                            
-                            <!-- Points de navigation -->
-                            <div class="carousel-nav">
-                                ${template.images.map((_, index) => `
-                                    <div class="carousel-dot ${index === 0 ? 'active' : ''}" data-index="${index}" aria-label="Aller à l'image ${index + 1}"></div>
-                                `).join('')}
-                            </div>
+                            `).join('')}
                         </div>
                         
-                        <!-- Overlay d'informations -->
-                        <div class="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black to-transparent">
-                            <h2 class="text-2xl font-bold mb-2">${template.title}</h2>
-                            <p class="text-gray-300 mb-4">${template.shortDescription}</p>
-                            <div class="flex justify-between items-center">
-                                <span class="text-xl font-bold text-indigo-400">${template.price}</span>
-                                <span class="text-gray-400" id="orderCount-${template.id}">${orders} commandes</span>
-                            </div>
+                        <div class="slide-indicator">
+                            <i class="fas fa-images"></i>
+                            <span>${template.images.length} images</span>
                         </div>
                         
-                        <!-- Actions à droite (style TikTok) -->
-                        <div class="absolute right-4 bottom-1/2 transform translate-y-1/2 flex flex-col items-center space-y-6">
-                            <!-- Bouton Like -->
-                            <div class="flex flex-col items-center">
-                                <button class="like-btn w-12 h-12 bg-black bg-opacity-50 rounded-full flex items-center justify-center text-white hover:bg-opacity-70 transition-all" data-id="${template.id}" aria-label="Aimer ce template">
-                                    <i class="fas fa-heart ${likes > 0 ? 'text-red-500' : 'text-white'}"></i>
-                                </button>
-                                <span class="text-white text-sm mt-1" id="likeCount-${template.id}">${likes}</span>
-                            </div>
-                            
-                            <!-- Bouton Commander -->
-                            <div class="flex flex-col items-center">
-                                <button class="order-btn w-12 h-12 bg-black bg-opacity-50 rounded-full flex items-center justify-center text-white hover:bg-opacity-70 transition-all" data-id="${template.id}" aria-label="Commander ce template">
-                                    <i class="fas fa-shopping-cart"></i>
-                                </button>
-                                <span class="text-white text-sm mt-1">Commander</span>
-                            </div>
-                            
-                            <!-- Bouton Visiter le template -->
-                            <div class="flex flex-col items-center">
-                                <button class="visit-btn w-12 h-12 bg-black bg-opacity-50 rounded-full flex items-center justify-center text-white hover:bg-opacity-70 transition-all" data-id="${template.id}" aria-label="Visiter la démo">
-                                    <i class="fas fa-external-link-alt"></i>
-                                </button>
-                                <span class="text-white text-sm mt-1">Visiter</span>
-                            </div>
+                        <button class="carousel-arrow carousel-arrow-left" aria-label="Image précédente">
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                        <button class="carousel-arrow carousel-arrow-right" aria-label="Image suivante">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                        
+                        <div class="carousel-nav">
+                            ${template.images.map((_, index) => `
+                                <div class="carousel-dot ${index === 0 ? 'active' : ''}" data-index="${index}"></div>
+                            `).join('')}
                         </div>
+                    </div>
+                    
+                    <div class="card-content">
+                        <h3 class="card-title">${template.title}</h3>
+                        <p class="card-description">${template.shortDescription}</p>
+                        
+                        <div class="card-footer">
+                            <div class="price-container">
+                                ${oldPriceHtml}
+                                <span class="current-price">${template.price}</span>
+                            </div>
+                            <span class="order-count">${orders} commandes</span>
+                        </div>
+                    </div>
+                    
+                    <div class="card-actions">
+                        <button class="action-btn like-btn ${isLiked ? 'liked' : ''}" data-id="${template.id}">
+                            <i class="fas fa-heart"></i>
+                            <span>${likes}</span>
+                        </button>
+                        <button class="action-btn visit-btn" data-id="${template.id}">
+                            <i class="fas fa-external-link-alt"></i>
+                            Visiter
+                        </button>
+                        <button class="action-btn order-btn" data-id="${template.id}">
+                            <i class="fas fa-shopping-cart"></i>
+                            Commander
+                        </button>
                     </div>
                 `;
                 
                 container.appendChild(card);
                 
-                // Initialiser le carrousel pour ce template (seulement la structure)
+                // Initialiser le carrousel pour ce template
                 initCarousel(template.id, template.images.length);
             });
+        }
+
+        // Gérer l'erreur de chargement d'image
+        function handleImageError(img) {
+            img.style.display = 'none';
+            const placeholder = document.createElement('div');
+            placeholder.className = 'image-error';
+            placeholder.innerHTML = `
+                <i class="fas fa-exclamation-triangle"></i>
+                <p>Image non disponible</p>
+            `;
+            img.parentNode.appendChild(placeholder);
         }
 
         // Initialiser un carrousel
@@ -762,8 +1104,7 @@
             // Initialiser l'état du carrousel
             carouselStates[templateId] = {
                 currentSlide: 0,
-                totalSlides: totalSlides,
-                loadedSlides: new Set([0]) // Seule la première image est chargée initialement
+                totalSlides: totalSlides
             };
             
             // Événement pour le bouton précédent
@@ -784,17 +1125,39 @@
                 });
             });
             
-            // Navigation au clavier
-            carousel.addEventListener('keydown', (e) => {
-                if (e.key === 'ArrowLeft') {
-                    navigateCarousel(templateId, -1);
-                } else if (e.key === 'ArrowRight') {
-                    navigateCarousel(templateId, 1);
-                }
+            // Navigation tactile pour mobile
+            let startX = 0;
+            let isSwiping = false;
+            
+            carousel.addEventListener('touchstart', (e) => {
+                startX = e.touches[0].clientX;
+                isSwiping = true;
             });
             
-            // Rendre le carrousel focusable pour l'accessibilité
-            carousel.setAttribute('tabindex', '0');
+            carousel.addEventListener('touchmove', (e) => {
+                if (!isSwiping) return;
+                e.preventDefault();
+            });
+            
+            carousel.addEventListener('touchend', (e) => {
+                if (!isSwiping) return;
+                
+                const endX = e.changedTouches[0].clientX;
+                const diffX = startX - endX;
+                
+                // Seuil de swipe (50px)
+                if (Math.abs(diffX) > 50) {
+                    if (diffX > 0) {
+                        // Swipe vers la gauche -> image suivante
+                        navigateCarousel(templateId, 1);
+                    } else {
+                        // Swipe vers la droite -> image précédente
+                        navigateCarousel(templateId, -1);
+                    }
+                }
+                
+                isSwiping = false;
+            });
         }
 
         // Naviguer dans le carrousel
@@ -822,13 +1185,6 @@
             const track = carousel.querySelector('.carousel-track');
             const dots = carousel.querySelectorAll('.carousel-dot');
             
-            // Charger l'image si elle n'est pas encore chargée
-            const template = templates.find(t => t.id == templateId);
-            if (template && !carouselStates[templateId].loadedSlides.has(slideIndex)) {
-                loadSlideImage(templateId, slideIndex, template.images[slideIndex]);
-                carouselStates[templateId].loadedSlides.add(slideIndex);
-            }
-            
             // Mettre à jour la position du track
             track.style.transform = `translateX(-${slideIndex * 100}%)`;
             
@@ -846,45 +1202,6 @@
             carouselStates[templateId].currentSlide = slideIndex;
         }
 
-        // Charger une image de slide
-        function loadSlideImage(templateId, slideIndex, imageSrc) {
-            const carousel = document.getElementById(`carousel-${templateId}`);
-            if (!carousel) return;
-            
-            const track = carousel.querySelector('.carousel-track');
-            let slide = track.children[slideIndex];
-            
-            // Si la slide n'existe pas encore, la créer
-            if (!slide) {
-                slide = document.createElement('div');
-                slide.className = 'carousel-slide';
-                slide.innerHTML = `
-                    <div class="image-container">
-                        <div class="image-placeholder">
-                            <div class="loading-indicator">
-                                <i class="fas fa-spinner fa-spin text-2xl"></i>
-                                <p class="mt-2">Chargement...</p>
-                            </div>
-                        </div>
-                        <img 
-                            data-src="${imageSrc}" 
-                            alt="Image ${slideIndex + 1}" 
-                            class="responsive-image blur-load hidden"
-                            loading="lazy"
-                            onload="this.classList.remove('hidden'); this.previousElementSibling.style.display='none'; this.classList.add('loaded')"
-                        >
-                    </div>
-                `;
-                track.appendChild(slide);
-            }
-            
-            // Charger l'image si elle n'est pas déjà chargée
-            const img = slide.querySelector('img');
-            if (img && !img.src) {
-                img.src = img.dataset.src;
-            }
-        }
-
         // Initialiser les écouteurs d'événements
         function initEventListeners() {
             // Filtres
@@ -896,12 +1213,10 @@
                     
                     // Mettre à jour l'état actif des boutons
                     document.querySelectorAll('.filter-btn').forEach(b => {
-                        b.classList.remove('bg-white', 'text-black');
-                        b.classList.add('bg-gray-800', 'text-white');
+                        b.classList.remove('active');
                     });
                     
-                    this.classList.remove('bg-gray-800', 'text-white');
-                    this.classList.add('bg-white', 'text-black');
+                    this.classList.add('active');
                 });
             });
             
@@ -949,84 +1264,6 @@
                     closeOrderModal();
                 }
             });
-            
-            // Observer les changements de scroll pour activer/désactiver les carrousels
-            const scrollContainer = document.getElementById('scrollContainer');
-            scrollContainer.addEventListener('scroll', debounce(function() {
-                updateActiveTemplateCard();
-            }, 100));
-        }
-
-        // Mettre à jour la carte de template active
-        function updateActiveTemplateCard() {
-            const scrollContainer = document.getElementById('scrollContainer');
-            const templateCards = document.querySelectorAll('.template-card');
-            
-            // Trouver la carte actuellement visible
-            let newActiveCard = null;
-            
-            templateCards.forEach(card => {
-                const rect = card.getBoundingClientRect();
-                // Si la carte occupe au moins 50% de l'écran
-                if (rect.top <= window.innerHeight / 2 && rect.bottom >= window.innerHeight / 2) {
-                    newActiveCard = card;
-                }
-            });
-            
-            // Mettre à jour l'état actif
-            if (newActiveCard && newActiveCard !== activeTemplateCard) {
-                // Désactiver l'ancienne carte active
-                if (activeTemplateCard) {
-                    activeTemplateCard.classList.remove('active');
-                }
-                
-                // Activer la nouvelle carte
-                newActiveCard.classList.add('active');
-                activeTemplateCard = newActiveCard;
-                
-                // Charger toutes les images de la carte active
-                const templateId = newActiveCard.dataset.id;
-                const template = templates.find(t => t.id == templateId);
-                if (template) {
-                    loadAllImagesForTemplate(templateId, template.images);
-                }
-            }
-        }
-
-        // Charger toutes les images pour un template
-        function loadAllImagesForTemplate(templateId, images) {
-            const carousel = document.getElementById(`carousel-${templateId}`);
-            if (!carousel) return;
-            
-            const track = carousel.querySelector('.carousel-track');
-            const state = carouselStates[templateId];
-            
-            // Charger toutes les images qui ne sont pas encore chargées
-            images.forEach((image, index) => {
-                if (!state.loadedSlides.has(index)) {
-                    loadSlideImage(templateId, index, image);
-                    state.loadedSlides.add(index);
-                }
-            });
-        }
-
-        // Initialiser le lazy loading avec IntersectionObserver
-        function initLazyLoading() {
-            const lazyImages = document.querySelectorAll('img[data-src]');
-            
-            const imageObserver = new IntersectionObserver((entries, observer) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        const img = entry.target;
-                        if (!img.src) {
-                            img.src = img.dataset.src;
-                        }
-                        imageObserver.unobserve(img);
-                    }
-                });
-            });
-            
-            lazyImages.forEach(img => imageObserver.observe(img));
         }
 
         // Filtrer les templates par catégorie
@@ -1039,19 +1276,17 @@
             
             // Réinitialiser les états des carrousels
             carouselStates = {};
-            activeTemplateCard = null;
             
             // Animation de transition
             anime({
-                targets: '#scrollContainer',
+                targets: '#templatesGrid',
                 opacity: [1, 0],
-                duration: 300,
+                duration: 200,
                 easing: 'easeInOutQuad',
                 complete: function() {
                     generateTemplateCards();
-                    initLazyLoading();
                     anime({
-                        targets: '#scrollContainer',
+                        targets: '#templatesGrid',
                         opacity: [0, 1],
                         duration: 300,
                         easing: 'easeInOutQuad'
@@ -1062,47 +1297,48 @@
 
         // Basculer l'état "Like"
         function toggleLike(templateId, button) {
-            const likeCount = document.getElementById(`likeCount-${templateId}`);
+            const likeCount = button.querySelector('span');
             let currentLikes = parseInt(localStorage.getItem(`likes_${templateId}`) || 0);
             const heartIcon = button.querySelector('i');
+            const isLiked = localStorage.getItem(`liked_${templateId}`) === 'true';
             
             // Animation du cœur
             anime({
                 targets: button,
-                scale: [1, 1.3, 1],
-                duration: 500,
+                scale: [1, 1.2, 1],
+                duration: 400,
                 easing: 'easeInOutQuad'
             });
             
-            // Créer l'effet d'éclatement de cœur
-            const heartBurst = document.createElement('div');
-            heartBurst.className = 'heart-burst';
-            heartBurst.innerHTML = '<i class="fas fa-heart text-red-500 text-2xl"></i>';
-            button.parentElement.appendChild(heartBurst);
-            
-            anime({
-                targets: heartBurst,
-                translateY: -50,
-                opacity: [1, 0],
-                scale: [1, 2],
-                duration: 800,
-                easing: 'easeOutQuad',
-                complete: function() {
-                    heartBurst.remove();
-                }
-            });
-            
             // Basculer l'état
-            if (heartIcon.classList.contains('text-red-500')) {
+            if (isLiked) {
                 // Retirer le like
                 currentLikes = Math.max(0, currentLikes - 1);
-                heartIcon.classList.remove('text-red-500');
-                heartIcon.classList.add('text-white');
+                button.classList.remove('liked');
+                localStorage.setItem(`liked_${templateId}`, 'false');
             } else {
                 // Ajouter un like
                 currentLikes += 1;
-                heartIcon.classList.remove('text-white');
-                heartIcon.classList.add('text-red-500');
+                button.classList.add('liked');
+                localStorage.setItem(`liked_${templateId}`, 'true');
+                
+                // Animation d'éclatement
+                const heartBurst = document.createElement('div');
+                heartBurst.className = 'heart-burst';
+                heartBurst.innerHTML = '<i class="fas fa-heart text-red-500"></i>';
+                button.appendChild(heartBurst);
+                
+                anime({
+                    targets: heartBurst,
+                    translateY: -30,
+                    opacity: [1, 0],
+                    scale: [1, 2],
+                    duration: 600,
+                    easing: 'easeOutQuad',
+                    complete: function() {
+                        heartBurst.remove();
+                    }
+                });
             }
             
             // Mettre à jour le compteur et le stockage
@@ -1129,7 +1365,14 @@
             // Remplir la modal avec les données du template
             document.getElementById('modalTitle').textContent = template.title;
             document.getElementById('modalDescription').textContent = template.shortDescription;
-            document.getElementById('modalPrice').textContent = template.price;
+            
+            // Afficher le prix
+            const modalPrice = document.getElementById('modalPrice');
+            if (template.oldPrice) {
+                modalPrice.innerHTML = `<span style="text-decoration: line-through; color: #ef4444; font-size: 1rem; margin-right: 0.5rem;">${template.oldPrice}</span> ${template.price}`;
+            } else {
+                modalPrice.textContent = template.price;
+            }
             
             // Configurer le carrousel de la modal
             setupModalCarousel(template.images);
@@ -1143,18 +1386,17 @@
                 reasonsList.appendChild(li);
             });
             
+            // Réinitialiser les cases à cocher
+            document.querySelectorAll('.option-checkbox').forEach(checkbox => {
+                checkbox.checked = false;
+            });
+            
             // Afficher la modal
             document.getElementById('orderModal').classList.add('active');
             document.getElementById('orderModal').setAttribute('aria-hidden', 'false');
             
-            // Animation d'entrée
-            anime({
-                targets: '.modal-content',
-                scale: [0.9, 1],
-                opacity: [0, 1],
-                duration: 300,
-                easing: 'easeOutBack'
-            });
+            // Empêcher le défilement du body
+            document.body.style.overflow = 'hidden';
         }
 
         // Configurer le carrousel de la modal
@@ -1172,8 +1414,8 @@
                 const slide = document.createElement('div');
                 slide.className = 'carousel-slide';
                 slide.innerHTML = `
-                    <div class="image-container h-full">
-                        <img src="${image}" alt="Image ${index + 1}" class="responsive-image">
+                    <div class="image-container">
+                        <img src="${image}" alt="Image ${index + 1}" class="carousel-image">
                     </div>
                 `;
                 track.appendChild(slide);
@@ -1219,6 +1461,41 @@
                     updateModalCarousel(currentSlide, track, dots);
                 });
             });
+            
+            // Navigation tactile pour mobile
+            let startX = 0;
+            let isSwiping = false;
+            
+            modalCarousel.addEventListener('touchstart', (e) => {
+                startX = e.touches[0].clientX;
+                isSwiping = true;
+            });
+            
+            modalCarousel.addEventListener('touchmove', (e) => {
+                if (!isSwiping) return;
+                e.preventDefault();
+            });
+            
+            modalCarousel.addEventListener('touchend', (e) => {
+                if (!isSwiping) return;
+                
+                const endX = e.changedTouches[0].clientX;
+                const diffX = startX - endX;
+                
+                // Seuil de swipe (50px)
+                if (Math.abs(diffX) > 50) {
+                    if (diffX > 0) {
+                        // Swipe vers la gauche -> image suivante
+                        currentSlide = (currentSlide + 1) % totalSlides;
+                    } else {
+                        // Swipe vers la droite -> image précédente
+                        currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+                    }
+                    updateModalCarousel(currentSlide, track, dots);
+                }
+                
+                isSwiping = false;
+            });
         }
 
         // Mettre à jour le carrousel de la modal
@@ -1239,19 +1516,12 @@
 
         // Fermer la modal de commande
         function closeOrderModal() {
-            // Animation de sortie
-            anime({
-                targets: '.modal-content',
-                scale: [1, 0.9],
-                opacity: [1, 0],
-                duration: 200,
-                easing: 'easeInBack',
-                complete: function() {
-                    document.getElementById('orderModal').classList.remove('active');
-                    document.getElementById('orderModal').setAttribute('aria-hidden', 'true');
-                    currentTemplateId = null;
-                }
-            });
+            document.getElementById('orderModal').classList.remove('active');
+            document.getElementById('orderModal').setAttribute('aria-hidden', 'true');
+            currentTemplateId = null;
+            
+            // Rétablir le défilement du body
+            document.body.style.overflow = '';
         }
 
         // Confirmer la commande
@@ -1266,7 +1536,7 @@
             });
             
             // Construire le message WhatsApp
-            const message = `Bonjour, je veux commander le template [ID: ${template.id}] - "${template.title}" au prix ${template.price}. Détails / options : ${selectedOptions.join(', ') || 'Aucune option supplémentaire'}`;
+            const message = `Bonjour, je veux commander le template "${template.title}" au prix ${template.price}.${selectedOptions.length > 0 ? ` Options: ${selectedOptions.join(', ')}.` : ''}`;
             const encodedMessage = encodeURIComponent(message);
             const whatsappUrl = `https://wa.me/50935601379?text=${encodedMessage}`;
             
@@ -1275,7 +1545,7 @@
             localStorage.setItem(`orders_${template.id}`, currentOrders + 1);
             
             // Mettre à jour l'affichage
-            const orderCountElement = document.getElementById(`orderCount-${template.id}`);
+            const orderCountElement = document.querySelector(`[data-id="${template.id}"] .order-count`);
             if (orderCountElement) {
                 orderCountElement.textContent = currentOrders + 1;
             }
@@ -1293,19 +1563,6 @@
                 total += parseInt(localStorage.getItem(`orders_${template.id}`) || template.orders);
             });
             document.getElementById('totalOrders').textContent = total;
-        }
-
-        // Fonction debounce pour limiter les appels fréquents
-        function debounce(func, wait) {
-            let timeout;
-            return function executedFunction(...args) {
-                const later = () => {
-                    clearTimeout(timeout);
-                    func(...args);
-                };
-                clearTimeout(timeout);
-                timeout = setTimeout(later, wait);
-            };
         }
     </script>
 </body>
