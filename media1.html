@@ -26,6 +26,7 @@
                         'fade-in': 'fadeIn 0.5s ease-in-out',
                         'slide-up': 'slideUp 0.6s ease-out',
                         'scale-in': 'scaleIn 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
+                        'marquee': 'marquee 30s linear infinite',
                     },
                     keyframes: {
                         fadeIn: {
@@ -39,6 +40,10 @@
                         scaleIn: {
                             '0%': { transform: 'scale(0.95)', opacity: '0' },
                             '100%': { transform: 'scale(1)', opacity: '1' },
+                        },
+                        marquee: {
+                            '0%': { transform: 'translateX(100%)' },
+                            '100%': { transform: 'translateX(-100%)' },
                         },
                     }
                 }
@@ -54,64 +59,29 @@
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- Anime.js -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
-    
     <style>
-       
-        
-       
-        
-        .news-card-clip {
-            clip-path: inset(0 round 10px);
+        /* Styles d'accessibilité améliorés */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
         }
         
-        .category-clip {
-            clip-path: circle(75% at 50% 50%);
-            transition: clip-path 0.4s ease;
-        }
-        
-        .category-clip:hover {
-            clip-path: circle(85% at 50% 50%);
-        }
-        
-        /* Accessibility focus styles */
-        button:focus, a:focus, input:focus {
+        /* Amélioration du focus pour l'accessibilité */
+        button:focus-visible, 
+        a:focus-visible, 
+        input:focus-visible {
             outline: 2px solid #3182ce;
             outline-offset: 2px;
         }
         
-        /* Scrollbar styling */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-        
-        ::-webkit-scrollbar-track {
-            background: #f1f1f1;
-        }
-        
-        ::-webkit-scrollbar-thumb {
-            background: #888;
-            border-radius: 4px;
-        }
-        
-        ::-webkit-scrollbar-thumb:hover {
-            background: #555;
-        }
-        
-        .dark ::-webkit-scrollbar-track {
-            background: #2d3748;
-        }
-        
-        .dark ::-webkit-scrollbar-thumb {
-            background: #4a5568;
-        }
-        
-        .dark ::-webkit-scrollbar-thumb:hover {
-            background: #718096;
-        }
-        
-        /* Animation classes */
+        /* Styles pour les animations de scroll */
         .animate-on-scroll {
             opacity: 0;
             transform: translateY(20px);
@@ -123,161 +93,227 @@
             transform: translateY(0);
         }
         
-        /* Special futuristic animation */
-        @keyframes futuristicGlow {
-            0% { box-shadow: 0 0 5px rgba(59, 130, 246, 0.5); }
-            50% { box-shadow: 0 0 20px rgba(59, 130, 246, 0.8); }
-            100% { box-shadow: 0 0 5px rgba(59, 130, 246, 0.5); }
-        }
-        
-        .futuristic-animation {
-            animation: futuristicGlow 3s infinite;
+        /* Styles pour le ticker de breaking news */
+        .breaking-news-container {
+            overflow: hidden;
             position: relative;
         }
         
-        .futuristic-animation::after {
-            content: '';
-            position: absolute;
-            top: -2px;
-            left: -2px;
-            right: -2px;
-            bottom: -2px;
-            border: 2px solid rgba(59, 130, 246, 0.3);
-            border-radius: inherit;
-            pointer-events: none;
-            animation: futuristicGlow 3s infinite 0.5s;
+        .breaking-news-ticker {
+            display: inline-block;
+            white-space: nowrap;
+            padding-left: 100%;
+            animation: marquee 30s linear infinite;
+        }
+        
+        /* Styles pour les images de placeholder */
+        .placeholder-img {
+            background-color: #e5e7eb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #6b7280;
+            font-size: 0.875rem;
+        }
+        
+        /* Styles pour le menu mobile */
+        .mobile-menu {
+            transform: translateY(-100%);
+            transition: transform 0.3s ease;
+        }
+        
+        .mobile-menu.open {
+            transform: translateY(0);
+        }
+        
+        /* Styles pour les cartes d'actualités */
+        .news-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .news-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        /* Optimisation pour les écrans très petits */
+        @media (max-width: 320px) {
+            .text-responsive {
+                font-size: 0.875rem;
+            }
+        }
+        
+        /* Styles pour le mode sombre */
+        @media (prefers-color-scheme: dark) {
+            .dark-img {
+                filter: brightness(0.8);
+            }
         }
     </style>
 </head>
 <body class="bg-white text-gray-800 dark:bg-gray-900 dark:text-gray-100 font-sans antialiased">
     <!-- Header Global -->
-    <header class="sticky top-0 z-50 shadow-md bg-white dark:bg-gray-800 transition-colors duration-300">
+    <header class="sticky hidden top-0 z-50 shadow-md bg-white dark:bg-gray-800 transition-colors duration-300">
         <!-- Bandeau supérieur -->
-        <div class="bg-primary text-white py-2 px-4 flex items-center justify-between text-sm">
-            <div class="flex items-center space-x-4">
-                <a href="#" class="font-bold text-white hover:text-accent transition-colors">
-                   <img src="logojuristev.jpeg" width="25px" height="25px" alt="">
-                </a>
-                
-                <!-- Breaking News Ticker -->
-                <div class="overflow-hidden flex-1 mx-4">
-                    <div class="breaking-news-ticker whitespace-nowrap inline-block animate-marquee">
-                        <span class="font-semibold mr-6">BREAKING:</span>
-                        <span class="mr-6">Élection présidentielle: les résultats préliminaires montrent une avance pour le candidat indépendant</span>
-                        <span class="mr-6">Marchés boursiers: forte hausse après l'annonce des taux d'intérêt</span>
-                        <span class="mr-6">Coupe du monde: la finale aura lieu ce dimanche à 16h</span>
+        <div class="bg-primary text-white py-2 px-4">
+            <div class="container mx-auto flex flex-col sm:flex-row items-center justify-between gap-2 text-sm">
+                <div class="flex items-center w-full sm:w-auto">
+                    <a href="#" class="font-bold text-white hover:text-accent transition-colors focus-visible:text-accent">
+                        <span class="sr-only">Accueil</span>
+                        <img src="logojuristev.jpeg" width="25" height="25" alt="Logo VTN News">
+                    </a>
+                    
+                    <!-- Breaking News Ticker -->
+                    <div class="breaking-news-container flex-1 ml-4 overflow-hidden">
+                        <div class="breaking-news-ticker whitespace-nowrap">
+                            <span class="font-semibold mr-4">BREAKING:</span>
+                            <span class="mr-6">Élection présidentielle: les résultats préliminaires montrent une avance pour le candidat indépendant</span>
+                            <span class="mr-6">Marchés boursiers: forte hausse après l'annonce des taux d'intérêt</span>
+                            <span class="mr-6">Coupe du monde: la finale aura lieu ce dimanche à 16h</span>
+                        </div>
                     </div>
                 </div>
-            </div>
-            
-            <div class="flex items-center space-x-4">
-                <!-- Sélecteur de langue -->
-                <div class="hidden md:flex items-center space-x-2">
-                    <button class="w-6 h-4 focus:outline-none" aria-label="Français">
-                        <img src="https://flagcdn.com/w20/fr.png" alt="Français" class="w-full h-full object-cover">
-                    </button>
-                    <button class="w-6 h-4 focus:outline-none" aria-label="English">
-                        <img src="https://flagcdn.com/w20/gb.png" alt="English" class="w-full h-full object-cover">
-                    </button>
-                    <button class="w-6 h-4 focus:outline-none" aria-label="Español">
-                        <img src="https://flagcdn.com/w20/es.png" alt="Español" class="w-full h-full object-cover">
-                    </button>
-                </div>
                 
-                <!-- Réseaux sociaux -->
-                <div class="flex items-center space-x-3">
-                    <a href="#" aria-label="Facebook" class="text-white hover:text-accent transition-colors">
-                        <i class="fab fa-facebook-f"></i>
-                    </a>
-                    <a href="#" aria-label="Twitter" class="text-white hover:text-accent transition-colors">
-                        <i class="fab fa-twitter"></i>
-                    </a>
-                    <a href="#" aria-label="Instagram" class="text-white hover:text-accent transition-colors">
-                        <i class="fab fa-instagram"></i>
-                    </a>
-                    <a href="#" aria-label="YouTube" class="text-white hover:text-accent transition-colors">
-                        <i class="fab fa-youtube"></i>
-                    </a>
+                <div class="flex items-center space-x-4 w-full sm:w-auto justify-end">
+                    <!-- Sélecteur de langue -->
+                    <div class="hidden md:flex items-center space-x-2">
+                        <button class="w-6 h-4 focus-visible:outline focus-visible:outline-2 focus-visible:outline-white" aria-label="Français">
+                            <img src="https://flagcdn.com/w20/fr.png" alt="Français" class="w-full h-full object-cover">
+                        </button>
+                        <button class="w-6 h-4 focus-visible:outline focus-visible:outline-2 focus-visible:outline-white" aria-label="English">
+                            <img src="https://flagcdn.com/w20/gb.png" alt="English" class="w-full h-full object-cover">
+                        </button>
+                        <button class="w-6 h-4 focus-visible:outline focus-visible:outline-2 focus-visible:outline-white" aria-label="Español">
+                            <img src="https://flagcdn.com/w20/es.png" alt="Español" class="w-full h-full object-cover">
+                        </button>
+                    </div>
+                    
+                    <!-- Réseaux sociaux -->
+                    <div class="flex items-center space-x-3">
+                        <a href="#" aria-label="Facebook" class="text-white hover:text-accent transition-colors focus-visible:text-accent">
+                            <i class="fab fa-facebook-f" aria-hidden="true"></i>
+                        </a>
+                        <a href="#" aria-label="Twitter" class="text-white hover:text-accent transition-colors focus-visible:text-accent">
+                            <i class="fab fa-twitter" aria-hidden="true"></i>
+                        </a>
+                        <a href="#" aria-label="Instagram" class="text-white hover:text-accent transition-colors focus-visible:text-accent">
+                            <i class="fab fa-instagram" aria-hidden="true"></i>
+                        </a>
+                        <a href="#" aria-label="YouTube" class="text-white hover:text-accent transition-colors focus-visible:text-accent">
+                            <i class="fab fa-youtube" aria-hidden="true"></i>
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
         
         <!-- Bande principale -->
-        <div class="py-4 px-6 flex items-center justify-between">
-            <!-- Logo -->
-            <a href="#" class="flex items-center">
-                <img src="logojuristev.jpeg" alt=" Logo" class="h-12">
-            </a>
-            
-            <div class="flex items-center space-x-6">
-                <!-- Zone de recherche -->
-                <div class="hidden md:block relative">
-                    <input type="text" placeholder="Rechercher..." class="py-2 px-4 pr-10 rounded-full border border-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all w-64">
-                    <button class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 dark:text-gray-400 hover:text-primary dark:hover:text-accent transition-colors">
-                        <i class="fas fa-search"></i>
+        <div class="py-4 px-4 sm:px-6">
+            <div class="container mx-auto flex items-center justify-between">
+                <!-- Logo -->
+                <a href="#" class="flex items-center focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary">
+                    <img src="logojuristev.jpeg" alt="Logo VTN News" class="h-10 w-auto">
+                </a>
+                
+                <div class="flex items-center space-x-4">
+                    <!-- Zone de recherche -->
+                    <div class="hidden md:block relative">
+                        <label for="search-desktop" class="sr-only">Rechercher</label>
+                        <input 
+                            id="search-desktop" 
+                            type="text" 
+                            placeholder="Rechercher..." 
+                            class="py-2 px-4 pr-10 rounded-full border border-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all w-40 lg:w-64"
+                        >
+                        <button class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 dark:text-gray-400 hover:text-primary dark:hover:text-accent transition-colors focus-visible:text-primary">
+                            <i class="fas fa-search" aria-hidden="true"></i>
+                            <span class="sr-only">Rechercher</span>
+                        </button>
+                    </div>
+                    
+                    <!-- Mode clair/sombre -->
+                    <button 
+                        id="theme-toggle" 
+                        aria-label="Basculer entre le mode clair et sombre" 
+                        class="text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-accent transition-colors focus-visible:text-primary"
+                    >
+                        <i class="fas fa-moon hidden dark:inline-block" aria-hidden="true"></i>
+                        <i class="fas fa-sun inline-block dark:hidden" aria-hidden="true"></i>
+                    </button>
+                    
+                    <!-- Menu hamburger mobile -->
+                    <button 
+                        id="mobile-menu-button" 
+                        class="md:hidden text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-accent transition-colors focus-visible:text-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary"
+                        aria-expanded="false"
+                        aria-controls="mobile-menu"
+                    >
+                        <i class="fas fa-bars text-xl" aria-hidden="true"></i>
+                        <span class="sr-only">Ouvrir le menu</span>
                     </button>
                 </div>
-                
-                <!-- Mode clair/sombre -->
-                <button id="theme-toggle" aria-label="Toggle dark mode" class="text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-accent transition-colors">
-                    <i class="fas fa-moon hidden dark:inline-block"></i>
-                    <i class="fas fa-sun inline-block dark:hidden"></i>
-                </button>
-                
-                <!-- Menu hamburger mobile -->
-                <button id="mobile-menu-button" class="md:hidden text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-accent transition-colors focus:outline-none">
-                    <i class="fas fa-bars text-xl"></i>
-                </button>
             </div>
         </div>
         
-        <!-- Barre de navigation -->
+        <!-- Barre de navigation desktop -->
         <nav class="hidden md:block bg-gray-100 dark:bg-gray-700 border-t border-gray-200 dark:border-gray-600">
             <div class="container mx-auto px-6">
-                <ul class="flex justify-between py-3">
-                    <li><a href="#" class="font-medium text-primary dark:text-white hover:text-accent dark:hover:text-accent transition-colors px-3 py-2">ACCUEIL</a></li>
-                    <li><a href="#" class="font-medium text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-accent transition-colors px-3 py-2">POLITIQUE</a></li>
-                    <li><a href="#" class="font-medium text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-accent transition-colors px-3 py-2">ÉCONOMIE</a></li>
-                    <li><a href="#" class="font-medium text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-accent transition-colors px-3 py-2">SPORT</a></li>
-                    <li><a href="#" class="font-medium text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-accent transition-colors px-3 py-2">CULTURE</a></li>
-                    <li><a href="#" class="font-medium text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-accent transition-colors px-3 py-2">INTERNATIONAL</a></li>
-                    <li><a href="#" class="font-medium text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-accent transition-colors px-3 py-2">NÉCROLOGIE</a></li>
-                    <li><a href="#" class="font-medium text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-accent transition-colors px-3 py-2">CONTACT</a></li>
+                <ul class="flex flex-wrap justify-center py-3 gap-2">
+                    <li><a href="#" class="font-medium text-primary dark:text-white hover:text-accent dark:hover:text-accent transition-colors px-3 py-2 focus-visible:text-accent">ACCUEIL</a></li>
+                    <li><a href="#" class="font-medium text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-accent transition-colors px-3 py-2 focus-visible:text-accent">POLITIQUE</a></li>
+                    <li><a href="#" class="font-medium text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-accent transition-colors px-3 py-2 focus-visible:text-accent">ÉCONOMIE</a></li>
+                    <li><a href="#" class="font-medium text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-accent transition-colors px-3 py-2 focus-visible:text-accent">SPORT</a></li>
+                    <li><a href="#" class="font-medium text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-accent transition-colors px-3 py-2 focus-visible:text-accent">CULTURE</a></li>
+                    <li><a href="#" class="font-medium text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-accent transition-colors px-3 py-2 focus-visible:text-accent">INTERNATIONAL</a></li>
+                    <li><a href="#" class="font-medium text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-accent transition-colors px-3 py-2 focus-visible:text-accent">NÉCROLOGIE</a></li>
+                    <li><a href="#" class="font-medium text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-accent transition-colors px-3 py-2 focus-visible:text-accent">CONTACT</a></li>
                 </ul>
             </div>
         </nav>
         
         <!-- Menu mobile -->
-        <div id="mobile-menu" class="hidden md:hidden bg-white dark:bg-gray-800 shadow-lg absolute w-full z-50">
-            <div class="container mx-auto px-6 py-4">
+        <div 
+            id="mobile-menu" 
+            class="mobile-menu md:hidden bg-white dark:bg-gray-800 shadow-lg absolute w-full z-50"
+            role="dialog"
+            aria-modal="true"
+            aria-label="Menu de navigation mobile"
+        >
+            <div class="container mx-auto px-4 py-4">
                 <div class="relative mb-4">
-                    <input type="text" placeholder="Rechercher..." class="w-full py-2 px-4 pr-10 rounded-full border border-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all">
-                    <button class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 dark:text-gray-400 hover:text-primary dark:hover:text-accent transition-colors">
-                        <i class="fas fa-search"></i>
+                    <label for="search-mobile" class="sr-only">Rechercher</label>
+                    <input 
+                        id="search-mobile" 
+                        type="text" 
+                        placeholder="Rechercher..." 
+                        class="w-full py-2 px-4 pr-10 rounded-full border border-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
+                    >
+                    <button class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 dark:text-gray-400 hover:text-primary dark:hover:text-accent transition-colors focus-visible:text-primary">
+                        <i class="fas fa-search" aria-hidden="true"></i>
+                        <span class="sr-only">Rechercher</span>
                     </button>
                 </div>
                 <ul class="space-y-2">
-                    <li><a href="#" class="block font-medium text-primary dark:text-white hover:text-accent dark:hover:text-accent transition-colors px-3 py-2">ACCUEIL</a></li>
-                    <li><a href="#" class="block font-medium text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-accent transition-colors px-3 py-2">POLITIQUE</a></li>
-                    <li><a href="#" class="block font-medium text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-accent transition-colors px-3 py-2">ÉCONOMIE</a></li>
-                    <li><a href="#" class="block font-medium text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-accent transition-colors px-3 py-2">SPORT</a></li>
-                    <li><a href="#" class="block font-medium text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-accent transition-colors px-3 py-2">CULTURE</a></li>
-                    <li><a href="#" class="block font-medium text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-accent transition-colors px-3 py-2">INTERNATIONAL</a></li>
-                    <li><a href="#" class="block font-medium text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-accent transition-colors px-3 py-2">NÉCROLOGIE</a></li>
-                    <li><a href="#" class="block font-medium text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-accent transition-colors px-3 py-2">CONTACT</a></li>
+                    <li><a href="#" class="block font-medium text-primary dark:text-white hover:text-accent dark:hover:text-accent transition-colors px-3 py-2 focus-visible:text-accent">ACCUEIL</a></li>
+                    <li><a href="#" class="block font-medium text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-accent transition-colors px-3 py-2 focus-visible:text-accent">POLITIQUE</a></li>
+                    <li><a href="#" class="block font-medium text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-accent transition-colors px-3 py-2 focus-visible:text-accent">ÉCONOMIE</a></li>
+                    <li><a href="#" class="block font-medium text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-accent transition-colors px-3 py-2 focus-visible:text-accent">SPORT</a></li>
+                    <li><a href="#" class="block font-medium text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-accent transition-colors px-3 py-2 focus-visible:text-accent">CULTURE</a></li>
+                    <li><a href="#" class="block font-medium text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-accent transition-colors px-3 py-2 focus-visible:text-accent">INTERNATIONAL</a></li>
+                    <li><a href="#" class="block font-medium text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-accent transition-colors px-3 py-2 focus-visible:text-accent">NÉCROLOGIE</a></li>
+                    <li><a href="#" class="block font-medium text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-accent transition-colors px-3 py-2 focus-visible:text-accent">CONTACT</a></li>
                 </ul>
                 <div class="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700 flex justify-center space-x-4">
-                    <a href="#" aria-label="Facebook" class="text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-accent transition-colors">
-                        <i class="fab fa-facebook-f"></i>
+                    <a href="#" aria-label="Facebook" class="text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-accent transition-colors focus-visible:text-accent">
+                        <i class="fab fa-facebook-f" aria-hidden="true"></i>
                     </a>
-                    <a href="#" aria-label="Twitter" class="text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-accent transition-colors">
-                        <i class="fab fa-twitter"></i>
+                    <a href="#" aria-label="Twitter" class="text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-accent transition-colors focus-visible:text-accent">
+                        <i class="fab fa-twitter" aria-hidden="true"></i>
                     </a>
-                    <a href="#" aria-label="Instagram" class="text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-accent transition-colors">
-                        <i class="fab fa-instagram"></i>
+                    <a href="#" aria-label="Instagram" class="text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-accent transition-colors focus-visible:text-accent">
+                        <i class="fab fa-instagram" aria-hidden="true"></i>
                     </a>
-                    <a href="#" aria-label="YouTube" class="text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-accent transition-colors">
-                        <i class="fab fa-youtube"></i>
+                    <a href="#" aria-label="YouTube" class="text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-accent transition-colors focus-visible:text-accent">
+                        <i class="fab fa-youtube" aria-hidden="true"></i>
                     </a>
                 </div>
             </div>
@@ -286,102 +322,110 @@
 
     <main>
         <!-- Zone Hero "À la une" -->
-        <section class="relative hero-clip bg-gradient-to-r from-primary to-secondary overflow-hidden animate-on-scroll">
-            <div class="container mx-auto px-4 py-16 md:py-24 text-white">
+        <section class="relative bg-gradient-to-r from-primary to-secondary overflow-hidden animate-on-scroll">
+            <div class="container mx-auto px-4 py-12 md:py-16 lg:py-24 text-white">
                 <div class="max-w-3xl">
                     <span class="inline-block bg-accent text-white text-sm font-semibold px-3 py-1 rounded-full mb-4">À LA UNE</span>
-                    <h1 class="text-4xl md:text-5xl lg:text-6xl font-serif font-bold mb-6 leading-tight">Élections nationales: les résultats qui vont changer le paysage politique</h1>
-                    <p class="text-lg md:text-xl mb-8 opacity-90">Analyse approfondie des tendances électorales et des implications pour les années à venir.</p>
-                    <div class="flex flex-wrap gap-4">
-                        <a href="#" class="bg-white text-primary hover:bg-gray-100 font-semibold px-6 py-3 rounded-full transition-all duration-300 transform hover:scale-105 shadow-lg">Lire la suite</a>
-                        <a href="#" class="border-2 border-white text-white hover:bg-white hover:text-primary font-semibold px-6 py-3 rounded-full transition-all duration-300 transform hover:scale-105">Voir les autres articles</a>
+                    <h1 class="text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-serif font-bold mb-4 md:mb-6 leading-tight">Élections nationales: les résultats qui vont changer le paysage politique</h1>
+                    <p class="text-base md:text-lg lg:text-xl mb-6 md:mb-8 opacity-90">Analyse approfondie des tendances électorales et des implications pour les années à venir.</p>
+                    <div class="flex flex-wrap gap-3 md:gap-4">
+                        <a href="#" class="bg-white text-primary hover:bg-gray-100 font-semibold px-5 py-2.5 md:px-6 md:py-3 rounded-full transition-all duration-300 transform hover:scale-105 shadow-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-white">Lire la suite</a>
+                        <a href="#" class="border-2 border-white text-white hover:bg-white hover:text-primary font-semibold px-5 py-2.5 md:px-6 md:py-3 rounded-full transition-all duration-300 transform hover:scale-105 focus-visible:outline focus-visible:outline-2 focus-visible:outline-white">Voir les autres articles</a>
                     </div>
                 </div>
             </div>
             
             <!-- Image de fond -->
             <div class="absolute inset-0 -z-10">
-                <img src="https://via.placeholder.com/1920x1080?text=Élections+Nationales" alt="Élections nationales" class="w-full h-full object-cover opacity-30">
+                <div class="placeholder-img w-full h-full dark:bg-gray-800 dark-img">
+                    Élections Nationales
+                </div>
             </div>
             
             <!-- Navigation slider -->
-            <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex space-x-2">
-                <button class="w-3 h-3 rounded-full bg-white opacity-50 hover:opacity-100 transition-opacity"></button>
-                <button class="w-3 h-3 rounded-full bg-white opacity-50 hover:opacity-100 transition-opacity"></button>
-                <button class="w-3 h-3 rounded-full bg-white opacity-100 transition-opacity"></button>
-                <button class="w-3 h-3 rounded-full bg-white opacity-50 hover:opacity-100 transition-opacity"></button>
+            <div class="absolute bottom-6 left-1/2 transform -translate-x-1/2 flex space-x-2">
+                <button class="w-2 h-2 md:w-3 md:h-3 rounded-full bg-white opacity-50 hover:opacity-100 transition-opacity focus-visible:opacity-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-white" aria-label="Aller à la diapositive 1"></button>
+                <button class="w-2 h-2 md:w-3 md:h-3 rounded-full bg-white opacity-50 hover:opacity-100 transition-opacity focus-visible:opacity-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-white" aria-label="Aller à la diapositive 2"></button>
+                <button class="w-2 h-2 md:w-3 md:h-3 rounded-full bg-white opacity-100 transition-opacity focus-visible:opacity-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-white" aria-label="Aller à la diapositive 3"></button>
+                <button class="w-2 h-2 md:w-3 md:h-3 rounded-full bg-white opacity-50 hover:opacity-100 transition-opacity focus-visible:opacity-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-white" aria-label="Aller à la diapositive 4"></button>
             </div>
             
             <!-- Flèches navigation -->
-            <button class="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-30 hover:bg-opacity-50 text-white p-3 rounded-full transition-all">
-                <i class="fas fa-chevron-left"></i>
+            <button class="hidden md:block absolute left-4 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-30 hover:bg-opacity-50 text-white p-2 md:p-3 rounded-full transition-all focus-visible:bg-opacity-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-white" aria-label="Diapositive précédente">
+                <i class="fas fa-chevron-left" aria-hidden="true"></i>
             </button>
-            <button class="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-30 hover:bg-opacity-50 text-white p-3 rounded-full transition-all">
-                <i class="fas fa-chevron-right"></i>
+            <button class="hidden md:block absolute right-4 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-30 hover:bg-opacity-50 text-white p-2 md:p-3 rounded-full transition-all focus-visible:bg-opacity-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-white" aria-label="Diapositive suivante">
+                <i class="fas fa-chevron-right" aria-hidden="true"></i>
             </button>
         </section>
 
         <!-- Dernières actualités -->
-        <section class="py-16 bg-gray-50 dark:bg-gray-800 animate-on-scroll">
+        <section class="py-12 md:py-16 bg-gray-50 dark:bg-gray-800 animate-on-scroll">
             <div class="container mx-auto px-4">
-                <div class="flex justify-between items-center mb-12">
-                    <h2 class="text-3xl font-serif font-bold">Dernières actualités</h2>
-                    <a href="#" class="text-primary dark:text-accent hover:underline font-medium flex items-center">
-                        Voir toutes les actualités <i class="fas fa-arrow-right ml-2"></i>
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 md:mb-12 gap-4">
+                    <h2 class="text-2xl md:text-3xl font-serif font-bold">Dernières actualités</h2>
+                    <a href="#" class="text-primary dark:text-accent hover:underline font-medium flex items-center focus-visible:underline">
+                        Voir toutes les actualités <i class="fas fa-arrow-right ml-2" aria-hidden="true"></i>
                     </a>
                 </div>
                 
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
                     <!-- Article 1 -->
-                    <article class="bg-white dark:bg-gray-700 rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 news-card-clip futuristic-animation">
+                    <article class="bg-white dark:bg-gray-700 rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 news-card">
                         <div class="relative overflow-hidden h-48">
-                            <img src="https://via.placeholder.com/600x400?text=Politique" alt="Politique" class="w-full h-full object-cover transition-transform duration-500 hover:scale-105">
+                            <div class="placeholder-img w-full h-full dark:bg-gray-600">
+                                Politique
+                            </div>
                             <span class="absolute top-4 left-4 bg-primary text-white text-xs font-semibold px-3 py-1 rounded-full">POLITIQUE</span>
                         </div>
-                        <div class="p-6">
+                        <div class="p-5 md:p-6">
                             <time datetime="2023-05-15" class="text-sm text-gray-500 dark:text-gray-400">15 mai 2023 • Par Jean Dupont</time>
-                            <h3 class="text-xl font-bold mt-2 mb-3 hover:text-primary dark:hover:text-accent transition-colors">
-                                <a href="#">Réforme des retraites: ce qui va changer pour vous</a>
+                            <h3 class="text-lg md:text-xl font-bold mt-2 mb-3 hover:text-primary dark:hover:text-accent transition-colors">
+                                <a href="#" class="focus-visible:text-primary">Réforme des retraites: ce qui va changer pour vous</a>
                             </h3>
-                            <p class="text-gray-600 dark:text-gray-300 mb-4">Le gouvernement dévoile son plan de réforme avec des mesures qui impacteront tous les travailleurs.</p>
-                            <a href="#" class="inline-flex items-center text-primary dark:text-accent font-medium hover:underline">
-                                Lire la suite <i class="fas fa-arrow-right ml-2 text-sm"></i>
+                            <p class="text-gray-600 dark:text-gray-300 mb-4 text-responsive">Le gouvernement dévoile son plan de réforme avec des mesures qui impacteront tous les travailleurs.</p>
+                            <a href="#" class="inline-flex items-center text-primary dark:text-accent font-medium hover:underline focus-visible:underline">
+                                Lire la suite <i class="fas fa-arrow-right ml-2 text-sm" aria-hidden="true"></i>
                             </a>
                         </div>
                     </article>
                     
                     <!-- Article 2 -->
-                    <article class="bg-white dark:bg-gray-700 rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 news-card-clip futuristic-animation">
+                    <article class="bg-white dark:bg-gray-700 rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 news-card">
                         <div class="relative overflow-hidden h-48">
-                            <img src="https://via.placeholder.com/600x400?text=Économie" alt="Économie" class="w-full h-full object-cover transition-transform duration-500 hover:scale-105">
+                            <div class="placeholder-img w-full h-full dark:bg-gray-600">
+                                Économie
+                            </div>
                             <span class="absolute top-4 left-4 bg-green-600 text-white text-xs font-semibold px-3 py-1 rounded-full">ÉCONOMIE</span>
                         </div>
-                        <div class="p-6">
+                        <div class="p-5 md:p-6">
                             <time datetime="2023-05-14" class="text-sm text-gray-500 dark:text-gray-400">14 mai 2023 • Par Marie Leroy</time>
-                            <h3 class="text-xl font-bold mt-2 mb-3 hover:text-primary dark:hover:text-accent transition-colors">
-                                <a href="#">Inflation: les prévisions pour le second semestre</a>
+                            <h3 class="text-lg md:text-xl font-bold mt-2 mb-3 hover:text-primary dark:hover:text-accent transition-colors">
+                                <a href="#" class="focus-visible:text-primary">Inflation: les prévisions pour le second semestre</a>
                             </h3>
-                            <p class="text-gray-600 dark:text-gray-300 mb-4">Les experts anticipent une légère baisse des prix mais restent prudents sur la durée de cette tendance.</p>
-                            <a href="#" class="inline-flex items-center text-primary dark:text-accent font-medium hover:underline">
-                                Lire la suite <i class="fas fa-arrow-right ml-2 text-sm"></i>
+                            <p class="text-gray-600 dark:text-gray-300 mb-4 text-responsive">Les experts anticipent une légère baisse des prix mais restent prudents sur la durée de cette tendance.</p>
+                            <a href="#" class="inline-flex items-center text-primary dark:text-accent font-medium hover:underline focus-visible:underline">
+                                Lire la suite <i class="fas fa-arrow-right ml-2 text-sm" aria-hidden="true"></i>
                             </a>
                         </div>
                     </article>
                     
                     <!-- Article 3 -->
-                    <article class="bg-white dark:bg-gray-700 rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 news-card-clip futuristic-animation">
+                    <article class="bg-white dark:bg-gray-700 rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 news-card">
                         <div class="relative overflow-hidden h-48">
-                            <img src="https://via.placeholder.com/600x400?text=Sport" alt="Sport" class="w-full h-full object-cover transition-transform duration-500 hover:scale-105">
+                            <div class="placeholder-img w-full h-full dark:bg-gray-600">
+                                Sport
+                            </div>
                             <span class="absolute top-4 left-4 bg-red-600 text-white text-xs font-semibold px-3 py-1 rounded-full">SPORT</span>
                         </div>
-                        <div class="p-6">
+                        <div class="p-5 md:p-6">
                             <time datetime="2023-05-13" class="text-sm text-gray-500 dark:text-gray-400">13 mai 2023 • Par Thomas Martin</time>
-                            <h3 class="text-xl font-bold mt-2 mb-3 hover:text-primary dark:hover:text-accent transition-colors">
-                                <a href="#">Coupe d'Europe: le parcours historique de l'équipe nationale</a>
+                            <h3 class="text-lg md:text-xl font-bold mt-2 mb-3 hover:text-primary dark:hover:text-accent transition-colors">
+                                <a href="#" class="focus-visible:text-primary">Coupe d'Europe: le parcours historique de l'équipe nationale</a>
                             </h3>
-                            <p class="text-gray-600 dark:text-gray-300 mb-4">Retour sur les moments clés qui ont mené notre sélection en demi-finale pour la première fois depuis 20 ans.</p>
-                            <a href="#" class="inline-flex items-center text-primary dark:text-accent font-medium hover:underline">
-                                Lire la suite <i class="fas fa-arrow-right ml-2 text-sm"></i>
+                            <p class="text-gray-600 dark:text-gray-300 mb-4 text-responsive">Retour sur les moments clés qui ont mené notre sélection en demi-finale pour la première fois depuis 20 ans.</p>
+                            <a href="#" class="inline-flex items-center text-primary dark:text-accent font-medium hover:underline focus-visible:underline">
+                                Lire la suite <i class="fas fa-arrow-right ml-2 text-sm" aria-hidden="true"></i>
                             </a>
                         </div>
                     </article>
@@ -390,60 +434,68 @@
         </section>
 
         <!-- Bloc Politique -->
-        <section class="py-16 animate-on-scroll">
+        <section class="py-12 md:py-16 animate-on-scroll">
             <div class="container mx-auto px-4">
-                <div class="flex justify-between items-center mb-12">
-                    <h2 class="text-3xl font-serif font-bold">Politique</h2>
-                    <a href="#" class="text-primary dark:text-accent hover:underline font-medium flex items-center">
-                        Voir plus <i class="fas fa-arrow-right ml-2"></i>
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 md:mb-12 gap-4">
+                    <h2 class="text-2xl md:text-3xl font-serif font-bold">Politique</h2>
+                    <a href="#" class="text-primary dark:text-accent hover:underline font-medium flex items-center focus-visible:underline">
+                        Voir plus <i class="fas fa-arrow-right ml-2" aria-hidden="true"></i>
                     </a>
                 </div>
                 
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                     <!-- Article 1 -->
                     <article class="group">
-                        <div class="relative overflow-hidden rounded-lg mb-4 h-48 category-clip">
-                            <img src="https://via.placeholder.com/400x300?text=Politique+1" alt="Politique" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        <div class="relative overflow-hidden rounded-lg mb-4 h-40 sm:h-48">
+                            <div class="placeholder-img w-full h-full dark:bg-gray-600 group-hover:scale-105 transition-transform duration-500">
+                                Politique 1
+                            </div>
                         </div>
                         <time datetime="2023-05-12" class="text-sm text-gray-500 dark:text-gray-400">12 mai 2023</time>
                         <h3 class="text-lg font-bold mt-1 mb-2 hover:text-primary dark:hover:text-accent transition-colors">
-                            <a href="#">Débat parlementaire houleux sur la nouvelle loi</a>
+                            <a href="#" class="focus-visible:text-primary">Débat parlementaire houleux sur la nouvelle loi</a>
                         </h3>
                         <p class="text-gray-600 dark:text-gray-300 text-sm">Les députés se sont vivement opposés lors de la discussion du projet de loi sur la sécurité.</p>
                     </article>
                     
                     <!-- Article 2 -->
                     <article class="group">
-                        <div class="relative overflow-hidden rounded-lg mb-4 h-48 category-clip">
-                            <img src="https://via.placeholder.com/400x300?text=Politique+2" alt="Politique" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        <div class="relative overflow-hidden rounded-lg mb-4 h-40 sm:h-48">
+                            <div class="placeholder-img w-full h-full dark:bg-gray-600 group-hover:scale-105 transition-transform duration-500">
+                                Politique 2
+                            </div>
                         </div>
                         <time datetime="2023-05-11" class="text-sm text-gray-500 dark:text-gray-400">11 mai 2023</time>
                         <h3 class="text-lg font-bold mt-1 mb-2 hover:text-primary dark:hover:text-accent transition-colors">
-                            <a href="#">Le président annonce un remaniement ministériel</a>
+                            <a href="#" class="focus-visible:text-primary">Le président annonce un remaniement ministériel</a>
                         </h3>
                         <p class="text-gray-600 dark:text-gray-300 text-sm">Plusieurs portefeuilles clés changent de mains dans cette nouvelle configuration gouvernementale.</p>
                     </article>
                     
                     <!-- Article 3 -->
                     <article class="group">
-                        <div class="relative overflow-hidden rounded-lg mb-4 h-48 category-clip">
-                            <img src="https://via.placeholder.com/400x300?text=Politique+3" alt="Politique" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        <div class="relative overflow-hidden rounded-lg mb-4 h-40 sm:h-48">
+                            <div class="placeholder-img w-full h-full dark:bg-gray-600 group-hover:scale-105 transition-transform duration-500">
+                                Politique 3
+                            </div>
                         </div>
                         <time datetime="2023-05-10" class="text-sm text-gray-500 dark:text-gray-400">10 mai 2023</time>
                         <h3 class="text-lg font-bold mt-1 mb-2 hover:text-primary dark:hover:text-accent transition-colors">
-                            <a href="#">Sondage: la cote de popularité du gouvernement en baisse</a>
+                            <a href="#" class="focus-visible:text-primary">Sondage: la cote de popularité du gouvernement en baisse</a>
                         </h3>
                         <p class="text-gray-600 dark:text-gray-300 text-sm">Selon notre dernier baromètre, seulement 32% des Français approuvent l'action du gouvernement.</p>
                     </article>
                     
                     <!-- Article 4 -->
                     <article class="group">
-                        <div class="relative overflow-hidden rounded-lg mb-4 h-48 category-clip">
-                            <img src="https://via.placeholder.com/400x300?text=Politique+4" alt="Politique" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        <div class="relative overflow-hidden rounded-lg mb-4 h-40 sm:h-48">
+                            <div class="placeholder-img w-full h-full dark:bg-gray-600 group-hover:scale-105 transition-transform duration-500">
+                                Politique 4
+                            </div>
                         </div>
                         <time datetime="2023-05-09" class="text-sm text-gray-500 dark:text-gray-400">09 mai 2023</time>
                         <h3 class="text-lg font-bold mt-1 mb-2 hover:text-primary dark:hover:text-accent transition-colors">
-                            <a href="#">Les régionales préparent déjà les élections de 2024</a>
+                            <a href="#" class="focus-visible:text-primary">Les régionales préparent déjà les élections de 2024</a>
                         </h3>
                         <p class="text-gray-600 dark:text-gray-300 text-sm">Les partis politiques commencent à dévoiler leurs stratégies et leurs têtes de liste.</p>
                     </article>
@@ -452,7 +504,7 @@
         </section>
 
         <!-- Zone publicitaire -->
-        <section class="py-8 bg-gray-100 dark:bg-gray-700 animate-on-scroll">
+        <section class="py-6 md:py-8 bg-gray-100 dark:bg-gray-700 animate-on-scroll" aria-label="Publicité">
             <div class="container mx-auto px-4">
                 <div class="flex justify-center items-center p-4 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg">
                     <p class="text-gray-500 dark:text-gray-400">Espace publicitaire 728x90</p>
@@ -461,60 +513,68 @@
         </section>
 
         <!-- Bloc Économie -->
-        <section class="py-16 bg-white dark:bg-gray-800 animate-on-scroll">
+        <section class="py-12 md:py-16 bg-white dark:bg-gray-800 animate-on-scroll">
             <div class="container mx-auto px-4">
-                <div class="flex justify-between items-center mb-12">
-                    <h2 class="text-3xl font-serif font-bold">Économie</h2>
-                    <a href="#" class="text-primary dark:text-accent hover:underline font-medium flex items-center">
-                        Voir plus <i class="fas fa-arrow-right ml-2"></i>
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 md:mb-12 gap-4">
+                    <h2 class="text-2xl md:text-3xl font-serif font-bold">Économie</h2>
+                    <a href="#" class="text-primary dark:text-accent hover:underline font-medium flex items-center focus-visible:underline">
+                        Voir plus <i class="fas fa-arrow-right ml-2" aria-hidden="true"></i>
                     </a>
                 </div>
                 
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                     <!-- Article 1 -->
                     <article class="group">
-                        <div class="relative overflow-hidden rounded-lg mb-4 h-48 category-clip">
-                            <img src="https://via.placeholder.com/400x300?text=Économie+1" alt="Économie" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        <div class="relative overflow-hidden rounded-lg mb-4 h-40 sm:h-48">
+                            <div class="placeholder-img w-full h-full dark:bg-gray-600 group-hover:scale-105 transition-transform duration-500">
+                                Économie 1
+                            </div>
                         </div>
                         <time datetime="2023-05-12" class="text-sm text-gray-500 dark:text-gray-400">12 mai 2023</time>
                         <h3 class="text-lg font-bold mt-1 mb-2 hover:text-primary dark:hover:text-accent transition-colors">
-                            <a href="#">La Banque Centrale relève ses taux directeurs</a>
+                            <a href="#" class="focus-visible:text-primary">La Banque Centrale relève ses taux directeurs</a>
                         </h3>
                         <p class="text-gray-600 dark:text-gray-300 text-sm">Une augmentation de 0,5 point décidée pour lutter contre l'inflation persistante.</p>
                     </article>
                     
                     <!-- Article 2 -->
                     <article class="group">
-                        <div class="relative overflow-hidden rounded-lg mb-4 h-48 category-clip">
-                            <img src="https://via.placeholder.com/400x300?text=Économie+2" alt="Économie" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        <div class="relative overflow-hidden rounded-lg mb-4 h-40 sm:h-48">
+                            <div class="placeholder-img w-full h-full dark:bg-gray-600 group-hover:scale-105 transition-transform duration-500">
+                                Économie 2
+                            </div>
                         </div>
                         <time datetime="2023-05-11" class="text-sm text-gray-500 dark:text-gray-400">11 mai 2023</time>
                         <h3 class="text-lg font-bold mt-1 mb-2 hover:text-primary dark:hover:text-accent transition-colors">
-                            <a href="#">Chiffre du chômage: une baisse inattendue</a>
+                            <a href="#" class="focus-visible:text-primary">Chiffre du chômage: une baisse inattendue</a>
                         </h3>
                         <p class="text-gray-600 dark:text-gray-300 text-sm">Le taux de chômage a reculé de 0,3 point ce trimestre, une bonne surprise pour les analystes.</p>
                     </article>
                     
                     <!-- Article 3 -->
                     <article class="group">
-                        <div class="relative overflow-hidden rounded-lg mb-4 h-48 category-clip">
-                            <img src="https://via.placeholder.com/400x300?text=Économie+3" alt="Économie" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        <div class="relative overflow-hidden rounded-lg mb-4 h-40 sm:h-48">
+                            <div class="placeholder-img w-full h-full dark:bg-gray-600 group-hover:scale-105 transition-transform duration-500">
+                                Économie 3
+                            </div>
                         </div>
                         <time datetime="2023-05-10" class="text-sm text-gray-500 dark:text-gray-400">10 mai 2023</time>
                         <h3 class="text-lg font-bold mt-1 mb-2 hover:text-primary dark:hover:text-accent transition-colors">
-                            <a href="#">Fusion historique dans le secteur de l'énergie</a>
+                            <a href="#" class="focus-visible:text-primary">Fusion historique dans le secteur de l'énergie</a>
                         </h3>
                         <p class="text-gray-600 dark:text-gray-300 text-sm">Deux géants annoncent leur rapprochement, créant un leader européen des énergies renouvelables.</p>
                     </article>
                     
                     <!-- Article 4 -->
                     <article class="group">
-                        <div class="relative overflow-hidden rounded-lg mb-4 h-48 category-clip">
-                            <img src="https://via.placeholder.com/400x300?text=Économie+4" alt="Économie" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        <div class="relative overflow-hidden rounded-lg mb-4 h-40 sm:h-48">
+                            <div class="placeholder-img w-full h-full dark:bg-gray-600 group-hover:scale-105 transition-transform duration-500">
+                                Économie 4
+                            </div>
                         </div>
                         <time datetime="2023-05-09" class="text-sm text-gray-500 dark:text-gray-400">09 mai 2023</time>
                         <h3 class="text-lg font-bold mt-1 mb-2 hover:text-primary dark:hover:text-accent transition-colors">
-                            <a href="#">Tech: les nouvelles licornes françaises</a>
+                            <a href="#" class="focus-visible:text-primary">Tech: les nouvelles licornes françaises</a>
                         </h3>
                         <p class="text-gray-600 dark:text-gray-300 text-sm">Trois startups tricolores ont atteint le milliard de valorisation ce mois-ci.</p>
                     </article>
@@ -523,25 +583,25 @@
         </section>
 
         <!-- Module "En direct" -->
-        <section class="py-16 bg-gray-50 dark:bg-gray-700 animate-on-scroll">
+        <section class="py-12 md:py-16 bg-gray-50 dark:bg-gray-700 animate-on-scroll">
             <div class="container mx-auto px-4">
-                <div class="flex justify-between items-center mb-8">
-                    <h2 class="text-3xl font-serif font-bold flex items-center">
-                        <span class="w-3 h-3 bg-red-600 rounded-full mr-3 animate-pulse"></span>
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 md:mb-8 gap-4">
+                    <h2 class="text-2xl md:text-3xl font-serif font-bold flex items-center">
+                        <span class="w-2 h-2 md:w-3 md:h-3 bg-red-600 rounded-full mr-2 md:mr-3 animate-pulse" aria-hidden="true"></span>
                         En direct
                     </h2>
-                    <a href="#" class="text-primary dark:text-accent hover:underline font-medium flex items-center">
-                        Voir le direct complet <i class="fas fa-arrow-right ml-2"></i>
+                    <a href="#" class="text-primary dark:text-accent hover:underline font-medium flex items-center focus-visible:underline">
+                        Voir le direct complet <i class="fas fa-arrow-right ml-2" aria-hidden="true"></i>
                     </a>
                 </div>
                 
-                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden futuristic-animation">
+                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden">
                     <div class="divide-y divide-gray-200 dark:divide-gray-700 max-h-96 overflow-y-auto">
                         <!-- Live item 1 -->
                         <div class="p-4 hover:bg-gray-50 dark:hover:bg-gray-750 transition-colors">
                             <div class="flex">
-                                <time class="text-sm font-medium text-gray-500 dark:text-gray-400 w-16 flex-shrink-0">14:32</time>
-                                <div class="ml-4">
+                                <time class="text-sm font-medium text-gray-500 dark:text-gray-400 w-14 md:w-16 flex-shrink-0">14:32</time>
+                                <div class="ml-3 md:ml-4">
                                     <h3 class="font-medium">Élections départementales: premiers résultats partiels</h3>
                                     <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Les bureaux de vote ferment progressivement, les premières tendances apparaissent.</p>
                                 </div>
@@ -551,8 +611,8 @@
                         <!-- Live item 2 -->
                         <div class="p-4 hover:bg-gray-50 dark:hover:bg-gray-750 transition-colors">
                             <div class="flex">
-                                <time class="text-sm font-medium text-gray-500 dark:text-gray-400 w-16 flex-shrink-0">14:15</time>
-                                <div class="ml-4">
+                                <time class="text-sm font-medium text-gray-500 dark:text-gray-400 w-14 md:w-16 flex-shrink-0">14:15</time>
+                                <div class="ml-3 md:ml-4">
                                     <h3 class="font-medium">Tennis: Nadal éliminé dès le premier tour à Rome</h3>
                                     <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Le champion espagnol s'incline en 3 sets contre le Canadien Shapovalov.</p>
                                 </div>
@@ -562,8 +622,8 @@
                         <!-- Live item 3 -->
                         <div class="p-4 hover:bg-gray-50 dark:hover:bg-gray-750 transition-colors">
                             <div class="flex">
-                                <time class="text-sm font-medium text-gray-500 dark:text-gray-400 w-16 flex-shrink-0">13:58</time>
-                                <div class="ml-4">
+                                <time class="text-sm font-medium text-gray-500 dark:text-gray-400 w-14 md:w-16 flex-shrink-0">13:58</time>
+                                <div class="ml-3 md:ml-4">
                                     <h3 class="font-medium">Bourse de Paris: le CAC40 en hausse de 1,2%</h3>
                                     <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Les valeurs bancaires et technologiques tirent l'indice vers le haut.</p>
                                 </div>
@@ -573,8 +633,8 @@
                         <!-- Live item 4 -->
                         <div class="p-4 hover:bg-gray-50 dark:hover:bg-gray-750 transition-colors">
                             <div class="flex">
-                                <time class="text-sm font-medium text-gray-500 dark:text-gray-400 w-16 flex-shrink-0">13:42</time>
-                                <div class="ml-4">
+                                <time class="text-sm font-medium text-gray-500 dark:text-gray-400 w-14 md:w-16 flex-shrink-0">13:42</time>
+                                <div class="ml-3 md:ml-4">
                                     <h3 class="font-medium">Grèves: perturbations attendues dans les transports demain</h3>
                                     <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Un syndicat majoritaire appelle à une journée de grève contre la réforme des retraites.</p>
                                 </div>
@@ -584,8 +644,8 @@
                         <!-- Live item 5 -->
                         <div class="p-4 hover:bg-gray-50 dark:hover:bg-gray-750 transition-colors">
                             <div class="flex">
-                                <time class="text-sm font-medium text-gray-500 dark:text-gray-400 w-16 flex-shrink-0">13:25</time>
-                                <div class="ml-4">
+                                <time class="text-sm font-medium text-gray-500 dark:text-gray-400 w-14 md:w-16 flex-shrink-0">13:25</time>
+                                <div class="ml-3 md:ml-4">
                                     <h3 class="font-medium">Festival de Cannes: les premières réactions à la projection de "Anatomie d'une chute"</h3>
                                     <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Le film de Justine Triet reçoit un accueil très favorable de la part de la critique.</p>
                                 </div>
@@ -597,73 +657,84 @@
         </section>
 
         <!-- Bloc Vidéo / Reportage -->
-        <section class="py-16 animate-on-scroll">
+        <section class="py-12 md:py-16 animate-on-scroll">
             <div class="container mx-auto px-4">
-                <div class="flex justify-between items-center mb-12">
-                    <h2 class="text-3xl font-serif font-bold">Vidéos & Reportages</h2>
-                    <a href="#" class="text-primary dark:text-accent hover:underline font-medium flex items-center">
-                        Voir plus <i class="fas fa-arrow-right ml-2"></i>
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 md:mb-12 gap-4">
+                    <h2 class="text-2xl md:text-3xl font-serif font-bold">Vidéos & Reportages</h2>
+                    <a href="#" class="text-primary dark:text-accent hover:underline font-medium flex items-center focus-visible:underline">
+                        Voir plus <i class="fas fa-arrow-right ml-2" aria-hidden="true"></i>
                     </a>
                 </div>
                 
-                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8">
                     <!-- Video principale -->
                     <div class="lg:col-span-2">
-                        <div class="relative pt-[56.25%] bg-black rounded-xl overflow-hidden shadow-lg futuristic-animation">
-                            <iframe class="absolute top-0 left-0 w-full h-full" src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                        <div class="relative pt-[56.25%] bg-black rounded-xl overflow-hidden shadow-lg">
+                            <div class="placeholder-img absolute top-0 left-0 w-full h-full dark:bg-gray-800 flex items-center justify-center text-white">
+                                <div class="text-center">
+                                    <i class="fas fa-play text-4xl mb-2" aria-hidden="true"></i>
+                                    <p>Vidéo: Reportage exclusif</p>
+                                </div>
+                            </div>
                         </div>
-                        <h3 class="text-xl font-bold mt-4 mb-2 hover:text-primary dark:hover:text-accent transition-colors">
-                            <a href="#">Reportage exclusif: dans les coulisses du sommet européen</a>
+                        <h3 class="text-lg md:text-xl font-bold mt-4 mb-2 hover:text-primary dark:hover:text-accent transition-colors">
+                            <a href="#" class="focus-visible:text-primary">Reportage exclusif: dans les coulisses du sommet européen</a>
                         </h3>
                         <p class="text-gray-600 dark:text-gray-300">Notre équipe a pu suivre les négociations entre les dirigeants européens sur le nouveau pacte migratoire.</p>
                     </div>
                     
                     <!-- Miniatures vidéos -->
-                    <div class="space-y-6">
+                    <div class="space-y-4 md:space-y-6">
                         <!-- Miniature 1 -->
-                        <a href="#" class="group flex items-start space-x-4">
+                        <a href="#" class="group flex items-start space-x-3 md:space-x-4 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary rounded-lg p-2 -m-2">
                             <div class="relative w-1/3 flex-shrink-0 rounded-lg overflow-hidden">
-                                <img src="https://via.placeholder.com/300x200?text=Video+1" alt="Video 1" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                                <div class="placeholder-img aspect-video dark:bg-gray-600 group-hover:scale-105 transition-transform duration-500">
+                                    Video 1
+                                </div>
                                 <div class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-30 group-hover:bg-opacity-50 transition-colors">
-                                    <div class="w-10 h-10 bg-white bg-opacity-80 rounded-full flex items-center justify-center">
-                                        <i class="fas fa-play text-primary"></i>
+                                    <div class="w-8 h-8 md:w-10 md:h-10 bg-white bg-opacity-80 rounded-full flex items-center justify-center">
+                                        <i class="fas fa-play text-primary text-sm md:text-base" aria-hidden="true"></i>
                                     </div>
                                 </div>
                             </div>
                             <div class="flex-1">
-                                <h4 class="font-bold group-hover:text-primary dark:group-hover:text-accent transition-colors">Interview exclusive du ministre de l'Économie</h4>
+                                <h4 class="font-bold group-hover:text-primary dark:group-hover:text-accent transition-colors text-responsive">Interview exclusive du ministre de l'Économie</h4>
                                 <time class="text-sm text-gray-500 dark:text-gray-400 mt-1 block">12 mai 2023</time>
                             </div>
                         </a>
                         
                         <!-- Miniature 2 -->
-                        <a href="#" class="group flex items-start space-x-4">
+                        <a href="#" class="group flex items-start space-x-3 md:space-x-4 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary rounded-lg p-2 -m-2">
                             <div class="relative w-1/3 flex-shrink-0 rounded-lg overflow-hidden">
-                                <img src="https://via.placeholder.com/300x200?text=Video+2" alt="Video 2" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                                <div class="placeholder-img aspect-video dark:bg-gray-600 group-hover:scale-105 transition-transform duration-500">
+                                    Video 2
+                                </div>
                                 <div class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-30 group-hover:bg-opacity-50 transition-colors">
-                                    <div class="w-10 h-10 bg-white bg-opacity-80 rounded-full flex items-center justify-center">
-                                        <i class="fas fa-play text-primary"></i>
+                                    <div class="w-8 h-8 md:w-10 md:h-10 bg-white bg-opacity-80 rounded-full flex items-center justify-center">
+                                        <i class="fas fa-play text-primary text-sm md:text-base" aria-hidden="true"></i>
                                     </div>
                                 </div>
                             </div>
                             <div class="flex-1">
-                                <h4 class="font-bold group-hover:text-primary dark:group-hover:text-accent transition-colors">Enquête: le business florissant des influenceurs</h4>
+                                <h4 class="font-bold group-hover:text-primary dark:group-hover:text-accent transition-colors text-responsive">Enquête: le business florissant des influenceurs</h4>
                                 <time class="text-sm text-gray-500 dark:text-gray-400 mt-1 block">11 mai 2023</time>
                             </div>
                         </a>
                         
                         <!-- Miniature 3 -->
-                        <a href="#" class="group flex items-start space-x-4">
+                        <a href="#" class="group flex items-start space-x-3 md:space-x-4 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary rounded-lg p-2 -m-2">
                             <div class="relative w-1/3 flex-shrink-0 rounded-lg overflow-hidden">
-                                <img src="https://via.placeholder.com/300x200?text=Video+3" alt="Video 3" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                                <div class="placeholder-img aspect-video dark:bg-gray-600 group-hover:scale-105 transition-transform duration-500">
+                                    Video 3
+                                </div>
                                 <div class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-30 group-hover:bg-opacity-50 transition-colors">
-                                    <div class="w-10 h-10 bg-white bg-opacity-80 rounded-full flex items-center justify-center">
-                                        <i class="fas fa-play text-primary"></i>
+                                    <div class="w-8 h-8 md:w-10 md:h-10 bg-white bg-opacity-80 rounded-full flex items-center justify-center">
+                                        <i class="fas fa-play text-primary text-sm md:text-base" aria-hidden="true"></i>
                                     </div>
                                 </div>
                             </div>
                             <div class="flex-1">
-                                <h4 class="font-bold group-hover:text-primary dark:group-hover:text-accent transition-colors">Découverte: le village français qui mise tout sur l'écologie</h4>
+                                <h4 class="font-bold group-hover:text-primary dark:group-hover:text-accent transition-colors text-responsive">Découverte: le village français qui mise tout sur l'écologie</h4>
                                 <time class="text-sm text-gray-500 dark:text-gray-400 mt-1 block">10 mai 2023</time>
                             </div>
                         </a>
@@ -673,22 +744,29 @@
         </section>
 
         <!-- Newsletter & Interaction -->
-        <section class="py-16 bg-primary text-white animate-on-scroll">
+        <section class="py-12 md:py-16 bg-primary text-white animate-on-scroll">
             <div class="container mx-auto px-4">
                 <div class="max-w-4xl mx-auto text-center">
-                    <h2 class="text-3xl md:text-4xl font-serif font-bold mb-6">Restez informé</h2>
-                    <p class="text-lg opacity-90 mb-8">Abonnez-vous à notre newsletter pour recevoir les dernières actualités directement dans votre boîte mail.</p>
+                    <h2 class="text-2xl md:text-3xl lg:text-4xl font-serif font-bold mb-4 md:mb-6">Restez informé</h2>
+                    <p class="text-base md:text-lg opacity-90 mb-6 md:mb-8">Abonnez-vous à notre newsletter pour recevoir les dernières actualités directement dans votre boîte mail.</p>
                     
-                    <form class="flex flex-col sm:flex-row gap-4 max-w-lg mx-auto">
-                        <input type="email" placeholder="Votre adresse email" required class="flex-1 px-4 py-3 rounded-full text-gray-900 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-primary">
-                        <button type="submit" class="bg-white text-primary hover:bg-gray-100 font-semibold px-6 py-3 rounded-full transition-all duration-300 transform hover:scale-105 shadow-lg">S'abonner</button>
+                    <form class="flex flex-col sm:flex-row gap-3 md:gap-4 max-w-lg mx-auto">
+                        <label for="newsletter-email" class="sr-only">Votre adresse email</label>
+                        <input 
+                            id="newsletter-email" 
+                            type="email" 
+                            placeholder="Votre adresse email" 
+                            required 
+                            class="flex-1 px-4 py-3 rounded-full text-gray-900 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-primary"
+                        >
+                        <button type="submit" class="bg-white text-primary hover:bg-gray-100 font-semibold px-5 py-3 md:px-6 md:py-3 rounded-full transition-all duration-300 transform hover:scale-105 shadow-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-white">S'abonner</button>
                     </form>
                     
-                    <p class="text-sm opacity-75 mt-4">Nous respectons votre vie privée. Vous pouvez vous désabonner à tout moment.</p>
+                    <p class="text-sm opacity-75 mt-3 md:mt-4">Nous respectons votre vie privée. Vous pouvez vous désabonner à tout moment.</p>
                     
-                    <div class="mt-8">
-                        <button class="bg-accent hover:bg-red-700 text-white font-semibold px-6 py-3 rounded-full transition-all duration-300 transform hover:scale-105 shadow-lg flex items-center mx-auto">
-                            <i class="fas fa-bell mr-2"></i> Activer les notifications push
+                    <div class="mt-6 md:mt-8">
+                        <button class="bg-accent hover:bg-red-700 text-white font-semibold px-5 py-2.5 md:px-6 md:py-3 rounded-full transition-all duration-300 transform hover:scale-105 shadow-lg flex items-center mx-auto focus-visible:outline focus-visible:outline-2 focus-visible:outline-white">
+                            <i class="fas fa-bell mr-2" aria-hidden="true"></i> Activer les notifications push
                         </button>
                         <p class="text-xs mt-2 opacity-75">Recevez les alertes breaking news directement sur votre appareil.</p>
                     </div>
@@ -698,27 +776,29 @@
     </main>
 
     <!-- Footer -->
-    <footer class="bg-gray-800 text-gray-300 pt-16 pb-8 animate-on-scroll">
+    <footer class="bg-gray-800 text-gray-300 pt-12 md:pt-16 pb-6 md:pb-8 animate-on-scroll">
         <div class="container mx-auto px-4">
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 mb-8 md:mb-12">
                 <!-- Colonne 1 -->
                 <div>
-                    <a href="#" class="mb-4 inline-block">
-                        <img src="https://via.placeholder.com/150x60?text=VTN+News" alt=" Logo" class="h-10">
+                    <a href="#" class="mb-4 inline-block focus-visible:outline focus-visible:outline-2 focus-visible:outline-white">
+                        <div class="h-10 w-32 bg-gray-700 flex items-center justify-center rounded">
+                            VTN News
+                        </div>
                     </a>
-                    <p class="mb-4">VTN Word News vous apporte une information fiable, vérifiée et en temps réel sur l'actualité mondiale.</p>
+                    <p class="mb-4 text-sm md:text-base">VTN Word News vous apporte une information fiable, vérifiée et en temps réel sur l'actualité mondiale.</p>
                     <div class="flex space-x-4">
-                        <a href="#" aria-label="Facebook" class="text-gray-400 hover:text-white transition-colors">
-                            <i class="fab fa-facebook-f"></i>
+                        <a href="#" aria-label="Facebook" class="text-gray-400 hover:text-white transition-colors focus-visible:text-white">
+                            <i class="fab fa-facebook-f" aria-hidden="true"></i>
                         </a>
-                        <a href="#" aria-label="Twitter" class="text-gray-400 hover:text-white transition-colors">
-                            <i class="fab fa-twitter"></i>
+                        <a href="#" aria-label="Twitter" class="text-gray-400 hover:text-white transition-colors focus-visible:text-white">
+                            <i class="fab fa-twitter" aria-hidden="true"></i>
                         </a>
-                        <a href="#" aria-label="Instagram" class="text-gray-400 hover:text-white transition-colors">
-                            <i class="fab fa-instagram"></i>
+                        <a href="#" aria-label="Instagram" class="text-gray-400 hover:text-white transition-colors focus-visible:text-white">
+                            <i class="fab fa-instagram" aria-hidden="true"></i>
                         </a>
-                        <a href="#" aria-label="YouTube" class="text-gray-400 hover:text-white transition-colors">
-                            <i class="fab fa-youtube"></i>
+                        <a href="#" aria-label="YouTube" class="text-gray-400 hover:text-white transition-colors focus-visible:text-white">
+                            <i class="fab fa-youtube" aria-hidden="true"></i>
                         </a>
                     </div>
                 </div>
@@ -727,12 +807,12 @@
                 <div>
                     <h3 class="text-white font-bold text-lg mb-4">Liens rapides</h3>
                     <ul class="space-y-2">
-                        <li><a href="#" class="hover:text-white transition-colors">Accueil</a></li>
-                        <li><a href="#" class="hover:text-white transition-colors">Mentions légales</a></li>
-                        <li><a href="#" class="hover:text-white transition-colors">Politique de confidentialité</a></li>
-                        <li><a href="#" class="hover:text-white transition-colors">Conditions générales</a></li>
-                        <li><a href="#" class="hover:text-white transition-colors">Contact</a></li>
-                        <li><a href="#" class="hover:text-white transition-colors">À propos</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors focus-visible:text-white text-sm md:text-base">Accueil</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors focus-visible:text-white text-sm md:text-base">Mentions légales</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors focus-visible:text-white text-sm md:text-base">Politique de confidentialité</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors focus-visible:text-white text-sm md:text-base">Conditions générales</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors focus-visible:text-white text-sm md:text-base">Contact</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors focus-visible:text-white text-sm md:text-base">À propos</a></li>
                     </ul>
                 </div>
                 
@@ -740,31 +820,38 @@
                 <div>
                     <h3 class="text-white font-bold text-lg mb-4">Catégories</h3>
                     <ul class="space-y-2">
-                        <li><a href="#" class="hover:text-white transition-colors">Politique</a></li>
-                        <li><a href="#" class="hover:text-white transition-colors">Économie</a></li>
-                        <li><a href="#" class="hover:text-white transition-colors">Sport</a></li>
-                        <li><a href="#" class="hover:text-white transition-colors">Culture</a></li>
-                        <li><a href="#" class="hover:text-white transition-colors">International</a></li>
-                        <li><a href="#" class="hover:text-white transition-colors">Nécrologie</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors focus-visible:text-white text-sm md:text-base">Politique</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors focus-visible:text-white text-sm md:text-base">Économie</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors focus-visible:text-white text-sm md:text-base">Sport</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors focus-visible:text-white text-sm md:text-base">Culture</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors focus-visible:text-white text-sm md:text-base">International</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors focus-visible:text-white text-sm md:text-base">Nécrologie</a></li>
                     </ul>
                 </div>
                 
                 <!-- Colonne 4 -->
                 <div>
                     <h3 class="text-white font-bold text-lg mb-4">Newsletter</h3>
-                    <p class="mb-4">Abonnez-vous pour recevoir nos dernières actualités.</p>
+                    <p class="mb-4 text-sm md:text-base">Abonnez-vous pour recevoir nos dernières actualités.</p>
                     <form class="flex">
-                        <input type="email" placeholder="Votre email" class="px-4 py-2 rounded-l-full text-gray-900 focus:outline-none flex-1">
-                        <button type="submit" class="bg-primary hover:bg-secondary text-white px-4 py-2 rounded-r-full transition-colors">
-                            <i class="fas fa-paper-plane"></i>
+                        <label for="footer-newsletter-email" class="sr-only">Votre email</label>
+                        <input 
+                            id="footer-newsletter-email" 
+                            type="email" 
+                            placeholder="Votre email" 
+                            class="px-3 py-2 rounded-l-full text-gray-900 focus:outline-none flex-1 text-sm md:text-base"
+                        >
+                        <button type="submit" class="bg-primary hover:bg-secondary text-white px-3 py-2 rounded-r-full transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-white">
+                            <i class="fas fa-paper-plane" aria-hidden="true"></i>
+                            <span class="sr-only">S'abonner</span>
                         </button>
                     </form>
                 </div>
             </div>
             
             <!-- Bande inférieure -->
-            <div class="border-t border-gray-700 pt-8 text-center text-sm text-gray-500">
-                <p>&copy; 2025 exemple Tous droits réservés.</p>
+            <div class="border-t border-gray-700 pt-6 md:pt-8 text-center text-sm text-gray-500">
+                <p>&copy; 2025 VTN News. Tous droits réservés.</p>
             </div>
         </div>
     </footer>
@@ -775,6 +862,7 @@
         const themeToggle = document.getElementById('theme-toggle');
         const html = document.documentElement;
         
+        // Vérifier la préférence utilisateur ou le stockage local
         if (localStorage.getItem('theme') === 'dark' || (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
             html.classList.add('dark');
         } else {
@@ -791,7 +879,31 @@
         const mobileMenu = document.getElementById('mobile-menu');
         
         mobileMenuButton.addEventListener('click', () => {
-            mobileMenu.classList.toggle('hidden');
+            const isExpanded = mobileMenuButton.getAttribute('aria-expanded') === 'true';
+            mobileMenuButton.setAttribute('aria-expanded', !isExpanded);
+            mobileMenu.classList.toggle('open');
+            
+            // Empêcher le défilement du body lorsque le menu est ouvert
+            document.body.style.overflow = !isExpanded ? 'hidden' : '';
+        });
+        
+        // Fermer le menu mobile en cliquant à l'extérieur
+        document.addEventListener('click', (e) => {
+            if (!mobileMenu.contains(e.target) && !mobileMenuButton.contains(e.target) && mobileMenu.classList.contains('open')) {
+                mobileMenu.classList.remove('open');
+                mobileMenuButton.setAttribute('aria-expanded', 'false');
+                document.body.style.overflow = '';
+            }
+        });
+        
+        // Fermer le menu mobile avec la touche Échap
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && mobileMenu.classList.contains('open')) {
+                mobileMenu.classList.remove('open');
+                mobileMenuButton.setAttribute('aria-expanded', 'false');
+                document.body.style.overflow = '';
+                mobileMenuButton.focus();
+            }
         });
         
         // Animation on scroll
@@ -804,116 +916,50 @@
                 
                 if (elementTop < windowHeight - 100) {
                     element.classList.add('is-visible');
-                    
-                    // Add futuristic animation with Anime.js
-                    if (element.classList.contains('futuristic-animation')) {
-                        anime({
-                            targets: element,
-                            translateY: [30, 0],
-                            opacity: [0, 1],
-                            duration: 800,
-                            easing: 'easeOutExpo',
-                            delay: anime.stagger(100)
-                        });
-                        
-                        // Add glowing effect
-                        const glow = element.querySelector('.glow') || document.createElement('div');
-                        glow.classList.add('glow', 'absolute', 'inset-0', 'rounded-lg', 'pointer-events-none');
-                        glow.style.background = 'radial-gradient(circle at center, rgba(59, 130, 246, 0.4) 0%, transparent 70%)';
-                        glow.style.opacity = '0';
-                        element.appendChild(glow);
-                        
-                        anime({
-                            targets: glow,
-                            opacity: [0, 0.6, 0],
-                            duration: 2000,
-                            easing: 'easeOutQuad',
-                            loop: true
-                        });
-                    }
                 }
             });
         };
         
-        // Initialize on load
+        // Initialiser au chargement
         window.addEventListener('load', animateOnScroll);
         
-        // Animate on scroll
+        // Animer au défilement
         window.addEventListener('scroll', animateOnScroll);
         
-        // Breaking news ticker animation
-        const ticker = document.querySelector('.breaking-news-ticker');
-        if (ticker) {
-            const tickerWidth = ticker.scrollWidth;
-            const duration = tickerWidth / 50; // Adjust speed here
+        // Pause le ticker de breaking news au survol
+        const breakingNewsTicker = document.querySelector('.breaking-news-ticker');
+        if (breakingNewsTicker) {
+            const breakingNewsContainer = document.querySelector('.breaking-news-container');
             
-            anime({
-                targets: ticker,
-                translateX: [-tickerWidth, 0],
-                duration: duration * 1000,
-                easing: 'linear',
-                loop: true
+            breakingNewsContainer.addEventListener('mouseenter', () => {
+                breakingNewsTicker.style.animationPlayState = 'paused';
+            });
+            
+            breakingNewsContainer.addEventListener('mouseleave', () => {
+                breakingNewsTicker.style.animationPlayState = 'running';
+            });
+            
+            breakingNewsContainer.addEventListener('focusin', () => {
+                breakingNewsTicker.style.animationPlayState = 'paused';
+            });
+            
+            breakingNewsContainer.addEventListener('focusout', () => {
+                breakingNewsTicker.style.animationPlayState = 'running';
             });
         }
         
-        // Hero section animations
-        const heroSection = document.querySelector('.hero-clip');
-        if (heroSection) {
-            // Text animation
-            anime({
-                targets: heroSection.querySelector('h1'),
-                translateY: [50, 0],
-                opacity: [0, 1],
-                duration: 800,
-                delay: 300,
-                easing: 'easeOutExpo'
-            });
+        // Gestion des images manquantes
+        document.addEventListener('DOMContentLoaded', () => {
+            const images = document.querySelectorAll('img');
             
-            anime({
-                targets: heroSection.querySelector('p'),
-                translateY: [30, 0],
-                opacity: [0, 1],
-                duration: 800,
-                delay: 500,
-                easing: 'easeOutExpo'
-            });
-            
-            anime({
-                targets: heroSection.querySelectorAll('a'),
-                translateY: [40, 0],
-                opacity: [0, 1],
-                duration: 800,
-                delay: anime.stagger(100, {start: 700}),
-                easing: 'easeOutExpo'
-            });
-            
-            // Background animation
-            anime({
-                targets: heroSection.querySelector('img'),
-                scale: [1.1, 1],
-                opacity: [0, 0.3],
-                duration: 1000,
-                easing: 'easeOutExpo'
-            });
-        }
-        
-        // Special futuristic animation for cards
-        document.querySelectorAll('.futuristic-animation').forEach(card => {
-            card.addEventListener('mouseenter', () => {
-                anime({
-                    targets: card,
-                    scale: 1.02,
-                    duration: 300,
-                    easing: 'easeOutExpo'
-                });
-            });
-            
-            card.addEventListener('mouseleave', () => {
-                anime({
-                    targets: card,
-                    scale: 1,
-                    duration: 300,
-                    easing: 'easeOutExpo'
+            images.forEach(img => {
+                img.addEventListener('error', () => {
+                    // Remplacer l'image cassée par un placeholder
+                    const placeholder = document.createElement('div');
+                    placeholder.className = 'placeholder-img w-full h-full flex items-center justify-center text-gray-500';
+                    placeholder.textContent = 'Image non disponible';
+                    
+                    img.parentNode.replaceChild(placeholder, img);
                 });
             });
         });
