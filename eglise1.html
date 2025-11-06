@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Église Communautaire - Une communauté de foi, d'espérance et d'amour. Rejoignez-nous pour nos cultes et activités.">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:title" content="Église Communautaire - Bienvenue">
+    <meta property="og:description" content="Une communauté de foi, d'espérance et d'amour. Rejoignez-nous pour nos cultes et activités.">
+    <meta property="og:image" content="https://via.placeholder.com/1200x630">
+    <meta property="og:url" content="https://eglise-communautaire.fr">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    
+    <title>Église Communautaire - Une communauté de foi</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;1,300;1,400&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Tailwind CSS Play CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Anime.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    
+    <!-- Configuration Tailwind personnalisée -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#fef7ff',
+                            100: '#fceeff',
+                            500: '#8b5cf6',
+                            600: '#7c3aed',
+                            700: '#6d28d9',
+                        },
+                        secondary: {
+                            50: '#f0fdfa',
+                            100: '#ccfbf1',
+                            500: '#14b8a6',
+                            600: '#0d9488',
+                        }
+                    },
+                    fontFamily: {
+                        'heading': ['Montserrat', 'sans-serif'],
+                        'body': ['Merriweather', 'serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        /* Styles CSS personnalisés pour les ajustements */
+        .hero-bg {
+            background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://via.placeholder.com/1920x1080');
+        }
+        
+        /* Smooth scroll pour tout le document */
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        /* Animation pour le modal */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes slideUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+    </style>
+</head>
+<body class="font-body text-gray-700">
+    <!-- Header / Navigation -->
+    <header class="fixed w-full bg-white shadow-md z-50">
+        <nav class="container mx-auto px-4 py-3" aria-label="Navigation principale">
+            <div class="flex justify-between items-center">
+                <!-- Logo -->
+                <a href="#accueil" class="flex items-center space-x-2">
+                    <span class="text-2xl font-heading font-bold text-primary-600">Église Communautaire</span>
+                </a>
+                
+                <!-- Menu desktop -->
+                <div class="hidden md:flex space-x-8">
+                    <a href="#accueil" class="font-medium hover:text-primary-600 transition-colors">Accueil</a>
+                    <a href="#apropos" class="font-medium hover:text-primary-600 transition-colors">À propos</a>
+                    <a href="#sermons" class="font-medium hover:text-primary-600 transition-colors">Culte & Sermons</a>
+                    <a href="#evenements" class="font-medium hover:text-primary-600 transition-colors">Événements</a>
+                    <a href="#participer" class="font-medium hover:text-primary-600 transition-colors">Participer</a>
+                    <a href="#contact" class="font-medium hover:text-primary-600 transition-colors">Contact</a>
+                </div>
+                
+                <!-- Bouton menu mobile -->
+                <button id="menu-toggle" class="md:hidden text-gray-700 focus:outline-none" aria-expanded="false" aria-controls="mobile-menu">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                    <span class="sr-only">Ouvrir le menu</span>
+                </button>
+            </div>
+            
+            <!-- Menu mobile -->
+            <div id="mobile-menu" class="hidden md:hidden py-4 border-t mt-3">
+                <div class="flex flex-col space-y-4">
+                    <a href="#accueil" class="font-medium hover:text-primary-600 transition-colors">Accueil</a>
+                    <a href="#apropos" class="font-medium hover:text-primary-600 transition-colors">À propos</a>
+                    <a href="#sermons" class="font-medium hover:text-primary-600 transition-colors">Culte & Sermons</a>
+                    <a href="#evenements" class="font-medium hover:text-primary-600 transition-colors">Événements</a>
+                    <a href="#participer" class="font-medium hover:text-primary-600 transition-colors">Participer</a>
+                    <a href="#contact" class="font-medium hover:text-primary-600 transition-colors">Contact</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <!-- Section Hero -->
+        <section id="accueil" class="hero-bg bg-cover bg-center min-h-screen flex items-center pt-16">
+            <div class="container mx-auto px-4 py-20 text-center text-white">
+                <div id="hero-content" class="max-w-3xl mx-auto">
+                    <h1 class="text-4xl md:text-6xl font-heading font-bold mb-6">Bienvenue dans notre communauté</h1>
+                    <p class="text-xl md:text-2xl mb-8">Une communauté de foi, d'espérance et d'amour</p>
+                    <div class="flex flex-col sm:flex-row justify-center gap-4">
+                        <a href="#sermons" class="bg-primary-600 hover:bg-primary-700 text-white font-medium py-3 px-8 rounded-lg transition-colors">S'inscrire au culte</a>
+                        <button id="donate-btn" class="bg-secondary-500 hover:bg-secondary-600 text-white font-medium py-3 px-8 rounded-lg transition-colors">Faire un don</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section À propos -->
+        <section id="apropos" class="py-16 bg-gray-50">
+            <div class="container mx-auto px-4">
+                <h2 class="text-3xl md:text-4xl font-heading font-bold text-center mb-12">À propos de notre église</h2>
+                
+                <div class="flex flex-col lg:flex-row gap-12 items-center">
+                    <div class="lg:w-1/2">
+                        <img src="https://via.placeholder.com/500x400" alt="Pasteur de l'église" class="rounded-lg shadow-md">
+                    </div>
+                    
+                    <div class="lg:w-1/2">
+                        <h3 class="text-2xl font-heading font-semibold mb-4">Notre mission</h3>
+                        <p class="mb-6">Notre église a pour mission de partager l'amour de Dieu, d'enseigner les valeurs chrétiennes et de construire une communauté solidaire où chacun peut grandir dans sa foi.</p>
+                        
+                        <h3 class="text-2xl font-heading font-semibold mb-4">Nos valeurs</h3>
+                        <ul class="space-y-3 mb-8">
+                            <li class="flex items-start">
+                                <i class="fas fa-heart text-primary-600 mt-1 mr-3"></i>
+                                <span>Amour et compassion envers tous</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-hands-helping text-primary-600 mt-1 mr-3"></i>
+                                <span>Service et entraide communautaire</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-book text-primary-600 mt-1 mr-3"></i>
+                                <span>Étude et application de la Parole</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-pray text-primary-600 mt-1 mr-3"></i>
+                                <span>Prière et relation personnelle avec Dieu</span>
+                            </li>
+                        </ul>
+                        
+                        <div class="bg-primary-50 p-6 rounded-lg border-l-4 border-primary-500">
+                            <p class="italic">"Venez à moi, vous tous qui êtes fatigués et chargés, et je vous donnerai du repos."</p>
+                            <p class="mt-2 font-semibold">Matthieu 11:28</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section Sermons -->
+        <section id="sermons" class="py-16">
+            <div class="container mx-auto px-4">
+                <h2 class="text-3xl md:text-4xl font-heading font-bold text-center mb-12">Sermons récents</h2>
+                
+                <div id="sermons-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- Sermon 1 -->
+                    <article class="bg-white rounded-lg shadow-md overflow-hidden sermon-card">
+                        <img src="https://via.placeholder.com/400x250" alt="Image du sermon sur la foi" class="w-full h-48 object-cover">
+                        <div class="p-6">
+                            <span class="text-sm text-gray-500">15 Octobre 2023</span>
+                            <h3 class="text-xl font-heading font-semibold my-2">La foi qui déplace les montagnes</h3>
+                            <p class="text-gray-600 mb-4">Exploration de la puissance de la foi authentique et comment elle transforme nos vies.</p>
+                            <button class="text-primary-600 font-medium flex items-center">
+                                <i class="fas fa-play-circle mr-2"></i>
+                                Écouter le sermon
+                            </button>
+                        </div>
+                    </article>
+                    
+                    <!-- Sermon 2 -->
+                    <article class="bg-white rounded-lg shadow-md overflow-hidden sermon-card">
+                        <img src="https://via.placeholder.com/400x250" alt="Image du sermon sur l'amour" class="w-full h-48 object-cover">
+                        <div class="p-6">
+                            <span class="text-sm text-gray-500">8 Octobre 2023</span>
+                            <h3 class="text-xl font-heading font-semibold my-2">L'amour inconditionnel de Dieu</h3>
+                            <p class="text-gray-600 mb-4">Découvrir la profondeur de l'amour de Dieu et comment il se manifeste dans nos vies.</p>
+                            <button class="text-primary-600 font-medium flex items-center">
+                                <i class="fas fa-play-circle mr-2"></i>
+                                Écouter le sermon
+                            </button>
+                        </div>
+                    </article>
+                    
+                    <!-- Sermon 3 -->
+                    <article class="bg-white rounded-lg shadow-md overflow-hidden sermon-card">
+                        <img src="https://via.placeholder.com/400x250" alt="Image du sermon sur l'espérance" class="w-full h-48 object-cover">
+                        <div class="p-6">
+                            <span class="text-sm text-gray-500">1 Octobre 2023</span>
+                            <h3 class="text-xl font-heading font-semibold my-2">L'espérance en temps d'épreuve</h3>
+                            <p class="text-gray-600 mb-4">Comment maintenir l'espérance lorsque nous traversons des moments difficiles.</p>
+                            <button class="text-primary-600 font-medium flex items-center">
+                                <i class="fas fa-play-circle mr-2"></i>
+                                Écouter le sermon
+                            </button>
+                        </div>
+                    </article>
+                </div>
+                
+                <div class="text-center mt-12">
+                    <a href="#" class="bg-primary-600 hover:bg-primary-700 text-white font-medium py-3 px-8 rounded-lg transition-colors">Voir tous les sermons</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section Événements -->
+        <section id="evenements" class="py-16 bg-gray-50">
+            <div class="container mx-auto px-4">
+                <h2 class="text-3xl md:text-4xl font-heading font-bold text-center mb-12">Événements à venir</h2>
+                
+                <div id="events-container" class="max-w-4xl mx-auto space-y-8">
+                    <!-- Événement 1 -->
+                    <article class="bg-white rounded-lg shadow-md p-6 event-card">
+                        <div class="flex flex-col md:flex-row md:items-center">
+                            <div class="md:w-1/4 mb-4 md:mb-0">
+                                <div class="bg-primary-100 text-primary-700 rounded-lg py-3 px-4 text-center">
+                                    <p class="text-2xl font-bold">25</p>
+                                    <p class="text-lg">Octobre</p>
+                                    <p class="text-sm">2023</p>
+                                </div>
+                            </div>
+                            <div class="md:w-2/4">
+                                <h3 class="text-xl font-heading font-semibold">Soirée louange et adoration</h3>
+                                <p class="text-gray-600 my-2">Une soirée spéciale dédiée à la louange et à l'adoration collective.</p>
+                                <div class="flex items-center text-gray-500">
+                                    <i class="fas fa-clock mr-2"></i>
+                                    <span>19h00 - 21h00</span>
+                                    <i class="fas fa-map-marker-alt ml-4 mr-2"></i>
+                                    <span>Salle principale</span>
+                                </div>
+                            </div>
+                            <div class="md:w-1/4 mt-4 md:mt-0 text-right">
+                                <button class="bg-primary-600 hover:bg-primary-700 text-white font-medium py-2 px-6 rounded-lg transition-colors">S'inscrire</button>
+                            </div>
+                        </div>
+                    </article>
+                    
+                    <!-- Événement 2 -->
+                    <article class="bg-white rounded-lg shadow-md p-6 event-card">
+                        <div class="flex flex-col md:flex-row md:items-center">
+                            <div class="md:w-1/4 mb-4 md:mb-0">
+                                <div class="bg-primary-100 text-primary-700 rounded-lg py-3 px-4 text-center">
+                                    <p class="text-2xl font-bold">29</p>
+                                    <p class="text-lg">Octobre</p>
+                                    <p class="text-sm">2023</p>
+                                </div>
+                            </div>
+                            <div class="md:w-2/4">
+                                <h3 class="text-xl font-heading font-semibold">Pique-nique communautaire</h3>
+                                <p class="text-gray-600 my-2">Temps de partage et de convivialité pour tous les âges au parc municipal.</p>
+                                <div class="flex items-center text-gray-500">
+                                    <i class="fas fa-clock mr-2"></i>
+                                    <span>12h00 - 16h00</span>
+                                    <i class="fas fa-map-marker-alt ml-4 mr-2"></i>
+                                    <span>Parc Central</span>
+                                </div>
+                            </div>
+                            <div class="md:w-1/4 mt-4 md:mt-0 text-right">
+                                <button class="bg-primary-600 hover:bg-primary-700 text-white font-medium py-2 px-6 rounded-lg transition-colors">S'inscrire</button>
+                            </div>
+                        </div>
+                    </article>
+                    
+                    <!-- Événement 3 -->
+                    <article class="bg-white rounded-lg shadow-md p-6 event-card">
+                        <div class="flex flex-col md:flex-row md:items-center">
+                            <div class="md:w-1/4 mb-4 md:mb-0">
+                                <div class="bg-primary-100 text-primary-700 rounded-lg py-3 px-4 text-center">
+                                    <p class="text-2xl font-bold">5</p>
+                                    <p class="text-lg">Novembre</p>
+                                    <p class="text-sm">2023</p>
+                                </div>
+                            </div>
+                            <div class="md:w-2/4">
+                                <h3 class="text-xl font-heading font-semibold">Étude biblique en petits groupes</h3>
+                                <p class="text-gray-600 my-2">Session d'étude approfondie de la Bible dans une ambiance conviviale.</p>
+                                <div class="flex items-center text-gray-500">
+                                    <i class="fas fa-clock mr-2"></i>
+                                    <span>18h30 - 20h00</span>
+                                    <i class="fas fa-map-marker-alt ml-4 mr-2"></i>
+                                    <span>Salles annexes</span>
+                                </div>
+                            </div>
+                            <div class="md:w-1/4 mt-4 md:mt-0 text-right">
+                                <button class="bg-primary-600 hover:bg-primary-700 text-white font-medium py-2 px-6 rounded-lg transition-colors">S'inscrire</button>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section Participer / Donner -->
+        <section id="participer" class="py-16">
+            <div class="container mx-auto px-4">
+                <h2 class="text-3xl md:text-4xl font-heading font-bold text-center mb-12">Participer & Donner</h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+                    <!-- Bénévolat -->
+                    <div class="bg-white rounded-lg shadow-md p-6 text-center">
+                        <div class="bg-primary-100 text-primary-600 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-hands-helping text-2xl"></i>
+                        </div>
+                        <h3 class="text-xl font-heading font-semibold mb-3">Bénévolat</h3>
+                        <p class="text-gray-600 mb-4">Rejoignez nos équipes de bénévoles pour servir la communauté et participer aux activités de l'église.</p>
+                        <button class="text-primary-600 font-medium">En savoir plus</button>
+                    </div>
+                    
+                    <!-- Groupes de maison -->
+                    <div class="bg-white rounded-lg shadow-md p-6 text-center">
+                        <div class="bg-primary-100 text-primary-600 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-users text-2xl"></i>
+                        </div>
+                        <h3 class="text-xl font-heading font-semibold mb-3">Groupes de maison</h3>
+                        <p class="text-gray-600 mb-4">Participez à nos petits groupes de partage et d'étude biblique dans une ambiance chaleureuse et conviviale.</p>
+                        <button class="text-primary-600 font-medium">Trouver un groupe</button>
+                    </div>
+                    
+                    <!-- Dons -->
+                    <div class="bg-white rounded-lg shadow-md p-6 text-center">
+                        <div class="bg-primary-100 text-primary-600 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-donate text-2xl"></i>
+                        </div>
+                        <h3 class="text-xl font-heading font-semibold mb-3">Soutenir l'église</h3>
+                        <p class="text-gray-600 mb-4">Vos dons nous aident à poursuivre notre mission et à développer nos activités communautaires.</p>
+                        <button id="donate-section-btn" class="bg-primary-600 hover:bg-primary-700 text-white font-medium py-2 px-6 rounded-lg transition-colors">Faire un don</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section Newsletter -->
+        <section class="py-16 bg-primary-600 text-white">
+            <div class="container mx-auto px-4">
+                <div class="max-w-3xl mx-auto text-center">
+                    <h2 class="text-3xl md:text-4xl font-heading font-bold mb-4">Restez informés</h2>
+                    <p class="text-xl mb-8">Inscrivez-vous à notre newsletter pour recevoir les actualités de l'église et les prochains événements.</p>
+                    
+                    <form id="newsletter-form" class="flex flex-col sm:flex-row gap-4 max-w-xl mx-auto">
+                        <input 
+                            type="email" 
+                            id="newsletter-email" 
+                            placeholder="Votre adresse e-mail" 
+                            class="flex-grow px-4 py-3 rounded-lg text-gray-700 focus:outline-none focus:ring-2 focus:ring-primary-300"
+                            required
+                            aria-required="true"
+                            aria-describedby="newsletter-error"
+                        >
+                        <button type="submit" class="bg-secondary-500 hover:bg-secondary-600 font-medium py-3 px-8 rounded-lg transition-colors whitespace-nowrap">S'inscrire</button>
+                    </form>
+                    <div id="newsletter-error" class="text-primary-200 mt-2 text-sm hidden" aria-live="polite"></div>
+                    <div id="newsletter-success" class="mt-4 hidden" aria-live="polite">
+                        <p class="bg-primary-500 p-3 rounded-lg">Merci pour votre inscription ! Vous recevrez bientôt un e-mail de confirmation.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section Contact -->
+        <section id="contact" class="py-16 bg-gray-50">
+            <div class="container mx-auto px-4">
+                <h2 class="text-3xl md:text-4xl font-heading font-bold text-center mb-12">Contactez-nous</h2>
+                
+                <div class="flex flex-col lg:flex-row gap-12">
+                    <div class="lg:w-1/2">
+                        <h3 class="text-2xl font-heading font-semibold mb-6">Nos coordonnées</h3>
+                        
+                        <div class="space-y-6">
+                            <div class="flex items-start">
+                                <i class="fas fa-map-marker-alt text-primary-600 mt-1 mr-4 text-xl"></i>
+                                <div>
+                                    <h4 class="font-semibold">Adresse</h4>
+                                    <p>123 Rue de la Foi<br>75000 Paris, France</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-start">
+                                <i class="fas fa-phone text-primary-600 mt-1 mr-4 text-xl"></i>
+                                <div>
+                                    <h4 class="font-semibold">Téléphone</h4>
+                                    <p>+33 1 23 45 67 89</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-start">
+                                <i class="fas fa-envelope text-primary-600 mt-1 mr-4 text-xl"></i>
+                                <div>
+                                    <h4 class="font-semibold">E-mail</h4>
+                                    <p>contact@eglise-communautaire.fr</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-start">
+                                <i class="fas fa-clock text-primary-600 mt-1 mr-4 text-xl"></i>
+                                <div>
+                                    <h4 class="font-semibold">Horaires des cultes</h4>
+                                    <p>Dimanche : 10h30 - 12h00<br>Mercredi : 19h00 - 20h30 (étude biblique)</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-8">
+                            <h4 class="font-semibold mb-4">Suivez-nous sur les réseaux sociaux</h4>
+                            <div class="flex space-x-4">
+                                <a href="#" aria-label="Facebook" class="bg-primary-600 text-white w-10 h-10 rounded-full flex items-center justify-center hover:bg-primary-700 transition-colors">
+                                    <i class="fab fa-facebook-f"></i>
+                                </a>
+                                <a href="#" aria-label="Instagram" class="bg-primary-600 text-white w-10 h-10 rounded-full flex items-center justify-center hover:bg-primary-700 transition-colors">
+                                    <i class="fab fa-instagram"></i>
+                                </a>
+                                <a href="#" aria-label="YouTube" class="bg-primary-600 text-white w-10 h-10 rounded-full flex items-center justify-center hover:bg-primary-700 transition-colors">
+                                    <i class="fab fa-youtube"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="lg:w-1/2">
+                        <h3 class="text-2xl font-heading font-semibold mb-6">Envoyez-nous un message</h3>
+                        
+                        <form id="contact-form" class="space-y-6">
+                            <div>
+                                <label for="name" class="block mb-2 font-medium">Votre nom</label>
+                                <input 
+                                    type="text" 
+                                    id="name" 
+                                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-300 focus:border-transparent"
+                                    required
+                                    aria-required="true"
+                                >
+                            </div>
+                            
+                            <div>
+                                <label for="email" class="block mb-2 font-medium">Votre e-mail</label>
+                                <input 
+                                    type="email" 
+                                    id="email" 
+                                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-300 focus:border-transparent"
+                                    required
+                                    aria-required="true"
+                                >
+                            </div>
+                            
+                            <div>
+                                <label for="message" class="block mb-2 font-medium">Votre message</label>
+                                <textarea 
+                                    id="message" 
+                                    rows="5" 
+                                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-300 focus:border-transparent"
+                                    required
+                                    aria-required="true"
+                                ></textarea>
+                            </div>
+                            
+                            <button type="submit" class="bg-primary-600 hover:bg-primary-700 text-white font-medium py-3 px-8 rounded-lg transition-colors">Envoyer le message</button>
+                        </form>
+                        
+                        <div id="contact-success" class="mt-4 hidden" aria-live="polite">
+                            <p class="bg-green-100 text-green-700 p-3 rounded-lg">Votre message a été envoyé avec succès ! Nous vous répondrons dans les plus brefs délais.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section Carte -->
+        <section class="bg-white py-8">
+            <div class="container mx-auto px-4">
+                <h2 class="sr-only">Localisation de l'église</h2>
+                <div class="rounded-lg overflow-hidden shadow-md">
+                    <!-- Remplacez le src par votre iframe Google Maps -->
+                    <iframe 
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2624.9916256937595!2d2.292292615509614!3d48.85837007928746!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47e66e2964e34e2d%3A0x8ddca9ee380ef7e0!2sTour%20Eiffel!5e0!3m2!1sfr!2sfr!4v1633010860046!5m2!1sfr!2sfr" 
+                        width="100%" 
+                        height="400" 
+                        style="border:0;" 
+                        allowfullscreen="" 
+                        loading="lazy" 
+                        title="Carte de localisation de l'église"
+                        aria-label="Carte montrant l'emplacement de l'église">
+                    </iframe>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-12">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <h3 class="text-xl font-heading font-bold mb-4">Église Communautaire</h3>
+                    <p class="text-gray-300">Une communauté de foi, d'espérance et d'amour depuis 1985.</p>
+                </div>
+                
+                <div>
+                    <h4 class="font-heading font-semibold mb-4">Liens rapides</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#accueil" class="text-gray-300 hover:text-white transition-colors">Accueil</a></li>
+                        <li><a href="#apropos" class="text-gray-300 hover:text-white transition-colors">À propos</a></li>
+                        <li><a href="#sermons" class="text-gray-300 hover:text-white transition-colors">Sermons</a></li>
+                        <li><a href="#evenements" class="text-gray-300 hover:text-white transition-colors">Événements</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="font-heading font-semibold mb-4">Ressources</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-300 hover:text-white transition-colors">Blog</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white transition-colors">Méditations</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white transition-colors">Podcasts</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white transition-colors">Questions fréquentes</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="font-heading font-semibold mb-4">Contact</h4>
+                    <address class="text-gray-300 not-italic">
+                        123 Rue de la Foi<br>
+                        75000 Paris, France<br>
+                        <a href="tel:+33123456789" class="hover:text-white transition-colors">+33 1 23 45 67 89</a><br>
+                        <a href="mailto:contact@eglise-communautaire.fr" class="hover:text-white transition-colors">contact@eglise-communautaire.fr</a>
+                    </address>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-700 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
+                <p class="text-gray-400 text-sm mb-4 md:mb-0">&copy; 2023 Église Communautaire. Tous droits réservés.</p>
+                <div class="flex space-x-6">
+                    <a href="#" class="text-gray-400 hover:text-white transition-colors text-sm">Mentions légales</a>
+                    <a href="#" class="text-gray-400 hover:text-white transition-colors text-sm">Politique de confidentialité</a>
+                    <a href="#" class="text-gray-400 hover:text-white transition-colors text-sm">Accessibilité</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Modal de don -->
+    <div id="donate-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden" aria-hidden="true" role="dialog" aria-labelledby="modal-title">
+        <div class="bg-white rounded-lg shadow-xl max-w-md w-full mx-4 animate-slideUp">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 id="modal-title" class="text-2xl font-heading font-bold">Faire un don</h3>
+                    <button id="close-modal" class="text-gray-500 hover:text-gray-700" aria-label="Fermer la fenêtre">
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
+                </div>
+                
+                <p class="text-gray-600 mb-6">Votre don nous aide à poursuivre notre mission et à développer nos activités communautaires.</p>
+                
+                <form id="donate-form" class="space-y-4">
+                    <div>
+                        <label for="donation-amount" class="block mb-2 font-medium">Montant (€)</label>
+                        <input 
+                            type="number" 
+                            id="donation-amount" 
+                            min="1" 
+                            step="1" 
+                            value="20" 
+                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-300 focus:border-transparent"
+                            required
+                            aria-required="true"
+                        >
+                    </div>
+                    
+                    <div>
+                        <label for="donation-frequency" class="block mb-2 font-medium">Fréquence</label>
+                        <select 
+                            id="donation-frequency" 
+                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-300 focus:border-transparent"
+                            aria-required="true"
+                        >
+                            <option value="once">Don unique</option>
+                            <option value="monthly">Mensuel</option>
+                            <option value="quarterly">Trimestriel</option>
+                            <option value="yearly">Annuel</option>
+                        </select>
+                    </div>
+                    
+                    <div class="pt-4">
+                        <button type="submit" class="w-full bg-primary-600 hover:bg-primary-700 text-white font-medium py-3 px-8 rounded-lg transition-colors">Procéder au don</button>
+                    </div>
+                </form>
+                
+                <p class="text-sm text-gray-500 mt-4">Note: Ceci est une démonstration. Aucun paiement réel ne sera effectué.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts JavaScript -->
+    <script>
+        // Menu mobile toggle
+        document.getElementById('menu-toggle').addEventListener('click', function() {
+            const menu = document.getElementById('mobile-menu');
+            const isExpanded = this.getAttribute('aria-expanded') === 'true';
+            
+            menu.classList.toggle('hidden');
+            this.setAttribute('aria-expanded', !isExpanded);
+        });
+        
+        // Smooth scroll pour les liens d'ancrage
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    // Fermer le menu mobile si ouvert
+                    const mobileMenu = document.getElementById('mobile-menu');
+                    const menuToggle = document.getElementById('menu-toggle');
+                    
+                    if (!mobileMenu.classList.contains('hidden')) {
+                        mobileMenu.classList.add('hidden');
+                        menuToggle.setAttribute('aria-expanded', 'false');
+                    }
+                    
+                    // Scroll vers l'élément
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+        
+        // Gestion du modal de don
+        const donateButtons = document.querySelectorAll('#donate-btn, #donate-section-btn');
+        const donateModal = document.getElementById('donate-modal');
+        const closeModal = document.getElementById('close-modal');
+        
+        donateButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                donateModal.classList.remove('hidden');
+                document.body.style.overflow = 'hidden'; // Empêcher le scroll du body
+                
+                // Animation d'entrée du modal
+                anime({
+                    targets: '#donate-modal .animate-slideUp',
+                    translateY: [20, 0],
+                    opacity: [0, 1],
+                    duration: 300,
+                    easing: 'easeOutCubic'
+                });
+            });
+        });
+        
+        closeModal.addEventListener('click', function() {
+            donateModal.classList.add('hidden');
+            document.body.style.overflow = ''; // Rétablir le scroll du body
+        });
+        
+        // Fermer le modal en cliquant à l'extérieur
+        donateModal.addEventListener('click', function(e) {
+            if (e.target === donateModal) {
+                donateModal.classList.add('hidden');
+                document.body.style.overflow = '';
+            }
+        });
+        
+        // Validation du formulaire de newsletter
+        const newsletterForm = document.getElementById('newsletter-form');
+        const newsletterError = document.getElementById('newsletter-error');
+        const newsletterSuccess = document.getElementById('newsletter-success');
+        
+        newsletterForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('newsletter-email').value;
+            
+            // Validation basique
+            if (!email || !isValidEmail(email)) {
+                newsletterError.textContent = 'Veuillez entrer une adresse e-mail valide.';
+                newsletterError.classList.remove('hidden');
+                return;
+            }
+            
+            // Simulation d'envoi réussi
+            newsletterError.classList.add('hidden');
+            newsletterForm.reset();
+            newsletterSuccess.classList.remove('hidden');
+            
+            // Masquer le message de succès après 5 secondes
+            setTimeout(() => {
+                newsletterSuccess.classList.add('hidden');
+            }, 5000);
+        });
+        
+        // Validation du formulaire de contact
+        const contactForm = document.getElementById('contact-form');
+        const contactSuccess = document.getElementById('contact-success');
+        
+        contactForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const message = document.getElementById('message').value;
+            
+            // Validation basique
+            if (!name || !email || !message) {
+                alert('Veuillez remplir tous les champs obligatoires.');
+                return;
+            }
+            
+            if (!isValidEmail(email)) {
+                alert('Veuillez entrer une adresse e-mail valide.');
+                return;
+            }
+            
+            // Simulation d'envoi réussi
+            contactForm.reset();
+            contactSuccess.classList.remove('hidden');
+            
+            // Masquer le message de succès après 5 secondes
+            setTimeout(() => {
+                contactSuccess.classList.add('hidden');
+            }, 5000);
+            
+            // Ici, vous remplaceriez par un appel à votre backend
+            console.log('Formulaire de contact soumis:', { name, email, message });
+        });
+        
+        // Validation du formulaire de don
+        const donateForm = document.getElementById('donate-form');
+        
+        donateForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const amount = document.getElementById('donation-amount').value;
+            const frequency = document.getElementById('donation-frequency').value;
+            
+            // Simulation de traitement de don
+            alert(`Merci pour votre don de ${amount}€ (${getFrequencyText(frequency)}) !\n\nCeci est une démonstration, aucun paiement n'a été effectué.`);
+            
+            // Fermer le modal
+            donateModal.classList.add('hidden');
+            document.body.style.overflow = '';
+        });
+        
+        // Fonction utilitaire pour valider les e-mails
+        function isValidEmail(email) {
+            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return re.test(email);
+        }
+        
+        // Fonction utilitaire pour obtenir le texte de fréquence
+        function getFrequencyText(frequency) {
+            const frequencies = {
+                'once': 'don unique',
+                'monthly': 'mensuel',
+                'quarterly': 'trimestriel',
+                'yearly': 'annuel'
+            };
+            return frequencies[frequency] || 'don unique';
+        }
+        
+        // Animations avec Anime.js
+        document.addEventListener('DOMContentLoaded', function() {
+            // Animation du hero
+            anime({
+                targets: '#hero-content h1',
+                translateY: [50, 0],
+                opacity: [0, 1],
+                duration: 1000,
+                easing: 'easeOutCubic',
+                delay: 300
+            });
+            
+            anime({
+                targets: '#hero-content p',
+                translateY: [30, 0],
+                opacity: [0, 1],
+                duration: 800,
+                easing: 'easeOutCubic',
+                delay: 600
+            });
+            
+            anime({
+                targets: '#hero-content .flex',
+                translateY: [30, 0],
+                opacity: [0, 1],
+                duration: 800,
+                easing: 'easeOutCubic',
+                delay: 900
+            });
+            
+            // Animation en cascade pour les cartes de sermons
+            const sermonCards = document.querySelectorAll('.sermon-card');
+            
+            const sermonObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        anime({
+                            targets: entry.target,
+                            translateY: [50, 0],
+                            opacity: [0, 1],
+                            duration: 600,
+                            easing: 'easeOutCubic',
+                            delay: anime.stagger(100, {start: 100})
+                        });
+                        sermonObserver.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.1 });
+            
+            sermonCards.forEach(card => {
+                sermonObserver.observe(card);
+            });
+            
+            // Animation en cascade pour les événements
+            const eventCards = document.querySelectorAll('.event-card');
+            
+            const eventObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        anime({
+                            targets: entry.target,
+                            translateY: [30, 0],
+                            opacity: [0, 1],
+                            duration: 600,
+                            easing: 'easeOutCubic',
+                            delay: anime.stagger(100, {start: 100})
+                        });
+                        eventObserver.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.1 });
+            
+            eventCards.forEach(card => {
+                eventObserver.observe(card);
+            });
+        });
+    </script>
+</body>
+</html>
