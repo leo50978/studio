@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Introduction à l'Informatique</title>
+    
+    <!-- CDN Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- CDN Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- CDN Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- CDN Anime.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        
+        .course-card {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        
+        .btn-hover-animation:hover {
+            transform: scale(1.05);
+            transition: transform 0.3s ease;
+        }
+        
+        .hero-overlay {
+            background: rgba(0, 0, 0, 0.5);
+        }
+        
+        .modal-enter {
+            animation: modalEnter 0.3s ease-out;
+        }
+        
+        @keyframes modalEnter {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Header / Hero Section -->
+    <header class="relative h-screen flex items-center justify-center overflow-hidden">
+        <img 
+            src="introalino.jpg" 
+            alt="Ordinateur et programmation" 
+            class="absolute w-full h-full object-cover"
+        >
+        
+        <div class="absolute w-full h-full hero-overlay"></div>
+        
+        <div class="relative z-10 text-center text-white px-4 max-w-4xl">
+            <h1 class="text-4xl md:text-6xl font-bold mb-6">Introduction à l'Informatique</h1>
+            
+            <div id="quote-container" class="text-xl md:text-2xl mb-8 h-16">
+                <p id="quote" class="font-medium">L'informatique, c'est la science du traitement automatique de l'information.</p>
+            </div>
+            
+            <a href="#catalogue" class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-8 rounded-lg btn-hover-animation transition-all duration-300">
+                Découvrir les cours <i class="fas fa-arrow-down ml-2"></i>
+            </a>
+        </div>
+    </header>
+
+    <!-- Section Catalogue des cours -->
+    <section id="catalogue" class="py-16 px-4">
+        <div class="container mx-auto">
+            <h2 class="text-3xl md:text-4xl font-bold text-center mb-12">Catalogue des cours</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Les cartes de cours seront générées dynamiquement par JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Modale d'accès au cours -->
+    <div id="course-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-lg p-6 w-full max-w-md mx-4 modal-enter" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+            <div class="flex justify-between items-center mb-4">
+                <h3 id="modal-title" class="text-xl font-bold">Accéder au cours</h3>
+                <button id="close-modal" class="text-gray-500 hover:text-gray-700" aria-label="Fermer">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+            
+            <form id="access-form">
+                <input type="hidden" id="selected-course" value="">
+                
+                <div class="mb-4">
+                    <label for="code" class="block text-gray-700 mb-2">Code secret <span class="text-red-500">*</span></label>
+                    <input 
+                        type="text" 
+                        id="code" 
+                        required 
+                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        autofocus
+                        placeholder="Entrez le code d'accès"
+                    >
+                </div>
+                
+                <div class="mb-4">
+                    <label for="name" class="block text-gray-700 mb-2">Nom (optionnel)</label>
+                    <input 
+                        type="text" 
+                        id="name" 
+                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="Votre nom"
+                    >
+                </div>
+                
+                <div class="mb-4">
+                    <label for="contact" class="block text-gray-700 mb-2">Téléphone ou email (optionnel)</label>
+                    <input 
+                        type="text" 
+                        id="contact" 
+                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="Votre contact"
+                    >
+                </div>
+                
+                <div class="mb-4 flex items-center">
+                    <input 
+                        type="checkbox" 
+                        id="remember" 
+                        class="mr-2"
+                    >
+                    <label for="remember" class="text-gray-700">Se souvenir de moi</label>
+                </div>
+                
+                <div id="error-message" class="text-red-500 mb-4 hidden"></div>
+                
+                <div class="flex justify-between">
+                    <button 
+                        type="button" 
+                        id="contact-btn" 
+                        class="bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-md hidden transition-colors"
+                    >
+                        Contacter <i class="fas fa-whatsapp ml-2"></i>
+                    </button>
+                    
+                    <button 
+                        type="submit" 
+                        class="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-md transition-colors"
+                    >
+                        Valider <i class="fas fa-check ml-2"></i>
+                    </button>
+                </div>
+            </form>
+            
+            <p class="text-xs text-gray-500 mt-4">
+                Note: Les codes sont vérifiés côté client pour cette démonstration. 
+                En production, une vérification côté serveur est nécessaire.
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // CONFIGURATION
+        const WHATSAPP_NUMBER = "50935601379"; // Votre numéro WhatsApp
+        
+        const citations = [
+            "L'informatique, c'est la science du traitement automatique de l'information.",
+            "L'informatique, c'est l'art de résoudre des problèmes complexes avec des solutions élégantes.",
+            "L'informatique, c'est la discipline qui a révolutionné notre façon de communiquer et de travailler.",
+            "L'informatique, c'est comprendre comment les machines peuvent nous aider à penser et à créer.",
+            "L'informatique, c'est la clé pour naviguer dans le monde numérique d'aujourd'hui.",
+            "L'informatique, c'est apprendre à parler le langage des ordinateurs.",
+            "L'informatique, c'est transformer des idées abstraites en applications concrètes.",
+            "L'informatique, c'est développer des compétences essentielles pour le futur.",
+            "L'informatique, c'est la convergence entre créativité et logique.",
+            "L'informatique, c'est ouvrir les portes de l'innovation et de l'entrepreneuriat."
+        ];
+
+        // COURS AVEC CODES SECRETS INTÉGRÉS
+        const cours = [
+            {
+                id: 1,
+                titre: "Accueil, Présentation et Le Concept Fondamental de l'Informatique",
+                description: "Découvrez les bases de l'informatique, son histoire et ses concepts fondamentaux.",
+                image: "https://source.unsplash.com/400x300/?computer,basics",
+                code: "INFO2024-FOND"
+            },
+            {
+                id: 2,
+                titre: "Le Matériel (Hardware) : L'Anatomie d'un Ordinateur",
+                description: "Comprenez le fonctionnement interne des ordinateurs et leurs composants.",
+                image: "https://source.unsplash.com/400x300/?computer,hardware",
+                code: "INFO2024-ARCH"
+            },
+            {
+                id: 3,
+                titre: "Le Logiciel (Software) et le Système d'Exploitation (SE)",
+                description: "Apprenez le rôle et le fonctionnement des systèmes d'exploitation comme Windows et Linux.",
+                image: "https://source.unsplash.com/400x300/?operating,system",
+                code: "INFO2024-SYST"
+            },
+            {
+                id: 4,
+                titre: "Maîtriser l'Environnement de Travail (Windows/macOS/Linux)",
+                description: "Explorez les principes des réseaux informatiques et le fonctionnement d'Internet.",
+                image: "https://source.unsplash.com/400x300/?network,internet",
+                code: "INFO2024-RESX"
+            },
+            {
+                id: 5,
+                titre: "Organisation et Gestion des Fichiers et Dossiers",
+                description: "Initiez-vous à la pensée algorithmique et aux bases de la programmation.",
+                image: "https://source.unsplash.com/400x300/?algorithm,programming",
+                code: "INFO2024-ALGO"
+            },
+            {
+                id: 6,
+                titre: "Introduction aux Réseaux : Découvrir Internet et le Web",
+                description: "Découvrez comment stocker, organiser et interroger des données efficacement.",
+                image: "https://source.unsplash.com/400x300/?database,storage",
+                code: "INFO2024-BASE"
+            },
+            {
+                id: 7,
+                titre: "Recherche Efficace et Navigation Sécurisée en Ligne",
+                description: "Apprenez à créer des sites web avec HTML, CSS et JavaScript.",
+                image: "https://source.unsplash.com/400x300/?web,development",
+                code: "INFO2024-WEB"
+            },
+            {
+                id: 8,
+                titre: "La Messagerie Électronique (E-mail) : Communication et Gestion",
+                description: "Comprenez les enjeux de la sécurité informatique et les bonnes pratiques.",
+                image: "https://source.unsplash.com/400x300/?security,cyber",
+                code: "INFO2024-SECU"
+            },
+            {
+                id: 9,
+                titre: "Initiation à la Bureautique : Le Traitement de Texte",
+                description: "Explorez les bases de l'IA et du machine learning.",
+                image: "https://source.unsplash.com/400x300/?ai,machine,learning",
+                code: "INFO2024-AI"
+            },
+            {
+                id: 10,
+                titre: "Initiation à la Bureautique : Le Tableur (Calculs et Données)",
+                description: "Découvrez les services cloud et leur utilisation dans les entreprises.",
+                image: "https://source.unsplash.com/400x300/?cloud,computing",
+                code: "INFO2024-CLOUD"
+            },
+            {
+                id: 11,
+                titre: "Sécurité Informatique, Virus et Mots de Passe",
+                description: "Initiez-vous à la création d'applications pour smartphones.",
+                image: "https://source.unsplash.com/400x300/?mobile,app",
+                code: "INFO2024-MOBI"
+            },
+            {
+                id: 12,
+                titre: "Révision Générale, Bonnes Pratiques et Perspectives d'Avenir",
+                description: "Appliquez toutes vos connaissances dans un projet pratique complet.",
+                image: "https://source.unsplash.com/400x300/?project,teamwork",
+                code: "INFO2024-PROJ"
+            }
+        ];
+
+        // VARIABLES GLOBALES
+        let currentQuoteIndex = 0;
+        let quoteAnimation;
+
+        // INITIALISATION
+        document.addEventListener('DOMContentLoaded', function() {
+            initQuoteRotation();
+            generateCourseCards();
+            initScrollAnimation();
+            initModalEvents();
+            checkLocalStorage();
+        });
+
+        // ROTATION DES CITATIONS
+        function initQuoteRotation() {
+            updateQuote();
+            setInterval(() => {
+                currentQuoteIndex = (currentQuoteIndex + 1) % citations.length;
+                updateQuote();
+            }, 5000);
+        }
+
+        function updateQuote() {
+            const quoteElement = document.getElementById('quote');
+            
+            if (quoteAnimation) quoteAnimation.pause();
+            
+            quoteAnimation = anime({
+                targets: quoteElement,
+                opacity: 0,
+                translateY: -20,
+                duration: 500,
+                easing: 'easeInOutQuad',
+                complete: function() {
+                    quoteElement.textContent = citations[currentQuoteIndex];
+                    anime({
+                        targets: quoteElement,
+                        opacity: 1,
+                        translateY: 0,
+                        duration: 500,
+                        easing: 'easeInOutQuad'
+                    });
+                }
+            });
+        }
+
+        // GÉNÉRATION DES CARTES DE COURS
+        function generateCourseCards() {
+            const grid = document.querySelector('.grid');
+            
+            cours.forEach(course => {
+                const card = document.createElement('div');
+                card.className = 'course-card bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow';
+                card.innerHTML = `
+                    <img src="${course.image}" alt="${course.titre}" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-2">${course.titre}</h3>
+                        <p class="text-gray-600 mb-4">${course.description}</p>
+                        <button 
+                            class="access-course-btn w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-md btn-hover-animation transition-all duration-300"
+                            data-course-id="${course.id}"
+                        >
+                            Accéder au cours <i class="fas fa-arrow-right ml-2"></i>
+                        </button>
+                    </div>
+                `;
+                
+                grid.appendChild(card);
+            });
+            
+            document.querySelectorAll('.access-course-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const courseId = this.getAttribute('data-course-id');
+                    openModal(courseId);
+                });
+            });
+        }
+
+        // ANIMATION AU SCROLL
+        function initScrollAnimation() {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        anime({
+                            targets: entry.target,
+                            opacity: 1,
+                            translateY: 0,
+                            duration: 600,
+                            easing: 'easeOutCubic',
+                            delay: anime.stagger(100)
+                        });
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.1 });
+            
+            document.querySelectorAll('.course-card').forEach(card => {
+                observer.observe(card);
+            });
+        }
+
+        // GESTION DE LA MODALE
+        function initModalEvents() {
+            const modal = document.getElementById('course-modal');
+            const closeBtn = document.getElementById('close-modal');
+            const form = document.getElementById('access-form');
+            const contactBtn = document.getElementById('contact-btn');
+            
+            closeBtn.addEventListener('click', closeModal);
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) closeModal();
+            });
+            
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                validateAccess();
+            });
+            
+            contactBtn.addEventListener('click', contactTeacher);
+            
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && !modal.classList.contains('hidden')) {
+                    closeModal();
+                }
+            });
+        }
+
+        function openModal(courseId) {
+            const modal = document.getElementById('course-modal');
+            const title = document.getElementById('modal-title');
+            const selectedCourseInput = document.getElementById('selected-course');
+            
+            const course = cours.find(c => c.id == courseId);
+            if (!course) return;
+            
+            title.textContent = `Accéder à ${course.titre}`;
+            selectedCourseInput.value = courseId;
+            
+            modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+            
+            document.getElementById('code').focus();
+            document.getElementById('error-message').classList.add('hidden');
+            document.getElementById('contact-btn').classList.add('hidden');
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('course-modal');
+            modal.classList.add('hidden');
+            document.body.style.overflow = 'auto';
+            document.getElementById('access-form').reset();
+        }
+
+        // VALIDATION D'ACCÈS
+        function validateAccess() {
+            const courseId = document.getElementById('selected-course').value;
+            const enteredCode = document.getElementById('code').value.trim();
+            const name = document.getElementById('name').value.trim();
+            const contact = document.getElementById('contact').value.trim();
+            const remember = document.getElementById('remember').checked;
+            
+            const course = cours.find(c => c.id == courseId);
+            if (!course) return;
+            
+            if (enteredCode === course.code) {
+                if (remember) {
+                    localStorage.setItem('userName', name);
+                    localStorage.setItem('userContact', contact);
+                }
+                window.location.href = `cours${courseId}.html`;
+            } else {
+                const errorMessage = document.getElementById('error-message');
+                errorMessage.textContent = "Code incorrect — veuillez contacter le professeur pour acheter le cours.";
+                errorMessage.classList.remove('hidden');
+                
+                const contactBtn = document.getElementById('contact-btn');
+                contactBtn.classList.remove('hidden');
+                
+                contactBtn.setAttribute('data-course-name', course.titre);
+                contactBtn.setAttribute('data-user-name', name);
+                contactBtn.setAttribute('data-user-contact', contact);
+                contactBtn.setAttribute('data-entered-code', enteredCode);
+            }
+        }
+
+        // CONTACT WHATSAPP
+        function contactTeacher() {
+            const courseName = this.getAttribute('data-course-name');
+            const userName = this.getAttribute('data-user-name');
+            const userContact = this.getAttribute('data-user-contact');
+            const enteredCode = this.getAttribute('data-entered-code');
+            
+            let message = `Bonjour, je souhaite acheter le ${courseName} (code incorrect entré: ${enteredCode}).`;
+            
+            if (userName) {
+                message += ` Nom: ${userName}.`;
+            }
+            
+            if (userContact) {
+                message += ` Contact: ${userContact}.`;
+            }
+            
+            const encodedMessage = encodeURIComponent(message);
+            const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodedMessage}`;
+            
+            window.open(whatsappUrl, '_blank');
+        }
+
+        // LOCALSTORAGE
+        function checkLocalStorage() {
+            const savedName = localStorage.getItem('userName');
+            const savedContact = localStorage.getItem('userContact');
+            
+            if (savedName) {
+                document.getElementById('name').value = savedName;
+            }
+            
+            if (savedContact) {
+                document.getElementById('contact').value = savedContact;
+            }
+            
+            if (savedName || savedContact) {
+                document.getElementById('remember').checked = true;
+            }
+        }
+
+        // GÉNÉRATION DE CODES ALÉATOIRES (BONUS)
+        function generateRandomCodes() {
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            const newCodes = [];
+            
+            for (let i = 0; i < cours.length; i++) {
+                let code = 'INFO2024-';
+                
+                for (let j = 0; j < 4; j++) {
+                    code += chars.charAt(Math.floor(Math.random() * chars.length));
+                }
+                
+                newCodes.push(code);
+            }
+            
+            console.log("Nouveaux codes générés:", newCodes);
+            return newCodes;
+        }
+        
+        // Décommentez la ligne suivante pour générer de nouveaux codes aléatoires
+        // generateRandomCodes();
+    </script>
+
+   
+</body>
+</html>

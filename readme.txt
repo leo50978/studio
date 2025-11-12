@@ -1,62 +1,140 @@
-**Objectif :** Donne-moi **le code HTML complet, prêt à ouvrir dans un seul fichier .html**, pour un site web inspiré de TikTok qui présente des *templates de sites web à vendre*.  
-Le fichier doit utiliser des CDN (pas d’outils de build) : **Tailwind (CDN)**, **Google Fonts**, **anime.js**, **Font Awesome**. Fournis aussi tout le CSS/JS dans le même fichier (ou via CDN) et commente le code.
+ 🎓 Wireframe Écrit — Vitch Inter School (One Page / Plateforme de Cours)
 
-**Exigences fonctionnelles et UX (détaillées) :**
-1. **Splash / Opening**
-   - Au chargement, affiche au centre le **logo de l’entreprise** (utilise un placeholder SVG) et un **sous-titre** : *« Les meilleurs sites web au meilleur prix »*.  
-   - L’opening doit être **synchronisé au chargement** du site : la page doit rester sur le splash tant que les ressources critiques (CSS, fonts, JS et mini set d’images d’aperçu) ne sont pas prêtes. Utilise **anime.js** pour une animation d’ouverture fluide (logo qui pulse/scale + fade).  
-   - Après fin chargement / animation, transition fluide vers l’interface principale.
 
-2. **Interface principale — style TikTok vertical**
-   - Layout vertical **full-screen par template** (scroll vertical plein écran, `scroll-snap` pour chaque carte/template), comme TikTok.  
-   - La **première image** doit apparaître en grand plan full-écran en haut (première carte visible).  
-   - **En haut** : une rangée de **boutons de filtre** (catégories) qui filtrent les templates affichés (ex : « E-commerce », « Portfolio », « Blog », « Landing »). Les filtres doivent réordonner / masquer les cartes de façon fluide (animation).  
-   - **À droite**, superposés sur chaque carte (alignés verticalement, comme sur TikTok) : icônes **Like**, **Achat (Commander)**, **Compteur de commandes** (affiche le nombre de commandes effectuées pour le template). Utilise **Font Awesome** pour les icônes.
-   - Le bouton **Commander** ouvre une **fenêtre modal** centrée avec : image plus grande, titre, prix, description, raisons d’achat (« pourquoi acheter »), et un bouton **Commander** final.
-   - Le bouton de la modal **envoie l’utilisateur sur WhatsApp** (lien API wa.me / `https://wa.me/<num>?text=...`) en **pré-remplissant un message** qui contient : ID du template, titre, prix, et options sélectionnées.  
-     - **Numéro WhatsApp à utiliser** dans le lien (tel que dans le message) : **+50935601379** (format international Haïti +50935601379).  
-   - Après la confirmation d’achat (lorsque l’utilisateur clique sur le bouton « Commander » dans la modal), **incrémente et affiche le compteur de commandes** pour ce template. Persiste le compteur localement en **localStorage** (ex : `orders_<templateId>`).
 
-3. **Lazy loading des images**
-   - Le site aura beaucoup d’images : **ne charge pas toutes les images d’un coup**. Implémente `loading="lazy"` et **IntersectionObserver** qui remplace `data-src` → `src` quand une image entre en viewport. Fournis un petit placeholder flou (blur) ou une base64 tiny inline en attendant le chargement.  
-   - Le prompt doit demander explicitement l’usage combiné `loading="lazy"` + IntersectionObserver + placeholder.
+ 🧭 1. Entête (Header / Navbar)
 
-4. **Sons sur boutons**
-   - Chaque bouton interactif (filtre, like, ouvrir modal, commander, fermer modal, etc.) joue **un son différent**. Intègre **de petites sources audio** (tu peux utiliser de courts fichiers audio encodés en base64 directement dans le JS pour que tout reste en un seul fichier). Fournis au moins 6 sons distincts (ils peuvent être très courts : click/confirm/pop). Assure une gestion correcte : une seule instance jouée, et volume raisonnable.
+Contenu :
 
-5. **Interactions Like / Animation**
-   - Le bouton **Like** doit pouvoir être toggle (aimer / retirer) et déclencher une animation (scale + heart burst) via **anime.js** et jouer son son distinct. Le nombre de likes peut être simulé et stocké en localStorage (persistant).
+ Logo texte : VITCH INTER SCHOOL
+ Menu de navigation (ancres internes) :
 
-6. **Accessibilité & Responsive**
-   - Le site doit être responsive (mobile d’abord), accessible (attributs ARIA, labels pour boutons, éléments focusables, gestion du clavier — tab / escape pour fermer modal).
+   Accueil
+   Formations
+   Témoignages (facultatif)
+ Bouton : Se connecter / S’inscrire
+ Apparence : barre fixe en haut, fond léger et épuré
 
-7. **Données & exemples**
-   - Inclure un **jeu d’exemple** d’au moins 8 templates (objet JS) : `id`, `title`, `category`, `price`, `shortDescription`, `imageUrl` (utiliser images d’Unsplash ou placeholders dynamiques), `orders` initial (nombre). Le code doit générer les cartes automatiquement à partir de ce dataset.
 
-8. **Performance & SEO**
-   - Minimise le travail JS bloquant au chargement initial ; assures-toi que l’opening n’attende que les ressources critiques. Ajoute des meta tags basiques (charset, viewport, description).
 
-9. **Instructions sur la livraison du code**
-   - Rends **un seul fichier HTML** auto-contenu (avec liens CDN pour Tailwind, Google Fonts, anime.js, Font Awesome).  
-   - Commente les parties importantes (splash, lazy loading, IntersectionObserver, modal + WhatsApp link, stockage localStorage, sons encodés).  
-   - **Ne** pas utiliser d’outils externes (WebPack, npm) — juste CDNs.  
-   - Les URL d’images peuvent pointer vers Unsplash (ex: `https://source.unsplash.com/collection/XXXXXXXX/1080x1920`) ou des placeholders, et inclure l’attribut `loading="lazy"` + `data-src`.  
-   - Le code doit implémenter le lien WhatsApp **avec le numéro fourni** : `+50935601379`. Le message pré-rempli doit ressembler à :  
-     `Bonjour, je veux commander le template [ID: {{id}}] - "{{title}}" au prix {{price}} HTG. Détails / options : ...`
+ 🎬 2. Section Héro (Hero Section – Présentation du concept)
 
-**Extras souhaités (optionnel mais apprécié) :**
-- Indique où et comment remplacer le logo, la police Google Font (propose une police par défaut), et comment changer les sons.  
-- Ajoute un petit compteur global de templates vendus (sum des `orders`) visible quelque part sur la page.
+Objectif : inspirer confiance et donner envie d’apprendre.
 
-**Contraintes techniques :**
-- Utilise `scroll-snap-type: y mandatory` (ou équivalent) pour l’effet TikTok.  
-- Utilise `IntersectionObserver` pour le lazy-loading (et pour déclencher les animations d’entrée si pertinent).  
-- Les animations d’ouverture et d’UI doivent utiliser **anime.js** (pas uniquement CSS).
+Contenu :
 
-**Format de la réponse attendue :**
-- Fournis **uniquement** le code complet du fichier HTML (avec commentaires).  
-- Après le code, ajoute une courte section (max 6 lignes) qui explique comment personnaliser rapidement : changer logo, numéro WhatsApp, images, et où modifier les sons.
+ Illustration ou image d’étudiants / d’ordinateur / de code
+ Grand titre :
 
-**Important :** le numéro WhatsApp à utiliser pour la redirection pré-remplie est **+50935601379**.  
+  > “Apprends l’informatique à ton rythme avec Vitch Inter School 💻”
+ Soustexte descriptif :
 
-Merci — génère maintenant **le fichier HTML complet** selon ces consignes.
+  > Des cours simples, pratiques et accessibles à tous. Crée ton site web, deviens pro en bureautique, et développe tes compétences en ligne.
+ Bouton principal (CTA) :
+
+   🎓 Voir les formations ➜ (fait défiler jusqu’à la section principale)
+ Bouton secondaire :
+
+   💬 Rejoindre le groupe WhatsApp (optionnel pour communauté ou support)
+
+
+
+ 💻 3. Section Principale — Les Formations Disponibles
+
+Titre de section :
+
+> 📚 Nos Cours en Ligne Disponibles
+
+Présentation :
+
+ Disposition en grille fluide :
+
+   💻 Desktop : 3 cours par ligne
+   📱 Mobile : 2 cours par ligne
+
+Chaque carte de formation contient :
+
+1. Image/illustration (icône de code, d’écran, etc.)
+2. Titre du cours
+3. Soustitre / Durée (ex : “Apprends HTML en 1 mois”)
+4. Courte description (une phrase max : Apprends les bases du HTML et crée tes premières pages web.)
+5. Prix (ex : Prix : 15 000 FCFA / 25 €)
+6. Bouton principal :
+
+    🛒 Acheter maintenant
+7. Bouton secondaire (optionnel) :
+
+    👁️ Voir le contenu du cours
+
+
+
+ 📘 Exemples de cartes de cours :
+
+| Cours                              | Description                                          | Prix        | Bouton     |
+|  |  |  |  |
+| Créer un site web de A à Z     | Apprends à créer ton propre site complet.            | 25 000 FCFA | 🛒 Acheter |
+| Apprendre HTML en 1 mois       | Découvre les bases du langage des sites web.         | 15 000 FCFA | 🛒 Acheter |
+| Apprendre CSS en 1 mois        | Apprends à styliser et rendre tes pages attractives. | 15 000 FCFA | 🛒 Acheter |
+| Apprendre JavaScript en 1 mois | Donne de la vie et des interactions à ton site.      | 20 000 FCFA | 🛒 Acheter |
+| Apprendre Excel en 1 mois      | Maîtrise les calculs, graphiques et tableaux pro.    | 10 000 FCFA | 🛒 Acheter |
+| Apprendre Word en 1 mois       | Devient expert en mise en page et bureautique.       | 8 000 FCFA  | 🛒 Acheter |
+
+Option :
+
+ Bouton global sous la grille :
+
+  > 📖 Voir toutes les formations
+
+
+
+ 💬 4. Section Témoignages (Optionnelle mais persuasive)
+
+Titre :
+
+> 🌟 Ils ont appris avec Vitch Inter School
+
+Contenu :
+
+ 2 ou 3 avis d’étudiants (photo, prénom, petit texte)
+ Exemples :
+
+   “Grâce à Vitch Inter School, j’ai créé mon premier site web en 3 semaines !”
+   “Les cours sont clairs, abordables et motivants.”
+
+
+
+ 📱 5. Section Inscription WhatsApp (Simplifiée)
+
+Titre :
+
+> 📲 Reste informé des nouvelles formations !
+
+Contenu :
+
+ Petit texte :
+
+  > Entre ton numéro WhatsApp pour recevoir les nouveaux cours et promos.
+ Champ : +33 6 00 00 00 00
+ Bouton : S’inscrire ➜
+
+
+
+ ⚙️ 6. Pied de page (Footer)
+
+Contenu :
+
+ Logo miniature ou nom du site : Vitch Inter School © 2025
+ Lien rapide : Accueil | Formations | Mentions légales
+ Phrase de clôture :
+
+  > Apprends, pratique, réussis — avec Vitch Inter School.
+
+
+
+ 📱 Spécificités Mobile :
+
+ Menu hamburger
+ Formations affichées 2 par ligne
+ Boutons “Acheter” visibles directement sous les prix
+ Section WhatsApp en bas de page, simple et bien centrée
+

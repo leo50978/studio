@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Inscrivez-vous au cours de développement d'un site e-commerce. Formation complète pour créer votre boutique en ligne.">
+    <title>Inscription — Cours : Développement d'un site e-commerce</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Anime.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    
+    <!-- Configuration Tailwind personnalisée -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'inter': ['Inter', 'sans-serif'],
+                        'poppins': ['Poppins', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: {
+                            50: '#eff6ff',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Styles personnalisés -->
+    <style>
+        /* Styles pour réduire les animations si l'utilisateur le préfère */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+        
+        /* Classe pour désactiver manuellement les animations */
+        .no-animations * {
+            animation: none !important;
+            transition: none !important;
+        }
+        
+        /* Styles pour les messages d'erreur et de succès */
+        .error-message {
+            display: none;
+            color: #dc2626;
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+        }
+        
+        .success-message {
+            display: none;
+        }
+        
+        /* Animation de chargement pour le bouton */
+        .button-loading {
+            position: relative;
+            color: transparent;
+        }
+        
+        .button-loading::after {
+            content: "";
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            margin: auto;
+            border: 2px solid transparent;
+            border-top-color: #ffffff;
+            border-radius: 50%;
+            animation: button-loading-spinner 1s ease infinite;
+        }
+        
+        @keyframes button-loading-spinner {
+            from {
+                transform: rotate(0turn);
+            }
+            to {
+                transform: rotate(1turn);
+            }
+        }
+        
+        /* Champ honeypot - ne doit pas être visible pour les utilisateurs */
+        .hp-field {
+            opacity: 0;
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 0;
+            width: 0;
+            z-index: -1;
+        }
+        
+        /* Styles pour les questions QCM */
+        .qcm-question {
+            background-color: #f8fafc;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .qcm-options {
+            display: flex;
+            gap: 1rem;
+            margin-top: 0.5rem;
+        }
+        
+        .qcm-option {
+            flex: 1;
+            text-align: center;
+        }
+        
+        .qcm-option input[type="radio"] {
+            display: none;
+        }
+        
+        .qcm-option label {
+            display: block;
+            padding: 0.5rem 1rem;
+            background-color: white;
+            border: 1px solid #d1d5db;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .qcm-option input[type="radio"]:checked + label {
+            background-color: #3b82f6;
+            color: white;
+            border-color: #3b82f6;
+        }
+        
+        .qcm-option label:hover {
+            border-color: #3b82f6;
+        }
+        
+        /* Indicateur de progression */
+        .progress-bar {
+            height: 6px;
+            background-color: #e5e7eb;
+            border-radius: 3px;
+            overflow: hidden;
+            margin-bottom: 1.5rem;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background-color: #3b82f6;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-inter min-h-screen flex items-center justify-center p-4">
+    <main class="w-full max-w-2xl">
+        <!-- Carte du formulaire -->
+        <div id="form-card" class="bg-white rounded-xl shadow-lg p-6 md:p-8 transition-all duration-300">
+            <!-- Indicateur de progression -->
+            <div class="progress-bar">
+                <div id="progress-fill" class="progress-fill"></div>
+            </div>
+            
+            <!-- En-tête -->
+            <header class="text-center mb-6">
+                <h1 class="text-2xl md:text-3xl font-bold font-poppins text-gray-800 mb-2">
+                    Inscription au cours
+                </h1>
+                <h2 class="text-xl md:text-2xl font-semibold text-primary-600 mb-4">
+                    Développement d'un site e-commerce
+                </h2>
+                <p class="text-gray-600 text-sm">
+                    Remplissez le formulaire ci-dessous pour vous inscrire à notre formation complète
+                </p>
+            </header>
+            
+            <!-- Formulaire d'inscription -->
+            <form id="registration-form" action="https://formspree.io/f/mpwjajva" method="POST" class="space-y-5">
+                <!-- Sujet pour Formspree -->
+                <input type="hidden" name="_subject" value="Nouvelle inscription — Cours e-commerce">
+                
+                <!-- Champs UTM cachés pour le tracking -->
+                <input type="hidden" name="utm_source" id="utm_source">
+                <input type="hidden" name="utm_medium" id="utm_medium">
+                <input type="hidden" name="utm_campaign" id="utm_campaign">
+                
+                <!-- Champ honeypot anti-spam -->
+                <div class="hp-field">
+                    <label for="website">Site web</label>
+                    <input type="text" id="website" name="website" tabindex="-1" autocomplete="off">
+                </div>
+                
+                <!-- Informations personnelles -->
+                <div class="border-b border-gray-200 pb-5">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-3 flex items-center">
+                        <i class="fas fa-user text-primary-500 mr-2"></i> Informations personnelles
+                    </h3>
+                    
+                    <!-- Nom complet -->
+                    <div class="mb-4">
+                        <label for="fullname" class="block text-sm font-medium text-gray-700 mb-1">
+                            Nom complet
+                        </label>
+                        <input type="text" id="fullname" name="fullname" required
+                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"
+                               placeholder="Votre nom et prénom">
+                        <div id="fullname-error" class="error-message" role="alert"></div>
+                    </div>
+                    
+                    <!-- Email -->
+                    <div class="mb-4">
+                        <label for="email" class="block text-sm font-medium text-gray-700 mb-1">
+                            Adresse email
+                        </label>
+                        <input type="email" id="email" name="email" required
+                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"
+                               placeholder="votre@email.com">
+                        <div id="email-error" class="error-message" role="alert"></div>
+                    </div>
+                    
+                    <!-- Téléphone -->
+                    <div class="mb-4">
+                        <label for="phone" class="block text-sm font-medium text-gray-700 mb-1">
+                            Téléphone
+                        </label>
+                        <input type="tel" id="phone" name="phone"
+                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"
+                               placeholder="+33 1 23 45 67 89">
+                        <div id="phone-error" class="error-message" role="alert"></div>
+                    </div>
+                    
+                    <!-- Pays -->
+                    <div>
+                        <label for="country" class="block text-sm font-medium text-gray-700 mb-1">
+                            Pays
+                        </label>
+                        <select id="country" name="country" required
+                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors">
+                            <option value="" disabled selected>Sélectionnez votre pays</option>
+                            <option value="Haïti">Haïti</option>
+                            <option value="France">France</option>
+                            <option value="Belgique">Belgique</option>
+                            <option value="Suisse">Suisse</option>
+                            <option value="Canada">Canada</option>
+                            <option value="États-Unis">États-Unis</option>
+                            <option value="Royaume-Uni">Royaume-Uni</option>
+                            <option value="Allemagne">Allemagne</option>
+                            <option value="Espagne">Espagne</option>
+                            <option value="Italie">Italie</option>
+                            <option value="Autre">Autre</option>
+                        </select>
+                        <div id="country-error" class="error-message" role="alert"></div>
+                    </div>
+                </div>
+                
+                <!-- Section QCM - Niveau en informatique -->
+                <div class="border-b border-gray-200 pb-5">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-3 flex items-center">
+                        <i class="fas fa-laptop-code text-primary-500 mr-2"></i> Votre niveau en informatique
+                    </h3>
+                    
+                    <!-- Question 1 -->
+                    <div class="qcm-question">
+                        <p class="font-medium text-gray-700">Avez-vous des bases en informatique ?</p>
+                        <div class="qcm-options">
+                            <div class="qcm-option">
+                                <input type="radio" id="it_basics_yes" name="it_basics" value="Oui" required>
+                                <label for="it_basics_yes">Oui</label>
+                            </div>
+                            <div class="qcm-option">
+                                <input type="radio" id="it_basics_no" name="it_basics" value="Non">
+                                <label for="it_basics_no">Non</label>
+                            </div>
+                            <div class="qcm-option">
+                                <input type="radio" id="it_basics_little" name="it_basics" value="Un peu">
+                                <label for="it_basics_little">Un peu</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Question 2 -->
+                    <div class="qcm-question">
+                        <p class="font-medium text-gray-700">Avez-vous un ordinateur personnel ?</p>
+                        <div class="qcm-options">
+                            <div class="qcm-option">
+                                <input type="radio" id="computer_yes" name="computer" value="Oui" required>
+                                <label for="computer_yes">Oui</label>
+                            </div>
+                            <div class="qcm-option">
+                                <input type="radio" id="computer_no" name="computer" value="Non">
+                                <label for="computer_no">Non</label>
+                            </div>
+                            <div class="qcm-option">
+                                <input type="radio" id="computer_soon" name="computer" value="Bientôt">
+                                <label for="computer_soon">Bientôt</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Question 3 -->
+                    <div class="qcm-question">
+                        <p class="font-medium text-gray-700">Avez-vous déjà créé un site web ?</p>
+                        <div class="qcm-options">
+                            <div class="qcm-option">
+                                <input type="radio" id="website_yes" name="website_created" value="Oui" required>
+                                <label for="website_yes">Oui</label>
+                            </div>
+                            <div class="qcm-option">
+                                <input type="radio" id="website_no" name="website_created" value="Non">
+                                <label for="website_no">Non</label>
+                            </div>
+                            <div class="qcm-option">
+                                <input type="radio" id="website_tried" name="website_created" value="J'ai essayé">
+                                <label for="website_tried">J'ai essayé</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Question 4 -->
+                    <div class="qcm-question">
+                        <p class="font-medium text-gray-700">Connaissez-vous le HTML/CSS ?</p>
+                        <div class="qcm-options">
+                            <div class="qcm-option">
+                                <input type="radio" id="html_yes" name="html_knowledge" value="Oui" required>
+                                <label for="html_yes">Oui</label>
+                            </div>
+                            <div class="qcm-option">
+                                <input type="radio" id="html_no" name="html_knowledge" value="Non">
+                                <label for="html_no">Non</label>
+                            </div>
+                            <div class="qcm-option">
+                                <input type="radio" id="html_basics" name="html_knowledge" value="Les bases">
+                                <label for="html_basics">Les bases</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Section QCM - Connaissances en e-commerce -->
+                <div class="border-b border-gray-200 pb-5">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-3 flex items-center">
+                        <i class="fas fa-shopping-cart text-primary-500 mr-2"></i> Vos connaissances en e-commerce
+                    </h3>
+                    
+                    <!-- Question 5 -->
+                    <div class="qcm-question">
+                        <p class="font-medium text-gray-700">Avez-vous déjà acheté en ligne ?</p>
+                        <div class="qcm-options">
+                            <div class="qcm-option">
+                                <input type="radio" id="online_shopping_yes" name="online_shopping" value="Oui" required>
+                                <label for="online_shopping_yes">Oui</label>
+                            </div>
+                            <div class="qcm-option">
+                                <input type="radio" id="online_shopping_no" name="online_shopping" value="Non">
+                                <label for="online_shopping_no">Non</label>
+                            </div>
+                            <div class="qcm-option">
+                                <input type="radio" id="online_shopping_rarely" name="online_shopping" value="Rarement">
+                                <label for="online_shopping_rarely">Rarement</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Question 6 -->
+                    <div class="qcm-question">
+                        <p class="font-medium text-gray-700">Avez-vous déjà vendu des produits en ligne ?</p>
+                        <div class="qcm-options">
+                            <div class="qcm-option">
+                                <input type="radio" id="online_selling_yes" name="online_selling" value="Oui" required>
+                                <label for="online_selling_yes">Oui</label>
+                            </div>
+                            <div class="qcm-option">
+                                <input type="radio" id="online_selling_no" name="online_selling" value="Non">
+                                <label for="online_selling_no">Non</label>
+                            </div>
+                            <div class="qcm-option">
+                                <input type="radio" id="online_selling_considered" name="online_selling" value="J'ai envisagé">
+                                <label for="online_selling_considered">J'ai envisagé</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Question 7 -->
+                    <div class="qcm-question">
+                        <p class="font-medium text-gray-700">Connaissez-vous les plateformes e-commerce (Shopify, WooCommerce, etc.) ?</p>
+                        <div class="qcm-options">
+                            <div class="qcm-option">
+                                <input type="radio" id="platforms_yes" name="platforms_knowledge" value="Oui" required>
+                                <label for="platforms_yes">Oui</label>
+                            </div>
+                            <div class="qcm-option">
+                                <input type="radio" id="platforms_no" name="platforms_knowledge" value="Non">
+                                <label for="platforms_no">Non</label>
+                            </div>
+                            <div class="qcm-option">
+                                <input type="radio" id="platforms_heard" name="platforms_knowledge" value="J'en ai entendu parler">
+                                <label for="platforms_heard">J'en ai entendu parler</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Question 8 -->
+                    <div class="qcm-question">
+                        <p class="font-medium text-gray-700">Avez-vous un produit/service à vendre en ligne ?</p>
+                        <div class="qcm-options">
+                            <div class="qcm-option">
+                                <input type="radio" id="product_yes" name="product_to_sell" value="Oui" required>
+                                <label for="product_yes">Oui</label>
+                            </div>
+                            <div class="qcm-option">
+                                <input type="radio" id="product_no" name="product_to_sell" value="Non">
+                                <label for="product_no">Non</label>
+                            </div>
+                            <div class="qcm-option">
+                                <input type="radio" id="product_developing" name="product_to_sell" value="En développement">
+                                <label for="product_developing">En développement</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Préférences de formation -->
+                <div>
+                    <h3 class="text-lg font-semibold text-gray-800 mb-3 flex items-center">
+                        <i class="fas fa-graduation-cap text-primary-500 mr-2"></i> Préférences de formation
+                    </h3>
+                    
+                    <!-- Niveau -->
+                    <div class="mb-4">
+                        <label for="level" class="block text-sm font-medium text-gray-700 mb-1">
+                            Niveau
+                        </label>
+                        <select id="level" name="level" required
+                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors">
+                            <option value="" disabled selected>Sélectionnez votre niveau</option>
+                            <option value="Débutant">Débutant</option>
+                            <option value="Intermédiaire">Intermédiaire</option>
+                            <option value="Avancé">Avancé</option>
+                        </select>
+                        <div id="level-error" class="error-message" role="alert"></div>
+                    </div>
+                    
+                    <!-- Horaire préféré -->
+                    <div class="mb-4">
+                        <p class="block text-sm font-medium text-gray-700 mb-2">
+                            Horaire préféré
+                        </p>
+                        <div class="space-y-2">
+                            <div class="flex items-center">
+                                <input type="radio" id="morning" name="schedule" value="Matin" required
+                                       class="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300">
+                                <label for="morning" class="ml-2 block text-sm text-gray-700">Matin (9h-12h)</label>
+                            </div>
+                            <div class="flex items-center">
+                                <input type="radio" id="afternoon" name="schedule" value="Après-midi"
+                                       class="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300">
+                                <label for="afternoon" class="ml-2 block text-sm text-gray-700">Après-midi (14h-17h)</label>
+                            </div>
+                            <div class="flex items-center">
+                                <input type="radio" id="evening" name="schedule" value="Soir"
+                                       class="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300">
+                                <label for="evening" class="ml-2 block text-sm text-gray-700">Soir (19h-21h)</label>
+                            </div>
+                        </div>
+                        <div id="schedule-error" class="error-message" role="alert"></div>
+                    </div>
+                    
+                    <!-- Message / Remarques -->
+                    <div class="mb-4">
+                        <label for="message" class="block text-sm font-medium text-gray-700 mb-1">
+                            Message / Remarques
+                        </label>
+                        <textarea id="message" name="message" rows="3"
+                                  class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"
+                                  placeholder="Avez-vous des questions ou des remarques particulières ?"></textarea>
+                    </div>
+                    
+                    <!-- Conditions d'utilisation -->
+                    <div class="flex items-start">
+                        <div class="flex items-center h-5">
+                            <input type="checkbox" id="terms" name="terms" required
+                                   class="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded">
+                        </div>
+                        <div class="ml-3 text-sm">
+                            <label for="terms" class="text-gray-700">
+                                J'accepte les <a href="#" class="text-primary-600 hover:text-primary-500 underline">conditions d'utilisation</a> et la politique de confidentialité
+                            </label>
+                            <div id="terms-error" class="error-message" role="alert"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- Microcopy rassurant -->
+                    <div class="bg-blue-50 p-3 rounded-lg text-sm text-blue-700 mt-4">
+                        <i class="fas fa-shield-alt mr-2"></i>
+                        Nous respectons votre vie privée. Aucune donnée bancaire n'est demandée ici.
+                    </div>
+                </div>
+                
+                <!-- Bouton d'envoi -->
+                <div>
+                    <button type="submit" id="submit-button"
+                            class="w-full bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:ring-primary-500 text-white font-medium py-3 px-4 rounded-lg transition-colors flex justify-center items-center">
+                        <span id="button-text">S'inscrire</span>
+                    </button>
+                </div>
+            </form>
+            
+            <!-- Message de succès (caché initialement) -->
+            <div id="success-message" class="success-message text-center py-8">
+                <div class="mb-4">
+                    <i class="fas fa-check-circle text-green-500 text-5xl mb-4"></i>
+                </div>
+                <h3 class="text-2xl font-bold text-gray-800 mb-2">Inscription réussie !</h3>
+                <p class="text-gray-600 mb-6">
+                    Merci pour votre inscription. Nous vous contacterons très prochainement avec les détails du cours.
+                </p>
+                <button id="new-registration" class="bg-primary-600 hover:bg-primary-700 text-white font-medium py-2 px-6 rounded-lg transition-colors">
+                    Nouvelle inscription
+                </button>
+            </div>
+        </div>
+        
+        <!-- Zone pour les messages d'erreur généraux -->
+        <div id="form-error" class="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg text-red-700 hidden" role="alert" aria-live="assertive"></div>
+    </main>
+    
+    <!-- Script JavaScript -->
+    <script>
+        // Récupération des paramètres UTM depuis l'URL
+        document.addEventListener('DOMContentLoaded', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            document.getElementById('utm_source').value = urlParams.get('utm_source') || '';
+            document.getElementById('utm_medium').value = urlParams.get('utm_medium') || '';
+            document.getElementById('utm_campaign').value = urlParams.get('utm_campaign') || '';
+            
+            // Animation d'entrée de la carte
+            if (!document.body.classList.contains('no-animations') && 
+                !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                anime({
+                    targets: '#form-card',
+                    translateY: [30, 0],
+                    opacity: [0, 1],
+                    duration: 600,
+                    easing: 'easeOutCubic'
+                });
+            }
+            
+            // Mise à jour de la barre de progression
+            updateProgressBar();
+            
+            // Écouteurs pour les questions QCM
+            document.querySelectorAll('.qcm-option input[type="radio"]').forEach(radio => {
+                radio.addEventListener('change', updateProgressBar);
+            });
+        });
+        
+        // Mise à jour de la barre de progression
+        function updateProgressBar() {
+            const totalQuestions = document.querySelectorAll('.qcm-question').length;
+            const answeredQuestions = document.querySelectorAll('.qcm-option input[type="radio"]:checked').length;
+            const progress = (answeredQuestions / totalQuestions) * 100;
+            
+            document.getElementById('progress-fill').style.width = `${progress}%`;
+        }
+        
+        // Références aux éléments du DOM
+        const form = document.getElementById('registration-form');
+        const formCard = document.getElementById('form-card');
+        const submitButton = document.getElementById('submit-button');
+        const buttonText = document.getElementById('button-text');
+        const successMessage = document.getElementById('success-message');
+        const formError = document.getElementById('form-error');
+        const newRegistrationBtn = document.getElementById('new-registration');
+        
+        // État du formulaire
+        let isSubmitting = false;
+        
+        // Validation des champs
+        function validateField(field) {
+            const value = field.value.trim();
+            const errorElement = document.getElementById(`${field.id}-error`);
+            
+            // Réinitialiser l'état d'erreur
+            field.setAttribute('aria-invalid', 'false');
+            if (errorElement) {
+                errorElement.textContent = '';
+                errorElement.style.display = 'none';
+            }
+            
+            // Validation selon le type de champ
+            let isValid = true;
+            let errorMessage = '';
+            
+            if (field.hasAttribute('required') && !value) {
+                isValid = false;
+                errorMessage = 'Ce champ est obligatoire.';
+            } else if (field.type === 'email' && value && !isValidEmail(value)) {
+                isValid = false;
+                errorMessage = 'Veuillez saisir une adresse email valide.';
+            } else if (field.id === 'phone' && value && !isValidPhone(value)) {
+                isValid = false;
+                errorMessage = 'Veuillez saisir un numéro de téléphone valide.';
+            }
+            
+            // Afficher l'erreur si nécessaire
+            if (!isValid && errorElement) {
+                field.setAttribute('aria-invalid', 'true');
+                errorElement.textContent = errorMessage;
+                errorElement.style.display = 'block';
+            }
+            
+            return isValid;
+        }
+        
+        // Validation de l'email
+        function isValidEmail(email) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return emailRegex.test(email);
+        }
+        
+        // Validation du téléphone (format basique)
+        function isValidPhone(phone) {
+            // Supprimer les espaces, tirets, etc.
+            const cleanedPhone = phone.replace(/[\s\-\(\)]/g, '');
+            // Vérifier que le numéro contient au moins 8 chiffres
+            const digitCount = cleanedPhone.replace(/\D/g, '').length;
+            return digitCount >= 8;
+        }
+        
+        // Validation de tous les champs
+        function validateForm() {
+            let isValid = true;
+            
+            // Valider chaque champ requis
+            const requiredFields = form.querySelectorAll('[required]');
+            requiredFields.forEach(field => {
+                if (!validateField(field)) {
+                    isValid = false;
+                }
+            });
+            
+            // Validation spécifique pour les radios
+            const scheduleRadios = form.querySelectorAll('input[name="schedule"]');
+            const scheduleError = document.getElementById('schedule-error');
+            const scheduleSelected = Array.from(scheduleRadios).some(radio => radio.checked);
+            
+            if (!scheduleSelected) {
+                isValid = false;
+                scheduleError.textContent = 'Veuillez sélectionner un horaire préféré.';
+                scheduleError.style.display = 'block';
+            } else {
+                scheduleError.style.display = 'none';
+            }
+            
+            // Validation pour les questions QCM
+            const qcmQuestions = form.querySelectorAll('.qcm-question');
+            qcmQuestions.forEach(question => {
+                const radioGroup = question.querySelectorAll('input[type="radio"]');
+                const groupName = radioGroup[0].name;
+                const groupSelected = Array.from(radioGroup).some(radio => radio.checked);
+                
+                if (!groupSelected) {
+                    isValid = false;
+                    // On pourrait ajouter un message d'erreur spécifique pour chaque groupe
+                }
+            });
+            
+            return isValid;
+        }
+        
+        // Écouteurs d'événements pour la validation en temps réel
+        form.querySelectorAll('input, select, textarea').forEach(field => {
+            field.addEventListener('blur', () => validateField(field));
+            
+            // Pour les champs de texte, validation au changement
+            if (field.type === 'text' || field.type === 'email' || field.type === 'tel') {
+                field.addEventListener('input', () => {
+                    if (field.value.trim()) {
+                        validateField(field);
+                    }
+                });
+            }
+        });
+        
+        // Gestion de la soumission du formulaire
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            // Empêcher la double soumission
+            if (isSubmitting) return;
+            
+            // Valider le formulaire
+            if (!validateForm()) {
+                formError.textContent = 'Veuillez corriger les erreurs dans le formulaire avant de soumettre.';
+                formError.classList.remove('hidden');
+                return;
+            }
+            
+            // Vérifier le champ honeypot
+            const honeypot = document.getElementById('website');
+            if (honeypot.value.trim() !== '') {
+                // C'est probablement un bot, ne pas soumettre
+                console.log('Spam détecté via honeypot');
+                return;
+            }
+            
+            // Mettre à jour l'état du bouton
+            isSubmitting = true;
+            submitButton.disabled = true;
+            buttonText.textContent = 'Envoi en cours...';
+            submitButton.classList.add('button-loading');
+            formError.classList.add('hidden');
+            
+            try {
+                // Préparer les données du formulaire
+                const formData = new FormData(form);
+                
+                // Nettoyer les données (trim)
+                for (let [key, value] of formData.entries()) {
+                    if (typeof value === 'string') {
+                        formData.set(key, value.trim());
+                    }
+                }
+                
+                // Envoyer les données à Formspree
+                const response = await fetch(form.action, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                });
+                
+                if (response.ok) {
+                    // Succès
+                    showSuccess();
+                } else {
+                    // Erreur
+                    const errorData = await response.json();
+                    throw new Error(errorData.error || 'Une erreur est survenue lors de l\'envoi.');
+                }
+            } catch (error) {
+                // Gestion des erreurs
+                console.error('Erreur lors de l\'envoi du formulaire:', error);
+                formError.textContent = 'Une erreur est survenue lors de l\'envoi du formulaire. Veuillez réessayer.';
+                formError.classList.remove('hidden');
+                
+                // Réactiver le bouton
+                resetSubmitButton();
+            }
+        });
+        
+        // Afficher le message de succès
+        function showSuccess() {
+            // Animation de succès
+            if (!document.body.classList.contains('no-animations') && 
+                !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                anime({
+                    targets: '#form-card',
+                    scale: [1, 1.02, 1],
+                    duration: 400,
+                    easing: 'easeInOutQuad'
+                });
+            }
+            
+            // Masquer le formulaire, afficher le message de succès
+            form.style.display = 'none';
+            successMessage.style.display = 'block';
+            
+            // Animation du message de succès
+            if (!document.body.classList.contains('no-animations') && 
+                !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                anime({
+                    targets: '#success-message',
+                    translateY: [20, 0],
+                    opacity: [0, 1],
+                    duration: 500,
+                    easing: 'easeOutCubic'
+                });
+            }
+        }
+        
+        // Réinitialiser le bouton de soumission
+        function resetSubmitButton() {
+            isSubmitting = false;
+            submitButton.disabled = false;
+            buttonText.textContent = 'S\'inscrire';
+            submitButton.classList.remove('button-loading');
+        }
+        
+        // Nouvelle inscription
+        newRegistrationBtn.addEventListener('click', function() {
+            // Réinitialiser le formulaire
+            form.reset();
+            form.style.display = 'block';
+            successMessage.style.display = 'none';
+            formError.classList.add('hidden');
+            updateProgressBar();
+            
+            // Réinitialiser les messages d'erreur
+            document.querySelectorAll('.error-message').forEach(el => {
+                el.textContent = '';
+                el.style.display = 'none';
+            });
+            
+            // Réinitialiser les états ARIA
+            form.querySelectorAll('[aria-invalid]').forEach(el => {
+                el.setAttribute('aria-invalid', 'false');
+            });
+        });
+    </script>
+</body>
+</html>

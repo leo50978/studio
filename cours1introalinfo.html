@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Audio Learning Experience</title>
+    
+    <!-- CDN Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- CDN Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- CDN Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- CDN anime.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        /* Style personnalisé pour la barre de progression */
+        .progress-bar {
+            height: 6px;
+            background: #e5e7eb;
+            border-radius: 3px;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        
+        .progress-current {
+            height: 100%;
+            background: #3b82f6;
+            width: 0%;
+            transition: width 0.1s linear;
+        }
+        
+        .progress-buffer {
+            height: 100%;
+            background: #93c5fd;
+            width: 0%;
+            transition: width 0.3s linear;
+        }
+        
+        /* Animation pour les cartes */
+        .card-enter {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        
+        .card-active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+    <!-- Header avec contrôle audio -->
+    <header class="bg-white shadow-sm sticky top-0 z-10 p-4">
+        <div class="flex items-center space-x-4">
+            <!-- Bouton Play/Pause -->
+            <button id="playPauseBtn" 
+                    class="w-12 h-12 bg-blue-500 text-white rounded-full flex items-center justify-center shadow-md hover:bg-blue-600 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-300"
+                    aria-label="Lecture/Pause">
+                <i class="fas fa-play text-sm ml-1"></i>
+            </button>
+            
+            <!-- Barre de progression -->
+            <div class="flex-1">
+                <div class="progress-bar" id="progressBar">
+                    <div class="progress-buffer" id="progressBuffer"></div>
+                    <div class="progress-current" id="progressCurrent"></div>
+                </div>
+                <div class="flex justify-between text-xs text-gray-500 mt-1">
+                    <span id="currentTime">0:00</span>
+                    <span id="duration">0:00</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Section principale pour afficher le contenu -->
+    <main class="p-4 pb-20">
+        <!-- Historique des cartes -->
+        <div id="history" class="mb-4 flex space-x-2 overflow-x-auto pb-2"></div>
+        
+        <!-- Carte active -->
+        <div id="mainboard" class="min-h-[60vh]">
+            <!-- Le contenu sera injecté ici dynamiquement -->
+        </div>
+    </main>
+
+    <!-- Audio element (caché) -->
+    <audio id="audioPlayer" preload="metadata">
+        <!-- REMPLACER L'URL DE L'AUDIO ICI -->
+        <source src="audiomass-output.mp3" type="audio/mpeg">
+        Votre navigateur ne supporte pas l'élément audio.
+    </audio>
+
+    <script>
+        // ============================================
+        // CONFIGURATION - À MODIFIER FACILEMENT
+        // ============================================
+        
+        // REMPLACER L'URL DE L'AUDIO ICI
+        const audioSrc = "audiomass-output.mp3";
+        document.getElementById('audioPlayer').querySelector('source').src = audioSrc;
+        
+        // TIMELINE - MODIFIER LES ÉLÉMENTS ET LEURS TIMINGS
+        const timeline = [
+            {
+                time: 0,
+                type: "text",
+                content: {
+                    title: "Bienvenue",
+                    text: "Ceci est une démonstration de lecture audio synchronisée avec du contenu. Cliquez sur le bouton play pour commencer."
+                }
+            },
+            {
+                time: 3,
+                type: "image",
+                content: {
+                    // REMPLACER L'URL DE L'IMAGE ICI
+                    imageUrl: "https://picsum.photos/600/400?random=1",
+                    caption: "Exemple d'image affichée à 3 secondes"
+                }
+            },
+            {
+                time: 8,
+                type: "text",
+                content: {
+                    title: "Explication",
+                    text: "À 8 secondes, ce texte apparaît. La timeline contrôle l'affichage du contenu en fonction du temps audio."
+                }
+            },
+            {
+                time: 15,
+                type: "quiz",
+                content: {
+                    question: "Quelle est la capitale de la France?",
+                    options: [
+                        { text: "Londres", correct: false },
+                        { text: "Berlin", correct: false },
+                        { text: "Paris", correct: true }
+                    ]
+                }
+            },
+            {
+                time: 22,
+                type: "image",
+                content: {
+                    // REMPLACER L'URL DE L'IMAGE ICI
+                    imageUrl: "https://picsum.photos/600/400?random=2",
+                    caption: "Deuxième exemple d'image à 22 secondes"
+                }
+            }
+        ];
+        
+        // ============================================
+        // VARIABLES GLOBALES
+        // ============================================
+        const audio = document.getElementById('audioPlayer');
+        const playPauseBtn = document.getElementById('playPauseBtn');
+        const progressBar = document.getElementById('progressBar');
+        const progressCurrent = document.getElementById('progressCurrent');
+        const progressBuffer = document.getElementById('progressBuffer');
+        const currentTimeEl = document.getElementById('currentTime');
+        const durationEl = document.getElementById('duration');
+        const mainboard = document.getElementById('mainboard');
+        const historyEl = document.getElementById('history');
+        
+        let isPlaying = false;
+        let currentTimelineIndex = -1;
+        let history = [];
+        
+        // ============================================
+        // INITIALISATION
+        // ============================================
+        document.addEventListener('DOMContentLoaded', function() {
+            // Charger la première entrée de la timeline
+            updateMainboard(0);
+            
+            // Configurer les écouteurs d'événements
+            setupEventListeners();
+        });
+        
+        // ============================================
+        // GESTIONNAIRES D'ÉVÉNEMENTS
+        // ============================================
+        function setupEventListeners() {
+            // Play/Pause
+            playPauseBtn.addEventListener('click', togglePlayPause);
+            
+            // Contrôles clavier
+            document.addEventListener('keydown', function(e) {
+                if (e.code === 'Space' || e.key === ' ') {
+                    e.preventDefault();
+                    togglePlayPause();
+                }
+            });
+            
+            // Barre de progression
+            progressBar.addEventListener('click', seek);
+            
+            // Événements audio
+            audio.addEventListener('loadedmetadata', function() {
+                durationEl.textContent = formatTime(audio.duration);
+            });
+            
+            audio.addEventListener('timeupdate', function() {
+                updateProgress();
+                checkTimeline();
+            });
+            
+            audio.addEventListener('progress', function() {
+                updateBuffer();
+            });
+            
+            audio.addEventListener('ended', function() {
+                isPlaying = false;
+                updatePlayPauseButton();
+            });
+            
+            audio.addEventListener('play', function() {
+                isPlaying = true;
+                updatePlayPauseButton();
+            });
+            
+            audio.addEventListener('pause', function() {
+                isPlaying = false;
+                updatePlayPauseButton();
+            });
+        }
+        
+        // ============================================
+        // FONCTIONS AUDIO
+        // ============================================
+        function togglePlayPause() {
+            if (audio.paused) {
+                audio.play().catch(e => console.error("Erreur de lecture:", e));
+            } else {
+                audio.pause();
+            }
+        }
+        
+        function updatePlayPauseButton() {
+            const icon = playPauseBtn.querySelector('i');
+            if (isPlaying) {
+                icon.className = 'fas fa-pause';
+                playPauseBtn.setAttribute('aria-label', 'Pause');
+            } else {
+                icon.className = 'fas fa-play text-sm ml-1';
+                playPauseBtn.setAttribute('aria-label', 'Lecture');
+            }
+        }
+        
+        function updateProgress() {
+            if (audio.duration) {
+                const percent = (audio.currentTime / audio.duration) * 100;
+                progressCurrent.style.width = percent + '%';
+                currentTimeEl.textContent = formatTime(audio.currentTime);
+            }
+        }
+        
+        function updateBuffer() {
+            if (audio.buffered.length > 0 && audio.duration) {
+                const bufferedEnd = audio.buffered.end(audio.buffered.length - 1);
+                const percent = (bufferedEnd / audio.duration) * 100;
+                progressBuffer.style.width = percent + '%';
+            }
+        }
+        
+        function seek(e) {
+            if (!audio.duration) return;
+            
+            const rect = progressBar.getBoundingClientRect();
+            const percent = (e.clientX - rect.left) / rect.width;
+            audio.currentTime = percent * audio.duration;
+        }
+        
+        function formatTime(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return mins + ':' + (secs < 10 ? '0' : '') + secs;
+        }
+        
+        // ============================================
+        // GESTION DE LA TIMELINE
+        // ============================================
+        function checkTimeline() {
+            const currentTime = audio.currentTime;
+            
+            // Trouver l'index de l'entrée active
+            let activeIndex = -1;
+            for (let i = timeline.length - 1; i >= 0; i--) {
+                if (currentTime >= timeline[i].time) {
+                    activeIndex = i;
+                    break;
+                }
+            }
+            
+            // Mettre à jour si nécessaire
+            if (activeIndex !== -1 && activeIndex !== currentTimelineIndex) {
+                updateMainboard(activeIndex);
+            }
+        }
+        
+        function updateMainboard(index) {
+            if (index < 0 || index >= timeline.length) return;
+            
+            const entry = timeline[index];
+            currentTimelineIndex = index;
+            
+            // Ajouter à l'historique
+            addToHistory(entry, index);
+            
+            // Animation de sortie
+            anime({
+                targets: mainboard,
+                opacity: [1, 0],
+                translateY: [0, 10],
+                duration: 200,
+                easing: 'easeInOutQuad',
+                complete: function() {
+                    // Mettre à jour le contenu
+                    renderContent(entry);
+                    
+                    // Animation d'entrée
+                    anime({
+                        targets: mainboard,
+                        opacity: [0, 1],
+                        translateY: [10, 0],
+                        duration: 400,
+                        easing: 'easeOutQuad'
+                    });
+                }
+            });
+        }
+        
+        function renderContent(entry) {
+            let html = '';
+            
+            switch(entry.type) {
+                case 'text':
+                    html = `
+                        <div class="bg-white rounded-xl shadow-md p-6 card-enter">
+                            <h2 class="text-xl font-bold text-gray-800 mb-3">${entry.content.title}</h2>
+                            <p class="text-gray-600">${entry.content.text}</p>
+                        </div>
+                    `;
+                    break;
+                    
+                case 'image':
+                    html = `
+                        <div class="bg-white rounded-xl shadow-md overflow-hidden card-enter">
+                            <img src="${entry.content.imageUrl}" 
+                                 alt="${entry.content.caption}" 
+                                 class="w-full h-auto object-cover"
+                                 loading="lazy">
+                            <div class="p-4">
+                                <p class="text-gray-600 text-sm">${entry.content.caption}</p>
+                            </div>
+                        </div>
+                    `;
+                    break;
+                    
+                case 'quiz':
+                    // Mettre en pause l'audio pour le quiz
+                    if (!audio.paused) {
+                        audio.pause();
+                    }
+                    
+                    html = `
+                        <div class="bg-white rounded-xl shadow-md p-6 card-enter">
+                            <h2 class="text-xl font-bold text-gray-800 mb-4">Question</h2>
+                            <p class="text-gray-700 mb-6">${entry.content.question}</p>
+                            <div class="space-y-3">
+                                ${entry.content.options.map((option, i) => `
+                                    <button class="quiz-option w-full text-left p-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-300"
+                                            data-correct="${option.correct}">
+                                        ${option.text}
+                                    </button>
+                                `).join('')}
+                            </div>
+                        </div>
+                    `;
+                    break;
+            }
+            
+            mainboard.innerHTML = html;
+            
+            // Ajouter les écouteurs pour les quiz
+            if (entry.type === 'quiz') {
+                const options = mainboard.querySelectorAll('.quiz-option');
+                options.forEach(option => {
+                    option.addEventListener('click', function() {
+                        const isCorrect = this.getAttribute('data-correct') === 'true';
+                        
+                        if (isCorrect) {
+                            this.classList.add('bg-green-100', 'border-green-500');
+                            // Reprendre la lecture après un délai
+                            setTimeout(() => {
+                                if (audio.paused) {
+                                    audio.play().catch(e => console.error("Erreur de reprise:", e));
+                                }
+                            }, 1500);
+                        } else {
+                            this.classList.add('bg-red-100', 'border-red-500');
+                        }
+                        
+                        // Désactiver tous les boutons après réponse
+                        options.forEach(opt => {
+                            opt.disabled = true;
+                        });
+                    });
+                });
+            }
+        }
+        
+        function addToHistory(entry, index) {
+            // Créer une vignette d'historique
+            const thumb = document.createElement('div');
+            thumb.className = 'flex-shrink-0 w-16 h-16 bg-white rounded-lg shadow-sm overflow-hidden cursor-pointer';
+            thumb.setAttribute('data-index', index);
+            
+            // Contenu de la vignette selon le type
+            let thumbContent = '';
+            switch(entry.type) {
+                case 'text':
+                    thumbContent = `<div class="w-full h-full flex items-center justify-center bg-blue-100 text-blue-600"><i class="fas fa-file-alt"></i></div>`;
+                    break;
+                case 'image':
+                    thumbContent = `<img src="${entry.content.imageUrl}" alt="" class="w-full h-full object-cover">`;
+                    break;
+                case 'quiz':
+                    thumbContent = `<div class="w-full h-full flex items-center justify-center bg-yellow-100 text-yellow-600"><i class="fas fa-question"></i></div>`;
+                    break;
+            }
+            
+            thumb.innerHTML = thumbContent;
+            
+            // Écouteur pour revenir à cette entrée
+            thumb.addEventListener('click', function() {
+                const targetIndex = parseInt(this.getAttribute('data-index'));
+                audio.currentTime = timeline[targetIndex].time;
+                updateMainboard(targetIndex);
+            });
+            
+            // Ajouter au début de l'historique
+            historyEl.insertBefore(thumb, historyEl.firstChild);
+            
+            // Limiter l'historique à 10 éléments
+            if (historyEl.children.length > 10) {
+                historyEl.removeChild(historyEl.lastChild);
+            }
+        }
+    </script>
+</body>
+</html>
