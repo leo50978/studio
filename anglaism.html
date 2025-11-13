@@ -1,0 +1,2047 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anglais'm - Jeu d'association anglais-français</title>
+    
+    <!-- CDN Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- CDN Anime.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* Styles personnalisés pour compléter Tailwind */
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        /* Animation de secousse pour les erreurs */
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+        
+        .shake {
+            animation: shake 0.3s ease-in-out;
+        }
+        
+        /* Hauteur d'écran moins la navbar */
+        .screen-height {
+            min-height: calc(100vh - 80px);
+        }
+        
+        /* Style pour les mots sélectionnés */
+        .word.selected {
+            background-color: #3b82f6;
+            color: white;
+        }
+        
+        /* Style pour les paires correctes */
+        .word.correct {
+            background-color: #10b981;
+            color: white;
+        }
+        
+        /* Style pour les paires incorrectes */
+        .word.incorrect {
+            background-color: #ef4444;
+            color: white;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+    <!-- Navbar fixe en bas -->
+    <nav class="fixed bottom-0 left-0 right-0 bg-white shadow-lg z-50">
+        <div class="flex justify-around items-center h-16">
+            <!-- Bouton Home -->
+            <button id="home-btn" class="flex flex-col items-center justify-center p-2 rounded-lg transition-colors hover:bg-blue-50" aria-label="Accueil">
+                <i class="fas fa-home text-xl text-blue-500"></i>
+                <span class="text-xs mt-1">Accueil</span>
+            </button>
+            
+            <!-- Bouton Play (plus proéminent) -->
+            <button id="play-btn" class="flex flex-col items-center justify-center p-3 -mt-4 bg-blue-500 rounded-full shadow-lg transition-transform hover:scale-105" aria-label="Jouer">
+                <i class="fas fa-play text-white text-xl"></i>
+                <span class="text-xs mt-1 text-white">Jouer</span>
+            </button>
+            
+            <!-- Bouton Library -->
+            <button id="library-btn" class="flex flex-col items-center justify-center p-2 rounded-lg transition-colors hover:bg-blue-50" aria-label="Bibliothèque">
+                <i class="fas fa-book text-xl text-blue-500"></i>
+                <span class="text-xs mt-1">Bibliothèque</span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Conteneur principal pour les différentes vues -->
+    <main class="pb-16">
+        <!-- Écran d'accueil -->
+        <section id="home-screen" class="screen-height flex flex-col items-center justify-center p-4">
+            <div class="text-center mb-8">
+                <h1 class="text-3xl font-bold text-blue-600 mb-4">Anglais'm</h1>
+                <p class="text-lg text-gray-600 mb-8">Améliorez votre vocabulaire anglais-français</p>
+                
+                <!-- Zone d'animation des dictons -->
+                <div class="h-24 flex items-center justify-center mb-8">
+                    <div id="quote-display" class="text-xl font-medium text-center max-w-md" aria-live="polite">
+                        <!-- Les dictons s'afficheront ici dynamiquement -->
+                    </div>
+                </div>
+                
+                <!-- Bouton Jouer avec image de fond -->
+                <div class="relative rounded-xl overflow-hidden shadow-lg max-w-md mx-auto">
+                    <!-- Placeholder pour l'image de fond -->
+                    <div class="bg-gradient-to-r from-blue-400 to-purple-500 h-48 flex items-center justify-center">
+                        <span class="text-white text-sm">Image: assets/images/play-bg.jpg</span>
+                    </div>
+                    <button id="play-home-btn" class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-30 transition-opacity hover:bg-opacity-20">
+                        <div class="bg-white rounded-full p-4 shadow-lg">
+                            <i class="fas fa-play text-blue-600 text-2xl"></i>
+                        </div>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Écran de jeu -->
+        <section id="game-screen" class="hidden screen-height p-4">
+            <!-- En-tête du jeu avec timer et score -->
+            <div class="flex justify-between items-center mb-6">
+                <div class="flex items-center">
+                    <button id="back-to-home" class="mr-4 p-2 rounded-full hover:bg-gray-200" aria-label="Retour à l'accueil">
+                        <i class="fas fa-arrow-left"></i>
+                    </button>
+                    <div>
+                        <div id="theme-display" class="font-medium"></div>
+                        <div id="level-display" class="text-sm text-gray-500"></div>
+                    </div>
+                </div>
+                
+                <div class="text-center">
+                    <div id="timer" class="text-2xl font-bold text-blue-600">60</div>
+                    <div class="text-xs text-gray-500">secondes</div>
+                </div>
+                
+                <div class="flex items-center">
+                    <button id="sound-toggle" class="p-2 rounded-full hover:bg-gray-200" aria-label="Activer/désactiver le son">
+                        <i class="fas fa-volume-up"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Zone de jeu avec les deux colonnes de mots -->
+            <div class="flex justify-between h-96 mb-6">
+                <!-- Colonne des mots anglais -->
+                <div class="w-1/2 pr-2">
+                    <h3 class="text-center font-medium mb-2">Anglais</h3>
+                    <div id="english-words" class="bg-white rounded-lg shadow p-4 h-full overflow-y-auto">
+                        <!-- Les mots anglais s'afficheront ici dynamiquement -->
+                    </div>
+                </div>
+                
+                <!-- Colonne des mots français -->
+                <div class="w-1/2 pl-2">
+                    <h3 class="text-center font-medium mb-2">Français</h3>
+                    <div id="french-words" class="bg-white rounded-lg shadow p-4 h-full overflow-y-auto">
+                        <!-- Les mots français s'afficheront ici dynamiquement -->
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Indicateur de progression -->
+            <div class="mb-4">
+                <div class="flex justify-between text-sm mb-1">
+                    <span>Progression</span>
+                    <span id="progress-text">0/0</span>
+                </div>
+                <div class="h-2 bg-gray-200 rounded-full overflow-hidden">
+                    <div id="progress-bar" class="h-full bg-blue-500 rounded-full transition-all duration-300" style="width: 0%"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Écran de bibliothèque -->
+        <section id="library-screen" class="hidden screen-height p-4">
+            <div class="mb-6">
+                <button id="back-from-library" class="flex items-center text-blue-500 mb-4" aria-label="Retour">
+                    <i class="fas fa-arrow-left mr-2"></i>
+                    <span>Retour</span>
+                </button>
+                
+                <h2 class="text-2xl font-bold mb-4">Bibliothèque de mots</h2>
+                
+                <!-- Barre de recherche -->
+                <div class="relative mb-4">
+                    <input type="text" id="search-input" placeholder="Rechercher un mot..." class="w-full p-3 pl-10 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                </div>
+                
+                <!-- Bouton d'export -->
+                <button id="export-btn" class="w-full bg-green-500 text-white py-3 rounded-lg font-medium mb-4 hover:bg-green-600 transition-colors">
+                    <i class="fas fa-download mr-2"></i>Exporter en CSV
+                </button>
+                
+                <!-- Liste des mots -->
+                <div id="word-list" class="bg-white rounded-lg shadow overflow-hidden">
+                    <!-- Les mots s'afficheront ici dynamiquement -->
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Modal de sélection du thème et niveau -->
+    <div id="theme-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-xl shadow-lg p-6 w-full max-w-md mx-4">
+            <h2 class="text-xl font-bold mb-4">Choisir le thème et le niveau</h2>
+            
+            <div class="mb-4">
+                <label for="theme-select" class="block text-sm font-medium text-gray-700 mb-1">Thème</label>
+                <select id="theme-select" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <!-- Les options de thème seront ajoutées dynamiquement -->
+                </select>
+            </div>
+            
+            <div class="mb-6">
+                <label for="level-select" class="block text-sm font-medium text-gray-700 mb-1">Niveau</label>
+                <select id="level-select" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <!-- Les options de niveau seront ajoutées dynamiquement -->
+                </select>
+            </div>
+            
+            <div class="flex justify-end space-x-3">
+                <button id="cancel-theme" class="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors">Annuler</button>
+                <button id="confirm-theme" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors">Jouer</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de fin de niveau -->
+    <div id="level-complete-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-xl shadow-lg p-6 w-full max-w-md mx-4 text-center">
+            <div class="text-5xl text-green-500 mb-4">
+                <i class="fas fa-trophy"></i>
+            </div>
+            <h2 class="text-2xl font-bold mb-2">Niveau terminé !</h2>
+            <p class="text-gray-600 mb-6">Félicitations ! Vous avez maîtrisé tous les mots de ce niveau.</p>
+            
+            <div class="flex flex-col space-y-3">
+                <button id="next-level-btn" class="w-full bg-blue-500 text-white py-3 rounded-lg font-medium hover:bg-blue-600 transition-colors">Niveau suivant</button>
+                <button id="replay-level-btn" class="w-full bg-gray-200 text-gray-800 py-3 rounded-lg font-medium hover:bg-gray-300 transition-colors">Rejouer ce niveau</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de fin de jeu (timer à 0) -->
+    <div id="game-over-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-xl shadow-lg p-6 w-full max-w-md mx-4 text-center">
+            <div class="text-5xl text-red-500 mb-4">
+                <i class="fas fa-clock"></i>
+            </div>
+            <h2 class="text-2xl font-bold mb-2">Temps écoulé !</h2>
+            <p class="text-gray-600 mb-4">Votre temps est écoulé. Voulez-vous réessayer ?</p>
+            <p id="score-display" class="text-lg font-medium mb-6"></p>
+            
+            <div class="flex flex-col space-y-3">
+                <button id="replay-game-btn" class="w-full bg-blue-500 text-white py-3 rounded-lg font-medium hover:bg-blue-600 transition-colors">Rejouer</button>
+                <button id="home-from-gameover-btn" class="w-full bg-gray-200 text-gray-800 py-3 rounded-lg font-medium hover:bg-gray-300 transition-colors">Retour à l'accueil</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // =============================================
+        // GUIDE D'UTILISATION ET CONFIGURATION
+        // =============================================
+        /*
+        COMMENT AJOUTER DES MOTS :
+        1. Modifiez l'objet THEMES ci-dessous
+        2. Ajoutez un nouveau thème ou étendez un thème existant
+        3. Chaque niveau doit contenir un tableau d'objets {id, en, fr}
+        
+        COMMENT AJOUTER DES SONS :
+        1. Placez vos fichiers audio dans le dossier assets/sounds/
+        2. Assurez-vous que les noms correspondent à ceux utilisés dans loadSounds()
+        
+        COMMENT MODIFIER LES IMAGES :
+        1. Remplacez les images dans le dossier assets/images/
+        2. Mettez à jour les chemins dans le code HTML
+        
+        CLÉS LOCALSTORAGE UTILISÉES :
+        - word_mastered: {thème: {id_mot: compteur}}
+        - progress: {thème: niveau_max_atteint}
+        - settings: {sound: booléen, timerDefault: nombre}
+        */
+
+        // =============================================
+        // DONNÉES ET CONFIGURATION
+        // =============================================
+        
+        // Dictons à afficher sur l'écran d'accueil
+        const QUOTES = [
+            "Practice makes perfect",
+            "The early bird catches the worm",
+            "Actions speak louder than words",
+            "Where there's a will, there's a way",
+            "Knowledge is power",
+            "Every cloud has a silver lining",
+            "Better late than never",
+            "Rome wasn't built in a day"
+        ];
+
+        // Structure des thèmes et mots
+        const THEMES = {
+          "famille": {
+    levels: {
+        1: [
+            { id: "f1-1", en: "mother", fr: "mère" },
+            { id: "f1-2", en: "father", fr: "père" },
+            { id: "f1-3", en: "sister", fr: "sœur" },
+            { id: "f1-4", en: "brother", fr: "frère" },
+            { id: "f1-5", en: "grandmother", fr: "grand-mère" },
+            { id: "f1-6", en: "grandfather", fr: "grand-père" },
+            { id: "f1-7", en: "aunt", fr: "tante" },
+            { id: "f1-8", en: "uncle", fr: "oncle" },
+            { id: "f1-9", en: "cousin", fr: "cousin/cousine" },
+            { id: "f1-10", en: "parents", fr: "parents" },
+            { id: "f1-11", en: "child", fr: "enfant" },
+            { id: "f1-12", en: "baby", fr: "bébé" },
+            { id: "f1-13", en: "son", fr: "fils" },
+            { id: "f1-14", en: "daughter", fr: "fille" },
+            { id: "f1-15", en: "wife", fr: "épouse" },
+            { id: "f1-16", en: "husband", fr: "mari" },
+            { id: "f1-17", en: "family", fr: "famille" },
+            { id: "f1-18", en: "home", fr: "maison" },
+            { id: "f1-19", en: "love", fr: "amour" },
+            { id: "f1-20", en: "house", fr: "maison" },
+            { id: "f1-21", en: "parents", fr: "parents" },
+            { id: "f1-22", en: "children", fr: "enfants" },
+            { id: "f1-23", en: "siblings", fr: "frères et sœurs" },
+            { id: "f1-24", en: "grandparents", fr: "grands-parents" },
+            { id: "f1-25", en: "grandchildren", fr: "petits-enfants" },
+            { id: "f1-26", en: "niece", fr: "nièce" },
+            { id: "f1-27", en: "nephew", fr: "neveu" },
+            { id: "f1-28", en: "twins", fr: "jumeaux" },
+            { id: "f1-29", en: "relative", fr: "parent" },
+            { id: "f1-30", en: "ancestor", fr: "ancêtre" },
+            { id: "f1-31", en: "descendant", fr: "descendant" },
+            { id: "f1-32", en: "generation", fr: "génération" },
+            { id: "f1-33", en: "family tree", fr: "arbre généalogique" },
+            { id: "f1-34", en: "genealogy", fr: "généalogie" },
+            { id: "f1-35", en: "heritage", fr: "héritage" },
+            { id: "f1-36", en: "lineage", fr: "lignée" },
+            { id: "f1-37", en: "bloodline", fr: "lignée" },
+            { id: "f1-38", en: "kin", fr: "parenté" },
+            { id: "f1-39", en: "kinship", fr: "parenté" },
+            { id: "f1-40", en: "clan", fr: "clan" },
+            { id: "f1-41", en: "tribe", fr: "tribu" },
+            { id: "f1-42", en: "dynasty", fr: "dynastie" },
+            { id: "f1-43", en: "household", fr: "ménage" },
+            { id: "f1-44", en: "heir", fr: "héritier" },
+            { id: "f1-45", en: "heiress", fr: "héritière" },
+            { id: "f1-46", en: "inheritance", fr: "héritage" },
+            { id: "f1-47", en: "legacy", fr: "legs" },
+            { id: "f1-48", en: "will", fr: "testament" },
+            { id: "f1-49", en: "estate", fr: "patrimoine" },
+            { id: "f1-50", en: "fortune", fr: "fortune" }
+        ],
+        2: [
+            { id: "f2-1", en: "stepmother", fr: "belle-mère" },
+            { id: "f2-2", en: "stepfather", fr: "beau-père" },
+            { id: "f2-3", en: "stepbrother", fr: "beau-frère" },
+            { id: "f2-4", en: "stepsister", fr: "belle-sœur" },
+            { id: "f2-5", en: "half-brother", fr: "demi-frère" },
+            { id: "f2-6", en: "half-sister", fr: "demi-sœur" },
+            { id: "f2-7", en: "mother-in-law", fr: "belle-mère" },
+            { id: "f2-8", en: "father-in-law", fr: "beau-père" },
+            { id: "f2-9", en: "brother-in-law", fr: "beau-frère" },
+            { id: "f2-10", en: "sister-in-law", fr: "belle-sœur" },
+            { id: "f2-11", en: "son-in-law", fr: "beau-fils" },
+            { id: "f2-12", en: "daughter-in-law", fr: "belle-fille" },
+            { id: "f2-13", en: "godmother", fr: "marraine" },
+            { id: "f2-14", en: "godfather", fr: "parrain" },
+            { id: "f2-15", en: "godson", fr: "filleul" },
+            { id: "f2-16", en: "goddaughter", fr: "filleule" },
+            { id: "f2-17", en: "foster mother", fr: "mère adoptive" },
+            { id: "f2-18", en: "foster father", fr: "père adoptif" },
+            { id: "f2-19", en: "foster child", fr: "enfant adoptif" },
+            { id: "f2-20", en: "adoptive parents", fr: "parents adoptifs" },
+            { id: "f2-21", en: "biological parents", fr: "parents biologiques" },
+            { id: "f2-22", en: "birth mother", fr: "mère biologique" },
+            { id: "f2-23", en: "birth father", fr: "père biologique" },
+            { id: "f2-24", en: "extended family", fr: "famille élargie" },
+            { id: "f2-25", en: "nuclear family", fr: "famille nucléaire" },
+            { id: "f2-26", en: "single parent", fr: "parent isolé" },
+            { id: "f2-27", en: "only child", fr: "enfant unique" },
+            { id: "f2-28", en: "middle child", fr: "enfant du milieu" },
+            { id: "f2-29", en: "youngest child", fr: "dernier enfant" },
+            { id: "f2-30", en: "eldest child", fr: "aîné" },
+            { id: "f2-31", en: "heir apparent", fr: "héritier présomptif" },
+            { id: "f2-32", en: "successor", fr: "successeur" },
+            { id: "f2-33", en: "predecessor", fr: "prédécesseur" },
+            { id: "f2-34", en: "progenitor", fr: "progéniteur" },
+            { id: "f2-35", en: "offspring", fr: "progéniture" },
+            { id: "f2-36", en: "posterity", fr: "postérité" },
+            { id: "f2-37", en: "matriarch", fr: "matriarche" },
+            { id: "f2-38", en: "patriarch", fr: "patriarche" },
+            { id: "f2-39", en: "matrilineal", fr: "matrilinéaire" },
+            { id: "f2-40", en: "patrilineal", fr: "patrilinéaire" },
+            { id: "f2-41", en: "consanguinity", fr: "consanguinité" },
+            { id: "f2-42", en: "affinity", fr: "affinité" },
+            { id: "f2-43", en: "filial", fr: "filial" },
+            { id: "f2-44", en: "fraternal", fr: "fraternel" },
+            { id: "f2-45", en: "sororal", fr: "sororal" },
+            { id: "f2-46", en: "paternal", fr: "paternel" },
+            { id: "f2-47", en: "maternal", fr: "maternel" },
+            { id: "f2-48", en: "avuncular", fr: "avunculaire" },
+            { id: "f2-49", en: "nepotism", fr: "népotisme" },
+            { id: "f2-50", en: "family ties", fr: "liens familiaux" }
+        ],
+        3: [
+            { id: "f3-1", en: "marriage", fr: "mariage" },
+            { id: "f3-2", en: "wedding", fr: "mariage" },
+            { id: "f3-3", en: "engagement", fr: "fiançailles" },
+            { id: "f3-4", en: "fiancé", fr: "fiancé" },
+            { id: "f3-5", en: "fiancée", fr: "fiancée" },
+            { id: "f3-6", en: "bride", fr: "mariée" },
+            { id: "f3-7", en: "groom", fr: "marié" },
+            { id: "f3-8", en: "best man", fr: "témoin" },
+            { id: "f3-9", en: "maid of honor", fr: "demoiselle d'honneur" },
+            { id: "f3-10", en: "bridesmaid", fr: "demoiselle d'honneur" },
+            { id: "f3-11", en: "groomsman", fr: "garçon d'honneur" },
+            { id: "f3-12", en: "wedding ring", fr: "alliance" },
+            { id: "f3-13", en: "vows", fr: "vœux" },
+            { id: "f3-14", en: "ceremony", fr: "cérémonie" },
+            { id: "f3-15", en: "reception", fr: "réception" },
+            { id: "f3-16", en: "honeymoon", fr: "lune de miel" },
+            { id: "f3-17", en: "anniversary", fr: "anniversaire" },
+            { id: "f3-18", en: "divorce", fr: "divorce" },
+            { id: "f3-19", en: "separation", fr: "séparation" },
+            { id: "f3-20", en: "alimony", fr: "pension alimentaire" },
+            { id: "f3-21", en: "custody", fr: "garde" },
+            { id: "f3-22", en: "child support", fr: "pension alimentaire" },
+            { id: "f3-23", en: "prenuptial agreement", fr: "contrat de mariage" },
+            { id: "f3-24", en: "matrimony", fr: "mariage" },
+            { id: "f3-25", en: "conjugal", fr: "conjugal" },
+            { id: "f3-26", en: "marital", fr: "matrimonial" },
+            { id: "f3-27", en: "spousal", fr: "conjugal" },
+            { id: "f3-28", en: "betrothal", fr: "fiançailles" },
+            { id: "f3-29", en: "matchmaker", fr: "entremetteur" },
+            { id: "f3-30", en: "dowry", fr: "dot" },
+            { id: "f3-31", en: "bride price", fr: "prix de la mariée" },
+            { id: "f3-32", en: "matrimonial home", fr: "foyer conjugal" },
+            { id: "f3-33", en: "common-law marriage", fr: "union libre" },
+            { id: "f3-34", en: "cohabitation", fr: "cohabitation" },
+            { id: "f3-35", en: "domestic partnership", fr: "partenariat domestique" },
+            { id: "f3-36", en: "civil union", fr: "union civile" },
+            { id: "f3-37", en: "same-sex marriage", fr: "mariage homosexuel" },
+            { id: "f3-38", en: "bigamy", fr: "bigamie" },
+            { id: "f3-39", en: "polygamy", fr: "polygamie" },
+            { id: "f3-40", en: "monogamy", fr: "monogamie" },
+            { id: "f3-41", en: "infidelity", fr: "infidélité" },
+            { id: "f3-42", en: "adultery", fr: "adultère" },
+            { id: "f3-43", en: "affair", fr: "aventure" },
+            { id: "f3-44", en: "cheating", fr: "tromperie" },
+            { id: "f3-45", en: "fidelity", fr: "fidélité" },
+            { id: "f3-46", en: "loyalty", fr: "loyauté" },
+            { id: "f3-47", en: "commitment", fr: "engagement" },
+            { id: "f3-48", en: "partnership", fr: "partenariat" },
+            { id: "f3-49", en: "relationship", fr: "relation" },
+            { id: "f3-50", en: "bond", fr: "lien" }
+        ],
+        4: [
+            { id: "f4-1", en: "pregnancy", fr: "grossesse" },
+            { id: "f4-2", en: "pregnant", fr: "enceinte" },
+            { id: "f4-3", en: "expecting", fr: "enceinte" },
+            { id: "f4-4", en: "birth", fr: "naissance" },
+            { id: "f4-5", en: "delivery", fr: "accouchement" },
+            { id: "f4-6", en: "labor", fr: "travail" },
+            { id: "f4-7", en: "contraction", fr: "contraction" },
+            { id: "f4-8", en: "due date", fr: "date d'accouchement" },
+            { id: "f4-9", en: "ultrasound", fr: "échographie" },
+            { id: "f4-10", en: "fetus", fr: "fœtus" },
+            { id: "f4-11", en: "embryo", fr: "embryon" },
+            { id: "f4-12", en: "umbilical cord", fr: "cordon ombilical" },
+            { id: "f4-13", en: "placenta", fr: "placenta" },
+            { id: "f4-14", en: "amniotic fluid", fr: "liquide amniotique" },
+            { id: "f4-15", en: "miscarriage", fr: "fausse couche" },
+            { id: "f4-16", en: "abortion", fr: "avortement" },
+            { id: "f4-17", en: "stillbirth", fr: "mortinaissance" },
+            { id: "f4-18", en: "fertility", fr: "fertilité" },
+            { id: "f4-19", en: "infertility", fr: "infertilité" },
+            { id: "f4-20", en: "conception", fr: "conception" },
+            { id: "f4-21", en: "contraception", fr: "contraception" },
+            { id: "f4-22", en: "birth control", fr: "contrôle des naissances" },
+            { id: "f4-23", en: "IVF", fr: "FIV" },
+            { id: "f4-24", en: "surrogacy", fr: "mère porteuse" },
+            { id: "f4-25", en: "midwife", fr: "sage-femme" },
+            { id: "f4-26", en: "obstetrician", fr: "obstétricien" },
+            { id: "f4-27", en: "gynecologist", fr: "gynécologue" },
+            { id: "f4-28", en: "pediatrician", fr: "pédiatre" },
+            { id: "f4-29", en: "neonatal", fr: "néonatal" },
+            { id: "f4-30", en: "postpartum", fr: "post-partum" },
+            { id: "f4-31", en: "breastfeeding", fr: "allaitement" },
+            { id: "f4-32", en: "formula", fr: "lait maternisé" },
+            { id: "f4-33", en: "diaper", fr: "couche" },
+            { id: "f4-34", en: "pacifier", fr: "tétine" },
+            { id: "f4-35", en: "bassinet", fr: "berceau" },
+            { id: "f4-36", en: "crib", fr: "lit d'enfant" },
+            { id: "f4-37", en: "stroller", fr: "poussette" },
+            { id: "f4-38", en: "car seat", fr: "siège auto" },
+            { id: "f4-39", en: "baby monitor", fr: "babyphone" },
+            { id: "f4-40", en: "onesie", fr: "body" },
+            { id: "f4-41", en: "bib", fr: "bavoir" },
+            { id: "f4-42", en: "rattles", fr: "hochet" },
+            { id: "f4-43", en: "teething", fr: "poussée dentaire" },
+            { id: "f4-44", en: "colic", fr: "colique" },
+            { id: "f4-45", en: "immunization", fr: "vaccination" },
+            { id: "f4-46", en: "vaccination", fr: "vaccination" },
+            { id: "f4-47", en: "well-baby visit", fr: "consultation pédiatrique" },
+            { id: "f4-48", en: "growth chart", fr: "courbe de croissance" },
+            { id: "f4-49", en: "milestone", fr: "étape" },
+            { id: "f4-50", en: "developmental stage", fr: "stade de développement" }
+        ],
+        5: [
+            { id: "f5-1", en: "toddler", fr: "bambin" },
+            { id: "f5-2", en: "preschooler", fr: "enfant d'âge préscolaire" },
+            { id: "f5-3", en: "kindergarten", fr: "maternelle" },
+            { id: "f5-4", en: "elementary school", fr: "école primaire" },
+            { id: "f5-5", en: "middle school", fr: "collège" },
+            { id: "f5-6", en: "high school", fr: "lycée" },
+            { id: "f5-7", en: "college", fr: "université" },
+            { id: "f5-8", en: "university", fr: "université" },
+            { id: "f5-9", en: "homework", fr: "devoirs" },
+            { id: "f5-10", en: "grades", fr: "notes" },
+            { id: "f5-11", en: "report card", fr: "bulletin" },
+            { id: "f5-12", en: "teacher", fr: "professeur" },
+            { id: "f5-13", en: "principal", fr: "directeur" },
+            { id: "f5-14", en: "tuition", fr: "frais de scolarité" },
+            { id: "f5-15", en: "scholarship", fr: "bourse" },
+            { id: "f5-16", en: "graduation", fr: "diplôme" },
+            { id: "f5-17", en: "degree", fr: "diplôme" },
+            { id: "f5-18", en: "major", fr: "spécialisation" },
+            { id: "f5-19", en: "minor", fr: "mineure" },
+            { id: "f5-20", en: "curriculum", fr: "programme" },
+            { id: "f5-21", en: "extracurricular", fr: "périscolaire" },
+            { id: "f5-22", en: "sports", fr: "sports" },
+            { id: "f5-23", en: "music lessons", fr: "cours de musique" },
+            { id: "f5-24", en: "art class", fr: "cours d'art" },
+            { id: "f5-25", en: "dance class", fr: "cours de danse" },
+            { id: "f5-26", en: "tutoring", fr: "soutien scolaire" },
+            { id: "f5-27", en: "study group", fr: "groupe d'étude" },
+            { id: "f5-28", en: "exam", fr: "examen" },
+            { id: "f5-29", en: "test", fr: "test" },
+            { id: "f5-30", en: "quiz", fr: "interrogation" },
+            { id: "f5-31", en: "assignment", fr: "devoir" },
+            { id: "f5-32", en: "project", fr: "projet" },
+            { id: "f5-33", en: "presentation", fr: "présentation" },
+            { id: "f5-34", en: "thesis", fr: "thèse" },
+            { id: "f5-35", en: "dissertation", fr: "dissertation" },
+            { id: "f5-36", en: "internship", fr: "stage" },
+            { id: "f5-37", en: "apprenticeship", fr: "apprentissage" },
+            { id: "f5-38", en: "vocational training", fr: "formation professionnelle" },
+            { id: "f5-39", en: "career", fr: "carrière" },
+            { id: "f5-40", en: "profession", fr: "profession" },
+            { id: "f5-41", en: "job", fr: "emploi" },
+            { id: "f5-42", en: "work", fr: "travail" },
+            { id: "f5-43", en: "employment", fr: "emploi" },
+            { id: "f5-44", en: "occupation", fr: "métier" },
+            { id: "f5-45", en: "salary", fr: "salaire" },
+            { id: "f5-46", en: "wages", fr: "salaire" },
+            { id: "f5-47", en: "income", fr: "revenu" },
+            { id: "f5-48", en: "benefits", fr: "avantages" },
+            { id: "f5-49", en: "pension", fr: "retraite" },
+            { id: "f5-50", en: "retirement", fr: "retraite" }
+        ],
+        6: [
+            { id: "f6-1", en: "household", fr: "ménage" },
+            { id: "f6-2", en: "chores", fr: "tâches ménagères" },
+            { id: "f6-3", en: "cleaning", fr: "nettoyage" },
+            { id: "f6-4", en: "cooking", fr: "cuisine" },
+            { id: "f6-5", en: "laundry", fr: "lessive" },
+            { id: "f6-6", en: "shopping", fr: "courses" },
+            { id: "f6-7", en: "grocery", fr: "épicerie" },
+            { id: "f6-8", en: "budget", fr: "budget" },
+            { id: "f6-9", en: "expenses", fr: "dépenses" },
+            { id: "f6-10", en: "savings", fr: "économies" },
+            { id: "f6-11", en: "mortgage", fr: "hypothèque" },
+            { id: "f6-12", en: "rent", fr: "loyer" },
+            { id: "f6-13", en: "utilities", fr: "services publics" },
+            { id: "f6-14", en: "electricity", fr: "électricité" },
+            { id: "f6-15", en: "water", fr: "eau" },
+            { id: "f6-16", en: "gas", fr: "gaz" },
+            { id: "f6-17", en: "internet", fr: "internet" },
+            { id: "f6-18", en: "phone", fr: "téléphone" },
+            { id: "f6-19", en: "insurance", fr: "assurance" },
+            { id: "f6-20", en: "health insurance", fr: "assurance maladie" },
+            { id: "f6-21", en: "car insurance", fr: "assurance auto" },
+            { id: "f6-22", en: "home insurance", fr: "assurance habitation" },
+            { id: "f6-23", en: "taxes", fr: "impôts" },
+            { id: "f6-24", en: "income tax", fr: "impôt sur le revenu" },
+            { id: "f6-25", en: "property tax", fr: "taxe foncière" },
+            { id: "f6-26", en: "investment", fr: "investissement" },
+            { id: "f6-27", en: "stocks", fr: "actions" },
+            { id: "f6-28", en: "bonds", fr: "obligations" },
+            { id: "f6-29", en: "real estate", fr: "immobilier" },
+            { id: "f6-30", en: "retirement fund", fr: "fonds de retraite" },
+            { id: "f6-31", en: "emergency fund", fr: "fonds d'urgence" },
+            { id: "f6-32", en: "debt", fr: "dette" },
+            { id: "f6-33", en: "credit", fr: "crédit" },
+            { id: "f6-34", en: "loan", fr: "prêt" },
+            { id: "f6-35", en: "interest", fr: "intérêt" },
+            { id: "f6-36", en: "bank", fr: "banque" },
+            { id: "f6-37", en: "account", fr: "compte" },
+            { id: "f6-38", en: "checking account", fr: "compte courant" },
+            { id: "f6-39", en: "savings account", fr: "compte d'épargne" },
+            { id: "f6-40", en: "credit card", fr: "carte de crédit" },
+            { id: "f6-41", en: "debit card", fr: "carte de débit" },
+            { id: "f6-42", en: "ATM", fr: "distributeur" },
+            { id: "f6-43", en: "online banking", fr: "banque en ligne" },
+            { id: "f6-44", en: "mobile banking", fr: "banque mobile" },
+            { id: "f6-45", en: "financial planning", fr: "planification financière" },
+            { id: "f6-46", en: "wealth management", fr: "gestion de patrimoine" },
+            { id: "f6-47", en: "estate planning", fr: "planification successorale" },
+            { id: "f6-48", en: "trust fund", fr: "fonds de placement" },
+            { id: "f6-49", en: "charity", fr: "charité" },
+            { id: "f6-50", en: "donation", fr: "don" }
+        ],
+        7: [
+            { id: "f7-1", en: "health", fr: "santé" },
+            { id: "f7-2", en: "wellness", fr: "bien-être" },
+            { id: "f7-3", en: "fitness", fr: "forme" },
+            { id: "f7-4", en: "exercise", fr: "exercice" },
+            { id: "f7-5", en: "nutrition", fr: "nutrition" },
+            { id: "f7-6", en: "diet", fr: "régime" },
+            { id: "f7-7", en: "vitamins", fr: "vitamines" },
+            { id: "f7-8", en: "minerals", fr: "minéraux" },
+            { id: "f7-9", en: "protein", fr: "protéine" },
+            { id: "f7-10", en: "carbohydrates", fr: "glucides" },
+            { id: "f7-11", en: "fats", fr: "lipides" },
+            { id: "f7-12", en: "calories", fr: "calories" },
+            { id: "f7-13", en: "organic", fr: "biologique" },
+            { id: "f7-14", en: "vegetarian", fr: "végétarien" },
+            { id: "f7-15", en: "vegan", fr: "végétalien" },
+            { id: "f7-16", en: "gluten-free", fr: "sans gluten" },
+            { id: "f7-17", en: "dairy-free", fr: "sans lait" },
+            { id: "f7-18", en: "allergy", fr: "allergie" },
+            { id: "f7-19", en: "intolerance", fr: "intolérance" },
+            { id: "f7-20", en: "medication", fr: "médicament" },
+            { id: "f7-21", en: "prescription", fr: "ordonnance" },
+            { id: "f7-22", en: "over-the-counter", fr: "sans ordonnance" },
+            { id: "f7-23", en: "supplements", fr: "compléments" },
+            { id: "f7-24", en: "doctor", fr: "médecin" },
+            { id: "f7-25", en: "physician", fr: "médecin" },
+            { id: "f7-26", en: "specialist", fr: "spécialiste" },
+            { id: "f7-27", en: "surgeon", fr: "chirurgien" },
+            { id: "f7-28", en: "dentist", fr: "dentiste" },
+            { id: "f7-29", en: "optometrist", fr: "optométriste" },
+            { id: "f7-30", en: "pharmacist", fr: "pharmacien" },
+            { id: "f7-31", en: "therapist", fr: "thérapeute" },
+            { id: "f7-32", en: "counselor", fr: "conseiller" },
+            { id: "f7-33", en: "psychologist", fr: "psychologue" },
+            { id: "f7-34", en: "psychiatrist", fr: "psychiatre" },
+            { id: "f7-35", en: "hospital", fr: "hôpital" },
+            { id: "f7-36", en: "clinic", fr: "clinique" },
+            { id: "f7-37", en: "emergency room", fr: "urgence" },
+            { id: "f7-38", en: "intensive care", fr: "soins intensifs" },
+            { id: "f7-39", en: "surgery", fr: "chirurgie" },
+            { id: "f7-40", en: "recovery", fr: "rétablissement" },
+            { id: "f7-41", en: "rehabilitation", fr: "rééducation" },
+            { id: "f7-42", en: "physical therapy", fr: "kinésithérapie" },
+            { id: "f7-43", en: "occupational therapy", fr: "ergothérapie" },
+            { id: "f7-44", en: "mental health", fr: "santé mentale" },
+            { id: "f7-45", en: "stress", fr: "stress" },
+            { id: "f7-46", en: "anxiety", fr: "anxiété" },
+            { id: "f7-47", en: "depression", fr: "dépression" },
+            { id: "f7-48", en: "therapy", fr: "thérapie" },
+            { id: "f7-49", en: "meditation", fr: "méditation" },
+            { id: "f7-50", en: "mindfulness", fr: "pleine conscience" }
+        ],
+        8: [
+            { id: "f8-1", en: "traditions", fr: "traditions" },
+            { id: "f8-2", en: "customs", fr: "coutumes" },
+            { id: "f8-3", en: "rituals", fr: "rituels" },
+            { id: "f8-4", en: "celebrations", fr: "célébrations" },
+            { id: "f8-5", en: "holidays", fr: "vacances" },
+            { id: "f8-6", en: "festivals", fr: "festivals" },
+            { id: "f8-7", en: "birthday", fr: "anniversaire" },
+            { id: "f8-8", en: "anniversary", fr: "anniversaire" },
+            { id: "f8-9", en: "graduation", fr: "diplôme" },
+            { id: "f8-10", en: "wedding", fr: "mariage" },
+            { id: "f8-11", en: "baby shower", fr: "fête de naissance" },
+            { id: "f8-12", en: "gender reveal", fr: "révélation du sexe" },
+            { id: "f8-13", en: "christening", fr: "baptême" },
+            { id: "f8-14", en: "first communion", fr: "première communion" },
+            { id: "f8-15", en: "bar mitzvah", fr: "bar mitzvah" },
+            { id: "f8-16", en: "bat mitzvah", fr: "bat mitzvah" },
+            { id: "f8-17", en: "quinceañera", fr: "quinceañera" },
+            { id: "f8-18", en: "retirement party", fr: "fête de retraite" },
+            { id: "f8-19", en: "family reunion", fr: "réunion de famille" },
+            { id: "f8-20", en: "Thanksgiving", fr: "Action de grâce" },
+            { id: "f8-21", en: "Christmas", fr: "Noël" },
+            { id: "f8-22", en: "Easter", fr: "Pâques" },
+            { id: "f8-23", en: "Hanukkah", fr: "Hanoucca" },
+            { id: "f8-24", en: "Diwali", fr: "Diwali" },
+            { id: "f8-25", en: "Ramadan", fr: "Ramadan" },
+            { id: "f8-26", en: "Eid", fr: "Aïd" },
+            { id: "f8-27", en: "Chinese New Year", fr: "Nouvel An chinois" },
+            { id: "f8-28", en: "Halloween", fr: "Halloween" },
+            { id: "f8-29", en: "Valentine's Day", fr: "Saint-Valentin" },
+            { id: "f8-30", en: "Mother's Day", fr: "Fête des mères" },
+            { id: "f8-31", en: "Father's Day", fr: "Fête des pères" },
+            { id: "f8-32", en: "gifts", fr: "cadeaux" },
+            { id: "f8-33", en: "presents", fr: "cadeaux" },
+            { id: "f8-34", en: "cards", fr: "cartes" },
+            { id: "f8-35", en: "decorations", fr: "décorations" },
+            { id: "f8-36", en: "ornaments", fr: "ornements" },
+            { id: "f8-37", en: "lights", fr: "lumières" },
+            { id: "f8-38", en: "tree", fr: "arbre" },
+            { id: "f8-39", en: "wreath", fr: "couronne" },
+            { id: "f8-40", en: "stockings", fr: "bas" },
+            { id: "f8-41", en: "carols", fr: "chants" },
+            { id: "f8-42", en: "songs", fr: "chansons" },
+            { id: "f8-43", en: "dances", fr: "danses" },
+            { id: "f8-44", en: "games", fr: "jeux" },
+            { id: "f8-45", en: "activities", fr: "activités" },
+            { id: "f8-46", en: "food", fr: "nourriture" },
+            { id: "f8-47", en: "recipes", fr: "recettes" },
+            { id: "f8-48", en: "dishes", fr: "plats" },
+            { id: "f8-49", en: "feast", fr: "festin" },
+            { id: "f8-50", en: "banquet", fr: "banquet" }
+        ],
+        9: [
+            { id: "f9-1", en: "communication", fr: "communication" },
+            { id: "f9-2", en: "conversation", fr: "conversation" },
+            { id: "f9-3", en: "dialogue", fr: "dialogue" },
+            { id: "f9-4", en: "discussion", fr: "discussion" },
+            { id: "f9-5", en: "talk", fr: "parler" },
+            { id: "f9-6", en: "speak", fr: "parler" },
+            { id: "f9-7", en: "listen", fr: "écouter" },
+            { id: "f9-8", en: "hear", fr: "entendre" },
+            { id: "f9-9", en: "understand", fr: "comprendre" },
+            { id: "f9-10", en: "comprehend", fr: "comprendre" },
+            { id: "f9-11", en: "explain", fr: "expliquer" },
+            { id: "f9-12", en: "clarify", fr: "clarifier" },
+            { id: "f9-13", en: "ask", fr: "demander" },
+            { id: "f9-14", en: "question", fr: "question" },
+            { id: "f9-15", en: "answer", fr: "réponse" },
+            { id: "f9-16", en: "respond", fr: "répondre" },
+            { id: "f9-17", en: "reply", fr: "répondre" },
+            { id: "f9-18", en: "express", fr: "exprimer" },
+            { id: "f9-19", en: "share", fr: "partager" },
+            { id: "f9-20", en: "confide", fr: "confier" },
+            { id: "f9-21", en: "trust", fr: "confiance" },
+            { id: "f9-22", en: "honesty", fr: "honnêteté" },
+            { id: "f9-23", en: "truth", fr: "vérité" },
+            { id: "f9-24", en: "sincerity", fr: "sincérité" },
+            { id: "f9-25", en: "openness", fr: "ouverture" },
+            { id: "f9-26", en: "transparency", fr: "transparence" },
+            { id: "f9-27", en: "respect", fr: "respect" },
+            { id: "f9-28", en: "consideration", fr: "considération" },
+            { id: "f9-29", en: "empathy", fr: "empathie" },
+            { id: "f9-30", en: "compassion", fr: "compassion" },
+            { id: "f9-31", en: "sympathy", fr: "sympathie" },
+            { id: "f9-32", en: "support", fr: "soutien" },
+            { id: "f9-33", en: "encouragement", fr: "encouragement" },
+            { id: "f9-34", en: "motivation", fr: "motivation" },
+            { id: "f9-35", en: "inspiration", fr: "inspiration" },
+            { id: "f9-36", en: "advice", fr: "conseil" },
+            { id: "f9-37", en: "guidance", fr: "orientation" },
+            { id: "f9-38", en: "counsel", fr: "conseil" },
+            { id: "f9-39", en: "wisdom", fr: "sagesse" },
+            { id: "f9-40", en: "experience", fr: "expérience" },
+            { id: "f9-41", en: "knowledge", fr: "connaissance" },
+            { id: "f9-42", en: "understanding", fr: "compréhension" },
+            { id: "f9-43", en: "insight", fr: "perspicacité" },
+            { id: "f9-44", en: "perspective", fr: "perspective" },
+            { id: "f9-45", en: "viewpoint", fr: "point de vue" },
+            { id: "f9-46", en: "opinion", fr: "opinion" },
+            { id: "f9-47", en: "belief", fr: "croyance" },
+            { id: "f9-48", en: "value", fr: "valeur" },
+            { id: "f9-49", en: "principle", fr: "principe" },
+            { id: "f9-50", en: "morals", fr: "morale" }
+        ],
+        10: [
+            { id: "f10-1", en: "conflict", fr: "conflit" },
+            { id: "f10-2", en: "disagreement", fr: "désaccord" },
+            { id: "f10-3", en: "argument", fr: "argument" },
+            { id: "f10-4", en: "dispute", fr: "différend" },
+            { id: "f10-5", en: "quarrel", fr: "querelle" },
+            { id: "f10-6", en: "fight", fr: "combat" },
+            { id: "f10-7", en: "struggle", fr: "lutte" },
+            { id: "f10-8", en: "tension", fr: "tension" },
+            { id: "f10-9", en: "stress", fr: "stress" },
+            { id: "f10-10", en: "pressure", fr: "pression" },
+            { id: "f10-11", en: "challenge", fr: "défi" },
+            { id: "f10-12", en: "difficulty", fr: "difficulté" },
+            { id: "f10-13", en: "problem", fr: "problème" },
+            { id: "f10-14", en: "issue", fr: "problème" },
+            { id: "f10-15", en: "crisis", fr: "crise" },
+            { id: "f10-16", en: "emergency", fr: "urgence" },
+            { id: "f10-17", en: "situation", fr: "situation" },
+            { id: "f10-18", en: "circumstance", fr: "circonstance" },
+            { id: "f10-19", en: "condition", fr: "condition" },
+            { id: "f10-20", en: "resolution", fr: "résolution" },
+            { id: "f10-21", en: "solution", fr: "solution" },
+            { id: "f10-22", en: "compromise", fr: "compromis" },
+            { id: "f10-23", en: "agreement", fr: "accord" },
+            { id: "f10-24", en: "understanding", fr: "entente" },
+            { id: "f10-25", en: "reconciliation", fr: "réconciliation" },
+            { id: "f10-26", en: "forgiveness", fr: "pardon" },
+            { id: "f10-27", en: "apology", fr: "excuses" },
+            { id: "f10-28", en: "regret", fr: "regret" },
+            { id: "f10-29", en: "remorse", fr: "remords" },
+            { id: "f10-30", en: "guilt", fr: "culpabilité" },
+            { id: "f10-31", en: "shame", fr: "honte" },
+            { id: "f10-32", en: "blame", fr: "faute" },
+            { id: "f10-33", en: "responsibility", fr: "responsabilité" },
+            { id: "f10-34", en: "accountability", fr: "responsabilité" },
+            { id: "f10-35", en: "duty", fr: "devoir" },
+            { id: "f10-36", en: "obligation", fr: "obligation" },
+            { id: "f10-37", en: "commitment", fr: "engagement" },
+            { id: "f10-38", en: "promise", fr: "promesse" },
+            { id: "f10-39", en: "pledge", fr: "engagement" },
+            { id: "f10-40", en: "vow", fr: "vœu" },
+            { id: "f10-41", en: "oath", fr: "serment" },
+            { id: "f10-42", en: "loyalty", fr: "loyauté" },
+            { id: "f10-43", en: "faithfulness", fr: "fidélité" },
+            { id: "f10-44", en: "devotion", fr: "dévotion" },
+            { id: "f10-45", en: "dedication", fr: "dédicace" },
+            { id: "f10-46", en: "sacrifice", fr: "sacrifice" },
+            { id: "f10-47", en: "compassion", fr: "compassion" },
+            { id: "f10-48", en: "kindness", fr: "gentillesse" },
+            { id: "f10-49", en: "generosity", fr: "générosité" },
+            { id: "f10-50", en: "love", fr: "amour" }
+        ]
+    }
+},
+           "voyage": {
+    levels: {
+        1: [
+            { id: "v1-1", en: "airport", fr: "aéroport" },
+            { id: "v1-2", en: "train", fr: "train" },
+            { id: "v1-3", en: "bus", fr: "bus" },
+            { id: "v1-4", en: "taxi", fr: "taxi" },
+            { id: "v1-5", en: "hotel", fr: "hôtel" },
+            { id: "v1-6", en: "passport", fr: "passeport" },
+            { id: "v1-7", en: "suitcase", fr: "valise" },
+            { id: "v1-8", en: "ticket", fr: "billet" },
+            { id: "v1-9", en: "map", fr: "carte" },
+            { id: "v1-10", en: "destination", fr: "destination" },
+            { id: "v1-11", en: "travel", fr: "voyage" },
+            { id: "v1-12", en: "trip", fr: "voyage" },
+            { id: "v1-13", en: "journey", fr: "trajet" },
+            { id: "v1-14", en: "flight", fr: "vol" },
+            { id: "v1-15", en: "plane", fr: "avion" },
+            { id: "v1-16", en: "car", fr: "voiture" },
+            { id: "v1-17", en: "road", fr: "route" },
+            { id: "v1-18", en: "highway", fr: "autoroute" },
+            { id: "v1-19", en: "station", fr: "gare" },
+            { id: "v1-20", en: "terminal", fr: "terminal" },
+            { id: "v1-21", en: "gate", fr: "porte" },
+            { id: "v1-22", en: "check-in", fr: "enregistrement" },
+            { id: "v1-23", en: "boarding", fr: "embarquement" },
+            { id: "v1-24", en: "departure", fr: "départ" },
+            { id: "v1-25", en: "arrival", fr: "arrivée" },
+            { id: "v1-26", en: "delay", fr: "retard" },
+            { id: "v1-27", en: "schedule", fr: "horaire" },
+            { id: "v1-28", en: "time", fr: "heure" },
+            { id: "v1-29", en: "date", fr: "date" },
+            { id: "v1-30", en: "reservation", fr: "réservation" },
+            { id: "v1-31", en: "booking", fr: "réservation" },
+            { id: "v1-32", en: "confirmation", fr: "confirmation" },
+            { id: "v1-33", en: "price", fr: "prix" },
+            { id: "v1-34", en: "cost", fr: "coût" },
+            { id: "v1-35", en: "money", fr: "argent" },
+            { id: "v1-36", en: "cash", fr: "espèces" },
+            { id: "v1-37", en: "credit card", fr: "carte de crédit" },
+            { id: "v1-38", en: "passenger", fr: "passager" },
+            { id: "v1-39", en: "tourist", fr: "touriste" },
+            { id: "v1-40", en: "visitor", fr: "visiteur" },
+            { id: "v1-41", en: "foreigner", fr: "étranger" },
+            { id: "v1-42", en: "local", fr: "local" },
+            { id: "v1-43", en: "guide", fr: "guide" },
+            { id: "v1-44", en: "driver", fr: "chauffeur" },
+            { id: "v1-45", en: "pilot", fr: "pilote" },
+            { id: "v1-46", en: "flight attendant", fr: "agent de bord" },
+            { id: "v1-47", en: "receptionist", fr: "réceptionniste" },
+            { id: "v1-48", en: "concierge", fr: "concierge" },
+            { id: "v1-49", en: "bellboy", fr: "groom" },
+            { id: "v1-50", en: "porter", fr: "porteur" }
+        ],
+        2: [
+            { id: "v2-1", en: "boarding pass", fr: "carte d'embarquement" },
+            { id: "v2-2", en: "luggage", fr: "bagages" },
+            { id: "v2-3", en: "customs", fr: "douane" },
+            { id: "v2-4", en: "itinerary", fr: "itinéraire" },
+            { id: "v2-5", en: "accommodation", fr: "hébergement" },
+            { id: "v2-6", en: "sightseeing", fr: "tourisme" },
+            { id: "v2-7", en: "guidebook", fr: "guide" },
+            { id: "v2-8", en: "backpack", fr: "sac à dos" },
+            { id: "v2-9", en: "journey", fr: "voyage" },
+            { id: "v2-10", en: "adventure", fr: "aventure" },
+            { id: "v2-11", en: "exploration", fr: "exploration" },
+            { id: "v2-12", en: "discovery", fr: "découverte" },
+            { id: "v2-13", en: "experience", fr: "expérience" },
+            { id: "v2-14", en: "memory", fr: "souvenir" },
+            { id: "v2-15", en: "souvenir", fr: "souvenir" },
+            { id: "v2-16", en: "photograph", fr: "photographie" },
+            { id: "v2-17", en: "camera", fr: "appareil photo" },
+            { id: "v2-18", en: "selfie", fr: "selfie" },
+            { id: "v2-19", en: "landscape", fr: "paysage" },
+            { id: "v2-20", en: "scenery", fr: "paysage" },
+            { id: "v2-21", en: "view", fr: "vue" },
+            { id: "v2-22", en: "panorama", fr: "panorama" },
+            { id: "v2-23", en: "vista", fr: "perspective" },
+            { id: "v2-24", en: "horizon", fr: "horizon" },
+            { id: "v2-25", en: "sunrise", fr: "lever du soleil" },
+            { id: "v2-26", en: "sunset", fr: "coucher du soleil" },
+            { id: "v2-27", en: "mountain", fr: "montagne" },
+            { id: "v2-28", en: "valley", fr: "vallée" },
+            { id: "v2-29", en: "river", fr: "rivière" },
+            { id: "v2-30", en: "lake", fr: "lac" },
+            { id: "v2-31", en: "ocean", fr: "océan" },
+            { id: "v2-32", en: "sea", fr: "mer" },
+            { id: "v2-33", en: "beach", fr: "plage" },
+            { id: "v2-34", en: "coast", fr: "côte" },
+            { id: "v2-35", en: "island", fr: "île" },
+            { id: "v2-36", en: "peninsula", fr: "péninsule" },
+            { id: "v2-37", en: "bay", fr: "baie" },
+            { id: "v2-38", en: "harbor", fr: "port" },
+            { id: "v2-39", en: "port", fr: "port" },
+            { id: "v2-40", en: "dock", fr: "quai" },
+            { id: "v2-41", en: "pier", fr: "jetée" },
+            { id: "v2-42", en: "wharf", fr: "appontement" },
+            { id: "v2-43", en: "marina", fr: "marina" },
+            { id: "v2-44", en: "yacht", fr: "yacht" },
+            { id: "v2-45", en: "sailboat", fr: "voilier" },
+            { id: "v2-46", en: "ferry", fr: "ferry" },
+            { id: "v2-47", en: "cruise", fr: "croisière" },
+            { id: "v2-48", en: "ship", fr: "navire" },
+            { id: "v2-49", en: "boat", fr: "bateau" },
+            { id: "v2-50", en: "vessel", fr: "vaisseau" }
+        ],
+        3: [
+            { id: "v3-1", en: "immigration", fr: "immigration" },
+            { id: "v3-2", en: "passport control", fr: "contrôle des passeports" },
+            { id: "v3-3", en: "security check", fr: "contrôle de sécurité" },
+            { id: "v3-4", en: "x-ray", fr: "rayons X" },
+            { id: "v3-5", en: "metal detector", fr: "détecteur de métaux" },
+            { id: "v3-6", en: "screening", fr: "filtrage" },
+            { id: "v3-7", en: "inspection", fr: "inspection" },
+            { id: "v3-8", en: "declaration", fr: "déclaration" },
+            { id: "v3-9", en: "duty-free", fr: "hors taxes" },
+            { id: "v3-10", en: "tax-free", fr: "détaxé" },
+            { id: "v3-11", en: "currency", fr: "devise" },
+            { id: "v3-12", en: "exchange", fr: "change" },
+            { id: "v3-13", en: "rate", fr: "taux" },
+            { id: "v3-14", en: "commission", fr: "commission" },
+            { id: "v3-15", en: "fee", fr: "frais" },
+            { id: "v3-16", en: "charge", fr: "frais" },
+            { id: "v3-17", en: "tax", fr: "taxe" },
+            { id: "v3-18", en: "tip", fr: "pourboire" },
+            { id: "v3-19", en: "gratuity", fr: "gratification" },
+            { id: "v3-20", en: "service charge", fr: "frais de service" },
+            { id: "v3-21", en: "visa", fr: "visa" },
+            { id: "v3-22", en: "permit", fr: "permis" },
+            { id: "v3-23", en: "authorization", fr: "autorisation" },
+            { id: "v3-24", en: "clearance", fr: "autorisation" },
+            { id: "v3-25", en: "approval", fr: "approbation" },
+            { id: "v3-26", en: "document", fr: "document" },
+            { id: "v3-27", en: "identification", fr: "pièce d'identité" },
+            { id: "v3-28", en: "ID card", fr: "carte d'identité" },
+            { id: "v3-29", en: "driver's license", fr: "permis de conduire" },
+            { id: "v3-30", en: "insurance", fr: "assurance" },
+            { id: "v3-31", en: "coverage", fr: "couverture" },
+            { id: "v3-32", en: "policy", fr: "police" },
+            { id: "v3-33", en: "claim", fr: "réclamation" },
+            { id: "v3-34", en: "emergency", fr: "urgence" },
+            { id: "v3-35", en: "assistance", fr: "assistance" },
+            { id: "v3-36", en: "help", fr: "aide" },
+            { id: "v3-37", en: "support", fr: "soutien" },
+            { id: "v3-38", en: "rescue", fr: "sauvetage" },
+            { id: "v3-39", en: "evacuation", fr: "évacuation" },
+            { id: "v3-40", en: "repatriation", fr: "rapatriement" },
+            { id: "v3-41", en: "embassy", fr: "ambassade" },
+            { id: "v3-42", en: "consulate", fr: "consulat" },
+            { id: "v3-43", en: "diplomat", fr: "diplomate" },
+            { id: "v3-44", en: "ambassador", fr: "ambassadeur" },
+            { id: "v3-45", en: "consultate general", fr: "consulat général" },
+            { id: "v3-46", en: "foreign office", fr: "ministère des affaires étrangères" },
+            { id: "v3-47", en: "state department", fr: "département d'État" },
+            { id: "v3-48", en: "ministry", fr: "ministère" },
+            { id: "v3-49", en: "government", fr: "gouvernement" },
+            { id: "v3-50", en: "official", fr: "officiel" }
+        ],
+        4: [
+            { id: "v4-1", en: "backpacking", fr: "randonnée" },
+            { id: "v4-2", en: "hiking", fr: "randonnée" },
+            { id: "v4-3", en: "trekking", fr: "trekking" },
+            { id: "v4-4", en: "camping", fr: "camping" },
+            { id: "v4-5", en: "tent", fr: "tente" },
+            { id: "v4-6", en: "sleeping bag", fr: "sac de couchage" },
+            { id: "v4-7", en: "backpack", fr: "sac à dos" },
+            { id: "v4-8", en: "rucksack", fr: "sac à dos" },
+            { id: "v4-9", en: "knapsack", fr: "havresac" },
+            { id: "v4-10", en: "gear", fr: "équipement" },
+            { id: "v4-11", en: "equipment", fr: "équipement" },
+            { id: "v4-12", en: "supplies", fr: "fournitures" },
+            { id: "v4-13", en: "provisions", fr: "provisions" },
+            { id: "v4-14", en: "food", fr: "nourriture" },
+            { id: "v4-15", en: "water", fr: "eau" },
+            { id: "v4-16", en: "canteen", fr: "gourde" },
+            { id: "v4-17", en: "bottle", fr: "bouteille" },
+            { id: "v4-18", en: "container", fr: "conteneur" },
+            { id: "v4-19", en: "flashlight", fr: "lampe torche" },
+            { id: "v4-20", en: "torch", fr: "torche" },
+            { id: "v4-21", en: "batteries", fr: "piles" },
+            { id: "v4-22", en: "compass", fr: "boussole" },
+            { id: "v4-23", en: "GPS", fr: "GPS" },
+            { id: "v4-24", en: "navigation", fr: "navigation" },
+            { id: "v4-25", en: "orientation", fr: "orientation" },
+            { id: "v4-26", en: "direction", fr: "direction" },
+            { id: "v4-27", en: "route", fr: "itinéraire" },
+            { id: "v4-28", en: "trail", fr: "sentier" },
+            { id: "v4-29", en: "path", fr: "chemin" },
+            { id: "v4-30", en: "track", fr: "piste" },
+            { id: "v4-31", en: "footpath", fr: "sentier" },
+            { id: "v4-32", en: "hiking boots", fr: "chaussures de randonnée" },
+            { id: "v4-33", en: "sneakers", fr: "baskets" },
+            { id: "v4-34", en: "sandals", fr: "sandales" },
+            { id: "v4-35", en: "clothing", fr: "vêtements" },
+            { id: "v4-36", en: "raincoat", fr: "imperméable" },
+            { id: "v4-37", en: "jacket", fr: "veste" },
+            { id: "v4-38", en: "sweater", fr: "pull" },
+            { id: "v4-39", en: "hat", fr: "chapeau" },
+            { id: "v4-40", en: "cap", fr: "casquette" },
+            { id: "v4-41", en: "gloves", fr: "gants" },
+            { id: "v4-42", en: "scarf", fr: "écharpe" },
+            { id: "v4-43", en: "sunglasses", fr: "lunettes de soleil" },
+            { id: "v4-44", en: "sunscreen", fr: "crème solaire" },
+            { id: "v4-45", en: "insect repellent", fr: "répulsif anti-insectes" },
+            { id: "v4-46", en: "first aid kit", fr: "trousse de premiers soins" },
+            { id: "v4-47", en: "medicine", fr: "médicament" },
+            { id: "v4-48", en: "bandage", fr: "bandage" },
+            { id: "v4-49", en: "antiseptic", fr: "antiseptique" },
+            { id: "v4-50", en: "painkiller", fr: "analgésique" }
+        ],
+        5: [
+            { id: "v5-1", en: "cruise ship", fr: "paquebot de croisière" },
+            { id: "v5-2", en: "yacht", fr: "yacht" },
+            { id: "v5-3", en: "sailboat", fr: "voilier" },
+            { id: "v5-4", en: "motorboat", fr: "bateau à moteur" },
+            { id: "v5-5", en: "ferry", fr: "ferry" },
+            { id: "v5-6", en: "catamaran", fr: "catamaran" },
+            { id: "v5-7", en: "trimaran", fr: "trimaran" },
+            { id: "v5-8", en: "kayak", fr: "kayak" },
+            { id: "v5-9", en: "canoe", fr: "canoë" },
+            { id: "v5-10", en: "rowing boat", fr: "bateau à rames" },
+            { id: "v5-11", en: "dinghy", fr: "youyou" },
+            { id: "v5-12", en: "lifeboat", fr: "canot de sauvetage" },
+            { id: "v5-13", en: "life jacket", fr: "gilet de sauvetage" },
+            { id: "v5-14", en: "life vest", fr: "gilet de sauvetage" },
+            { id: "v5-15", en: "buoy", fr: "bouée" },
+            { id: "v5-16", en: "anchor", fr: "ancre" },
+            { id: "v5-17", en: "rope", fr: "corde" },
+            { id: "v5-18", en: "sail", fr: "voile" },
+            { id: "v5-19", en: "mast", fr: "mât" },
+            { id: "v5-20", en: "rudder", fr: "gouvernail" },
+            { id: "v5-21", en: "helm", fr: "barre" },
+            { id: "v5-22", en: "deck", fr: "pont" },
+            { id: "v5-23", en: "cabin", fr: "cabine" },
+            { id: "v5-24", en: "berth", fr: "couchette" },
+            { id: "v5-25", en: "bunk", fr: "couchette" },
+            { id: "v5-26", en: "galley", fr: "cuisine" },
+            { id: "v5-27", en: "head", fr: "toilettes" },
+            { id: "v5-28", en: "bridge", fr: "passerelle" },
+            { id: "v5-29", en: "wheelhouse", fr: "timonerie" },
+            { id: "v5-30", en: "captain", fr: "capitaine" },
+            { id: "v5-31", en: "crew", fr: "équipage" },
+            { id: "v5-32", en: "sailor", fr: "marin" },
+            { id: "v5-33", en: "seaman", fr: "marin" },
+            { id: "v5-34", en: "navigator", fr: "navigateur" },
+            { id: "v5-35", en: "helmsman", fr: "timonier" },
+            { id: "v5-36", en: "pilot", fr: "pilote" },
+            { id: "v5-37", en: "mate", fr: "second" },
+            { id: "v5-38", en: "steward", fr: "steward" },
+            { id: "v5-39", en: "stewardess", fr: "hôtesse" },
+            { id: "v5-40", en: "porter", fr: "porteur" },
+            { id: "v5-41", en: "dockworker", fr: "docker" },
+            { id: "v5-42", en: "longshoreman", fr: "docker" },
+            { id: "v5-43", en: "stevedore", fr: "docker" },
+            { id: "v5-44", en: "harbormaster", fr: "capitaine de port" },
+            { id: "v5-45", en: "lighthouse", fr: "phare" },
+            { id: "v5-46", en: "beacon", fr: "balise" },
+            { id: "v5-47", en: "buoy", fr: "bouée" },
+            { id: "v5-48", en: "channel", fr: "chenal" },
+            { id: "v5-49", en: "fairway", fr: "chenal" },
+            { id: "v5-50", en: "waterway", fr: "voie navigable" }
+        ],
+        6: [
+            { id: "v6-1", en: "resort", fr: "station" },
+            { id: "v6-2", en: "spa", fr: "spa" },
+            { id: "v6-3", en: "wellness", fr: "bien-être" },
+            { id: "v6-4", en: "relaxation", fr: "détente" },
+            { id: "v6-5", en: "recreation", fr: "loisirs" },
+            { id: "v6-6", en: "leisure", fr: "loisir" },
+            { id: "v6-7", en: "entertainment", fr: "divertissement" },
+            { id: "v6-8", en: "amusement", fr: "amusement" },
+            { id: "v6-9", en: "activity", fr: "activité" },
+            { id: "v6-10", en: "sports", fr: "sports" },
+            { id: "v6-11", en: "games", fr: "jeux" },
+            { id: "v6-12", en: "swimming", fr: "natation" },
+            { id: "v6-13", en: "diving", fr: "plongée" },
+            { id: "v6-14", en: "snorkeling", fr: "plongée avec tuba" },
+            { id: "v6-15", en: "surfing", fr: "surf" },
+            { id: "v6-16", en: "windsurfing", fr: "planche à voile" },
+            { id: "v6-17", en: "kitesurfing", fr: "kitesurf" },
+            { id: "v6-18", en: "paddleboarding", fr: "planche à pagaie" },
+            { id: "v6-19", en: "kayaking", fr: "kayak" },
+            { id: "v6-20", en: "canoeing", fr: "canoë" },
+            { id: "v6-21", en: "fishing", fr: "pêche" },
+            { id: "v6-22", en: "angling", fr: "pêche à la ligne" },
+            { id: "v6-23", en: "hunting", fr: "chasse" },
+            { id: "v6-24", en: "golf", fr: "golf" },
+            { id: "v6-25", en: "tennis", fr: "tennis" },
+            { id: "v6-26", en: "squash", fr: "squash" },
+            { id: "v6-27", en: "badminton", fr: "badminton" },
+            { id: "v6-28", en: "volleyball", fr: "volley-ball" },
+            { id: "v6-29", en: "basketball", fr: "basket-ball" },
+            { id: "v6-30", en: "soccer", fr: "football" },
+            { id: "v6-31", en: "football", fr: "football" },
+            { id: "v6-32", en: "rugby", fr: "rugby" },
+            { id: "v6-33", en: "cricket", fr: "cricket" },
+            { id: "v6-34", en: "baseball", fr: "baseball" },
+            { id: "v6-35", en: "hockey", fr: "hockey" },
+            { id: "v6-36", en: "skiing", fr: "ski" },
+            { id: "v6-37", en: "snowboarding", fr: "snowboard" },
+            { id: "v6-38", en: "skating", fr: "patinage" },
+            { id: "v6-39", en: "sledding", fr: "luge" },
+            { id: "v6-40", en: "tobogganing", fr: "toboggan" },
+            { id: "v6-41", en: "ice skating", fr: "patinage sur glace" },
+            { id: "v6-42", en: "roller skating", fr: "patinage à roulettes" },
+            { id: "v6-43", en: "cycling", fr: "cyclisme" },
+            { id: "v6-44", en: "biking", fr: "vélo" },
+            { id: "v6-45", en: "mountain biking", fr: "VTT" },
+            { id: "v6-46", en: "horseback riding", fr: "équitation" },
+            { id: "v6-47", en: "equestrian", fr: "équestre" },
+            { id: "v6-48", en: "riding", fr: "équitation" },
+            { id: "v6-49", en: "trekking", fr: "randonnée" },
+            { id: "v6-50", en: "mountaineering", fr: "alpinisme" }
+        ],
+        7: [
+            { id: "v7-1", en: "cuisine", fr: "cuisine" },
+            { id: "v7-2", en: "gastronomy", fr: "gastronomie" },
+            { id: "v7-3", en: "culinary", fr: "culinaire" },
+            { id: "v7-4", en: "food", fr: "nourriture" },
+            { id: "v7-5", en: "dish", fr: "plat" },
+            { id: "v7-6", en: "meal", fr: "repas" },
+            { id: "v7-7", en: "breakfast", fr: "petit déjeuner" },
+            { id: "v7-8", en: "lunch", fr: "déjeuner" },
+            { id: "v7-9", en: "dinner", fr: "dîner" },
+            { id: "v7-10", en: "supper", fr: "souper" },
+            { id: "v7-11", en: "snack", fr: "collation" },
+            { id: "v7-12", en: "appetizer", fr: "apéritif" },
+            { id: "v7-13", en: "starter", fr: "entrée" },
+            { id: "v7-14", en: "main course", fr: "plat principal" },
+            { id: "v7-15", en: "dessert", fr: "dessert" },
+            { id: "v7-16", en: "beverage", fr: "boisson" },
+            { id: "v7-17", en: "drink", fr: "boisson" },
+            { id: "v7-18", en: "cocktail", fr: "cocktail" },
+            { id: "v7-19", en: "wine", fr: "vin" },
+            { id: "v7-20", en: "beer", fr: "bière" },
+            { id: "v7-21", en: "spirits", fr: "spiritueux" },
+            { id: "v7-22", en: "liquor", fr: "alcool" },
+            { id: "v7-23", en: "alcohol", fr: "alcool" },
+            { id: "v7-24", en: "non-alcoholic", fr: "non alcoolisé" },
+            { id: "v7-25", en: "soft drink", fr: "boisson gazeuse" },
+            { id: "v7-26", en: "juice", fr: "jus" },
+            { id: "v7-27", en: "water", fr: "eau" },
+            { id: "v7-28", en: "coffee", fr: "café" },
+            { id: "v7-29", en: "tea", fr: "thé" },
+            { id: "v7-30", en: "milk", fr: "lait" },
+            { id: "v7-31", en: "restaurant", fr: "restaurant" },
+            { id: "v7-32", en: "cafe", fr: "café" },
+            { id: "v7-33", en: "bistro", fr: "bistro" },
+            { id: "v7-34", en: "brasserie", fr: "brasserie" },
+            { id: "v7-35", en: "pub", fr: "pub" },
+            { id: "v7-36", en: "bar", fr: "bar" },
+            { id: "v7-37", en: "tavern", fr: "taverne" },
+            { id: "v7-38", en: "inn", fr: "auberge" },
+            { id: "v7-39", en: "lodge", fr: "gîte" },
+            { id: "v7-40", en: "hostel", fr: "auberge de jeunesse" },
+            { id: "v7-41", en: "motel", fr: "motel" },
+            { id: "v7-42", en: "bed and breakfast", fr: "chambre d'hôtes" },
+            { id: "v7-43", en: "guesthouse", fr: "maison d'hôtes" },
+            { id: "v7-44", en: "vacation rental", fr: "location de vacances" },
+            { id: "v7-45", en: "apartment", fr: "appartement" },
+            { id: "v7-46", en: "flat", fr: "appartement" },
+            { id: "v7-47", en: "condominium", fr: "copropriété" },
+            { id: "v7-48", en: "villa", fr: "villa" },
+            { id: "v7-49", en: "cottage", fr: "chalet" },
+            { id: "v7-50", en: "cabin", fr: "cabane" }
+        ],
+        8: [
+            { id: "v8-1", en: "culture", fr: "culture" },
+            { id: "v8-2", en: "tradition", fr: "tradition" },
+            { id: "v8-3", en: "custom", fr: "coutume" },
+            { id: "v8-4", en: "heritage", fr: "patrimoine" },
+            { id: "v8-5", en: "history", fr: "histoire" },
+            { id: "v8-6", en: "artifact", fr: "artefact" },
+            { id: "v8-7", en: "relic", fr: "relique" },
+            { id: "v8-8", en: "monument", fr: "monument" },
+            { id: "v8-9", en: "memorial", fr: "mémorial" },
+            { id: "v8-10", en: "statue", fr: "statue" },
+            { id: "v8-11", en: "sculpture", fr: "sculpture" },
+            { id: "v8-12", en: "painting", fr: "peinture" },
+            { id: "v8-13", en: "art", fr: "art" },
+            { id: "v8-14", en: "gallery", fr: "galerie" },
+            { id: "v8-15", en: "museum", fr: "musée" },
+            { id: "v8-16", en: "exhibition", fr: "exposition" },
+            { id: "v8-17", en: "display", fr: "exposition" },
+            { id: "v8-18", en: "collection", fr: "collection" },
+            { id: "v8-19", en: "antique", fr: "antiquité" },
+            { id: "v8-20", en: "vintage", fr: "ancien" },
+            { id: "v8-21", en: "architecture", fr: "architecture" },
+            { id: "v8-22", en: "building", fr: "bâtiment" },
+            { id: "v8-23", en: "structure", fr: "structure" },
+            { id: "v8-24", en: "construction", fr: "construction" },
+            { id: "v8-25", en: "design", fr: "conception" },
+            { id: "v8-26", en: "style", fr: "style" },
+            { id: "v8-27", en: "period", fr: "période" },
+            { id: "v8-28", en: "era", fr: "ère" },
+            { id: "v8-29", en: "century", fr: "siècle" },
+            { id: "v8-30", en: "millennium", fr: "millénaire" },
+            { id: "v8-31", en: "ancient", fr: "ancien" },
+            { id: "v8-32", en: "medieval", fr: "médiéval" },
+            { id: "v8-33", en: "renaissance", fr: "renaissance" },
+            { id: "v8-34", en: "modern", fr: "moderne" },
+            { id: "v8-35", en: "contemporary", fr: "contemporain" },
+            { id: "v8-36", en: "futuristic", fr: "futuriste" },
+            { id: "v8-37", en: "traditional", fr: "traditionnel" },
+            { id: "v8-38", en: "folk", fr: "folklorique" },
+            { id: "v8-39", en: "ethnic", fr: "ethnique" },
+            { id: "v8-40", en: "indigenous", fr: "autochtone" },
+            { id: "v8-41", en: "native", fr: "indigène" },
+            { id: "v8-42", en: "aboriginal", fr: "aborigène" },
+            { id: "v8-43", en: "tribal", fr: "tribal" },
+            { id: "v8-44", en: "ceremony", fr: "cérémonie" },
+            { id: "v8-45", en: "ritual", fr: "rituel" },
+            { id: "v8-46", en: "festival", fr: "festival" },
+            { id: "v8-47", en: "celebration", fr: "célébration" },
+            { id: "v8-48", en: "event", fr: "événement" },
+            { id: "v8-49", en: "performance", fr: "performance" },
+            { id: "v8-50", en: "show", fr: "spectacle" }
+        ],
+        9: [
+            { id: "v9-1", en: "climate", fr: "climat" },
+            { id: "v9-2", en: "weather", fr: "temps" },
+            { id: "v9-3", en: "temperature", fr: "température" },
+            { id: "v9-4", en: "humidity", fr: "humidité" },
+            { id: "v9-5", en: "precipitation", fr: "précipitation" },
+            { id: "v9-6", en: "rain", fr: "pluie" },
+            { id: "v9-7", en: "snow", fr: "neige" },
+            { id: "v9-8", en: "hail", fr: "grêle" },
+            { id: "v9-9", en: "sleet", fr: "neige fondue" },
+            { id: "v9-10", en: "wind", fr: "vent" },
+            { id: "v9-11", en: "breeze", fr: "brise" },
+            { id: "v9-12", en: "gale", fr: "coup de vent" },
+            { id: "v9-13", en: "storm", fr: "tempête" },
+            { id: "v9-14", en: "hurricane", fr: "ouragan" },
+            { id: "v9-15", en: "typhoon", fr: "typhon" },
+            { id: "v9-16", en: "tornado", fr: "tornade" },
+            { id: "v9-17", en: "cyclone", fr: "cyclone" },
+            { id: "v9-18", en: "monsoon", fr: "mousson" },
+            { id: "v9-19", en: "drought", fr: "sécheresse" },
+            { id: "v9-20", en: "flood", fr: "inondation" },
+            { id: "v9-21", en: "earthquake", fr: "tremblement de terre" },
+            { id: "v9-22", en: "tsunami", fr: "tsunami" },
+            { id: "v9-23", en: "volcano", fr: "volcan" },
+            { id: "v9-24", en: "eruption", fr: "éruption" },
+            { id: "v9-25", en: "avalanche", fr: "avalanche" },
+            { id: "v9-26", en: "landslide", fr: "glissement de terrain" },
+            { id: "v9-27", en: "wildfire", fr: "feu de forêt" },
+            { id: "v9-28", en: "blizzard", fr: "blizzard" },
+            { id: "v9-29", en: "fog", fr: "brouillard" },
+            { id: "v9-30", en: "mist", fr: "brume" },
+            { id: "v9-31", en: "haze", fr: "brume" },
+            { id: "v9-32", en: "smog", fr: "smog" },
+            { id: "v9-33", en: "pollution", fr: "pollution" },
+            { id: "v9-34", en: "environment", fr: "environnement" },
+            { id: "v9-35", en: "ecology", fr: "écologie" },
+            { id: "v9-36", en: "ecosystem", fr: "écosystème" },
+            { id: "v9-37", en: "habitat", fr: "habitat" },
+            { id: "v9-38", en: "biome", fr: "biome" },
+            { id: "v9-39", en: "flora", fr: "flore" },
+            { id: "v9-40", en: "fauna", fr: "faune" },
+            { id: "v9-41", en: "wildlife", fr: "faune" },
+            { id: "v9-42", en: "vegetation", fr: "végétation" },
+            { id: "v9-43", en: "forest", fr: "forêt" },
+            { id: "v9-44", en: "jungle", fr: "jungle" },
+            { id: "v9-45", en: "rainforest", fr: "forêt tropicale" },
+            { id: "v9-46", en: "desert", fr: "désert" },
+            { id: "v9-47", en: "savanna", fr: "savane" },
+            { id: "v9-48", en: "grassland", fr: "prairie" },
+            { id: "v9-49", en: "wetland", fr: "zone humide" },
+            { id: "v9-50", en: "marsh", fr: "marais" }
+        ],
+        10: [
+            { id: "v10-1", en: "itinerary", fr: "itinéraire" },
+            { id: "v10-2", en: "schedule", fr: "emploi du temps" },
+            { id: "v10-3", en: "agenda", fr: "ordre du jour" },
+            { id: "v10-4", en: "plan", fr: "plan" },
+            { id: "v10-5", en: "program", fr: "programme" },
+            { id: "v10-6", en: "tour", fr: "tour" },
+            { id: "v10-7", en: "excursion", fr: "excursion" },
+            { id: "v10-8", en: "outing", fr: "sortie" },
+            { id: "v10-9", en: "trip", fr: "voyage" },
+            { id: "v10-10", en: "journey", fr: "trajet" },
+            { id: "v10-11", en: "voyage", fr: "voyage" },
+            { id: "v10-12", en: "expedition", fr: "expédition" },
+            { id: "v10-13", en: "mission", fr: "mission" },
+            { id: "v10-14", en: "quest", fr: "quête" },
+            { id: "v10-15", en: "pilgrimage", fr: "pèlerinage" },
+            { id: "v10-16", en: "odyssey", fr: "odyssée" },
+            { id: "v10-17", en: "safari", fr: "safari" },
+            { id: "v10-18", en: "caravan", fr: "caravane" },
+            { id: "v10-19", en: "convoy", fr: "convoi" },
+            { id: "v10-20", en: "procession", fr: "procession" },
+            { id: "v10-21", en: "parade", fr: "défilé" },
+            { id: "v10-22", en: "march", fr: "marche" },
+            { id: "v10-23", en: "rally", fr: "rallye" },
+            { id: "v10-24", en: "race", fr: "course" },
+            { id: "v10-25", en: "challenge", fr: "défi" },
+            { id: "v10-26", en: "adventure", fr: "aventure" },
+            { id: "v10-27", en: "exploit", fr: "exploit" },
+            { id: "v10-28", en: "feat", fr: "exploit" },
+            { id: "v10-29", en: "achievement", fr: "réalisation" },
+            { id: "v10-30", en: "accomplishment", fr: "accomplissement" },
+            { id: "v10-31", en: "success", fr: "succès" },
+            { id: "v10-32", en: "victory", fr: "victoire" },
+            { id: "v10-33", en: "triumph", fr: "triomphe" },
+            { id: "v10-34", en: "conquest", fr: "conquête" },
+            { id: "v10-35", en: "discovery", fr: "découverte" },
+            { id: "v10-36", en: "exploration", fr: "exploration" },
+            { id: "v10-37", en: "navigation", fr: "navigation" },
+            { id: "v10-38", en: "orientation", fr: "orientation" },
+            { id: "v10-39", en: "direction", fr: "direction" },
+            { id: "v10-40", en: "guidance", fr: "guidage" },
+            { id: "v10-41", en: "leadership", fr: "leadership" },
+            { id: "v10-42", en: "companionship", fr: "camaraderie" },
+            { id: "v10-43", en: "fellowship", fr: "camaraderie" },
+            { id: "v10-44", en: "partnership", fr: "partenariat" },
+            { id: "v10-45", en: "collaboration", fr: "collaboration" },
+            { id: "v10-46", en: "cooperation", fr: "coopération" },
+            { id: "v10-47", en: "teamwork", fr: "travail d'équipe" },
+            { id: "v10-48", en: "unity", fr: "unité" },
+            { id: "v10-49", en: "harmony", fr: "harmonie" },
+            { id: "v10-50", en: "friendship", fr: "amitié" }
+        ]
+    }
+},
+        };
+
+        // =============================================
+        // ÉTAT DE L'APPLICATION
+        // =============================================
+        let currentScreen = 'home';
+        let currentTheme = '';
+        let currentLevel = 1;
+        let timerValue = 60;
+        let timerInterval = null;
+        let selectedWord = null;
+        let gameWords = [];
+        let masteredWords = {};
+        let soundEnabled = true;
+        let consecutiveErrors = 0;
+        let wordsFound = 0;
+        let totalWords = 0;
+
+        // =============================================
+        // FONCTIONS UTILITAIRES
+        // =============================================
+        
+        // Gestion du localStorage
+        function saveToStorage(key, obj) {
+            localStorage.setItem(key, JSON.stringify(obj));
+        }
+
+        function loadFromStorage(key) {
+            const item = localStorage.getItem(key);
+            return item ? JSON.parse(item) : null;
+        }
+
+        // Marquer un mot comme maîtrisé
+        function markWordMastered(theme, id) {
+            if (!masteredWords[theme]) {
+                masteredWords[theme] = {};
+            }
+            
+            if (!masteredWords[theme][id]) {
+                masteredWords[theme][id] = 0;
+            }
+            
+            masteredWords[theme][id]++;
+            saveToStorage('word_mastered', masteredWords);
+        }
+
+        // Vérifier si un mot est maîtrisé
+        function isWordMastered(theme, id) {
+            return masteredWords[theme] && masteredWords[theme][id] >= 2;
+        }
+
+        // Charger les sons
+        function loadSounds() {
+            // Placeholder pour les sons - à remplacer par de vrais fichiers
+            const soundFiles = {
+                click: 'assets/sounds/click.mp3',
+                correct: 'assets/sounds/correct.mp3',
+                wrong: 'assets/sounds/wrong.mp3',
+                play: 'assets/sounds/play.mp3',
+                levelup: 'assets/sounds/levelup.mp3',
+                notify: 'assets/sounds/notify.mp3'
+            };
+            
+            // En production, vous devriez créer des objets Audio réels
+            // Ici, nous simulons juste l'interface pour éviter les erreurs
+            return {
+                play: function(soundName) {
+                    if (!soundEnabled) return;
+                    
+                    // En production, remplacez par:
+                    // const audio = new Audio(soundFiles[soundName]);
+                    // audio.play().catch(e => console.log("Erreur de lecture audio:", e));
+                    
+                    console.log(`Jouer le son: ${soundName}`);
+                }
+            };
+        }
+
+        // Mélanger un tableau (aléatoire)
+        function shuffleArray(array) {
+            const newArray = [...array];
+            for (let i = newArray.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+            }
+            return newArray;
+        }
+
+        // =============================================
+        // GESTION DES ÉCRANS
+        // =============================================
+        
+        function showScreen(screenName) {
+            // Masquer tous les écrans
+            document.getElementById('home-screen').classList.add('hidden');
+            document.getElementById('game-screen').classList.add('hidden');
+            document.getElementById('library-screen').classList.add('hidden');
+            
+            // Afficher l'écran demandé
+            document.getElementById(`${screenName}-screen`).classList.remove('hidden');
+            currentScreen = screenName;
+            
+            // Jouer un son de navigation
+            sounds.play('click');
+        }
+
+        // =============================================
+        // ÉCRAN D'ACCUEIL - ANIMATION DES DICTONS
+        // =============================================
+        
+        function startQuoteAnimation() {
+            const quoteElement = document.getElementById('quote-display');
+            let currentQuoteIndex = 0;
+            
+            function typeWriter(text, i, callback) {
+                if (i < text.length) {
+                    quoteElement.innerHTML = text.substring(0, i + 1);
+                    setTimeout(() => typeWriter(text, i + 1, callback), 100);
+                } else {
+                    setTimeout(callback, 2000);
+                }
+            }
+            
+            function deleteText(callback) {
+                const text = quoteElement.innerHTML;
+                if (text.length > 0) {
+                    quoteElement.innerHTML = text.substring(0, text.length - 1);
+                    setTimeout(() => deleteText(callback), 50);
+                } else {
+                    setTimeout(callback, 500);
+                }
+            }
+            
+            function nextQuote() {
+                currentQuoteIndex = (currentQuoteIndex + 1) % QUOTES.length;
+                const nextQuote = QUOTES[currentQuoteIndex];
+                
+                typeWriter(nextQuote, 0, () => {
+                    setTimeout(() => deleteText(nextQuote), 2000);
+                });
+            }
+            
+            // Démarrer l'animation
+            nextQuote();
+            setInterval(nextQuote, 8000); // Changer de dicton toutes les 8 secondes
+        }
+
+        // =============================================
+        // MODAL DE SÉLECTION THÈME/NIVEAU
+        // =============================================
+        
+        function showThemeModal() {
+            const modal = document.getElementById('theme-modal');
+            const themeSelect = document.getElementById('theme-select');
+            const levelSelect = document.getElementById('level-select');
+            
+            // Vider les sélecteurs
+            themeSelect.innerHTML = '';
+            levelSelect.innerHTML = '';
+            
+            // Remplir le sélecteur de thèmes
+            Object.keys(THEMES).forEach(theme => {
+                const option = document.createElement('option');
+                option.value = theme;
+                option.textContent = theme.charAt(0).toUpperCase() + theme.slice(1);
+                themeSelect.appendChild(option);
+            });
+            
+            // Remplir le sélecteur de niveaux pour le premier thème
+            updateLevelOptions(THEMES[Object.keys(THEMES)[0]]);
+            
+            // Événement de changement de thème
+            themeSelect.addEventListener('change', function() {
+                updateLevelOptions(THEMES[this.value]);
+            });
+            
+            // Afficher le modal
+            modal.classList.remove('hidden');
+            
+            // Focus trapping pour accessibilité
+            modal.focus();
+        }
+        
+        function updateLevelOptions(themeData) {
+            const levelSelect = document.getElementById('level-select');
+            levelSelect.innerHTML = '';
+            
+            Object.keys(themeData.levels).forEach(level => {
+                const option = document.createElement('option');
+                option.value = level;
+                option.textContent = `Niveau ${level}`;
+                levelSelect.appendChild(option);
+            });
+        }
+        
+        function hideThemeModal() {
+            document.getElementById('theme-modal').classList.add('hidden');
+        }
+
+        // =============================================
+        // LOGIQUE DU JEU
+        // =============================================
+        
+        function startGame(theme, level) {
+            currentTheme = theme;
+            currentLevel = parseInt(level);
+            
+            // Charger les mots du niveau
+            const levelWords = THEMES[theme].levels[level];
+            
+            // Filtrer les mots déjà maîtrisés
+            gameWords = levelWords.filter(word => !isWordMastered(theme, word.id));
+            
+            // Si tous les mots sont maîtrisés, réinitialiser
+            if (gameWords.length === 0) {
+                gameWords = levelWords;
+                // Réinitialiser les statistiques de maîtrise pour ce thème/niveau
+                if (masteredWords[theme]) {
+                    levelWords.forEach(word => {
+                        delete masteredWords[theme][word.id];
+                    });
+                    saveToStorage('word_mastered', masteredWords);
+                }
+            }
+            
+            // Mélanger les mots
+            gameWords = shuffleArray(gameWords);
+            
+            // Initialiser le compteur de mots trouvés
+            wordsFound = 0;
+            totalWords = gameWords.length;
+            
+            // Mettre à jour l'affichage
+            updateGameDisplay();
+            
+            // Démarrer le timer
+            startTimer();
+            
+            // Afficher l'écran de jeu
+            showScreen('game');
+            
+            // Jouer le son de début de jeu
+            sounds.play('play');
+        }
+        
+        function updateGameDisplay() {
+            // Mettre à jour l'affichage du thème et niveau
+            document.getElementById('theme-display').textContent = 
+                currentTheme.charAt(0).toUpperCase() + currentTheme.slice(1);
+            document.getElementById('level-display').textContent = `Niveau ${currentLevel}`;
+            
+            // Mettre à jour la barre de progression
+            document.getElementById('progress-text').textContent = `${wordsFound}/${totalWords}`;
+            document.getElementById('progress-bar').style.width = `${(wordsFound / totalWords) * 100}%`;
+            
+            // Afficher les mots
+            displayWords();
+        }
+        
+        function displayWords() {
+            const englishContainer = document.getElementById('english-words');
+            const frenchContainer = document.getElementById('french-words');
+            
+            // Vider les conteneurs
+            englishContainer.innerHTML = '';
+            frenchContainer.innerHTML = '';
+            
+            // Prendre les 5 premiers mots (ou moins s'il en reste moins)
+            const wordsToDisplay = gameWords.slice(0, 5);
+            
+            // Mélanger l'ordre d'affichage
+            const shuffledEnglish = shuffleArray([...wordsToDisplay]);
+            const shuffledFrench = shuffleArray([...wordsToDisplay]);
+            
+            // Afficher les mots anglais
+            shuffledEnglish.forEach(word => {
+                const wordElement = document.createElement('div');
+                wordElement.className = 'word p-3 mb-2 bg-white border border-gray-200 rounded-lg cursor-pointer transition-colors hover:bg-blue-50';
+                wordElement.textContent = word.en;
+                wordElement.dataset.id = word.id;
+                wordElement.dataset.type = 'english';
+                
+                wordElement.addEventListener('click', () => handleWordClick(wordElement));
+                englishContainer.appendChild(wordElement);
+            });
+            
+            // Afficher les mots français
+            shuffledFrench.forEach(word => {
+                const wordElement = document.createElement('div');
+                wordElement.className = 'word p-3 mb-2 bg-white border border-gray-200 rounded-lg cursor-pointer transition-colors hover:bg-blue-50';
+                wordElement.textContent = word.fr;
+                wordElement.dataset.id = word.id;
+                wordElement.dataset.type = 'french';
+                
+                wordElement.addEventListener('click', () => handleWordClick(wordElement));
+                frenchContainer.appendChild(wordElement);
+            });
+        }
+        
+        function handleWordClick(wordElement) {
+            // Si aucun mot n'est sélectionné, sélectionner celui-ci
+            if (!selectedWord) {
+                selectedWord = wordElement;
+                wordElement.classList.add('selected');
+                sounds.play('click');
+                return;
+            }
+            
+            // Si on clique sur le même mot, le désélectionner
+            if (selectedWord === wordElement) {
+                selectedWord.classList.remove('selected');
+                selectedWord = null;
+                return;
+            }
+            
+            // Vérifier si c'est une paire correcte
+            const isCorrect = selectedWord.dataset.id === wordElement.dataset.id && 
+                             selectedWord.dataset.type !== wordElement.dataset.type;
+            
+            if (isCorrect) {
+                // Paire correcte
+                handleCorrectPair(selectedWord, wordElement);
+            } else {
+                // Paire incorrecte
+                handleIncorrectPair(selectedWord, wordElement);
+            }
+        }
+        
+        function handleCorrectPair(word1, word2) {
+            // Marquer comme correct
+            word1.classList.remove('selected');
+            word1.classList.add('correct');
+            word2.classList.add('correct');
+            
+            // Jouer le son de réussite
+            sounds.play('correct');
+            
+            // Marquer le mot comme maîtrisé
+            markWordMastered(currentTheme, word1.dataset.id);
+            
+            // Supprimer le mot de la liste des mots en jeu
+            const wordIndex = gameWords.findIndex(word => word.id === word1.dataset.id);
+            if (wordIndex !== -1) {
+                gameWords.splice(wordIndex, 1);
+            }
+            
+            // Augmenter le compteur de mots trouvés
+            wordsFound++;
+            
+            // Ajouter du temps au timer
+            timerValue += 5;
+            document.getElementById('timer').textContent = timerValue;
+            
+            // Réinitialiser les erreurs consécutives
+            consecutiveErrors = 0;
+            
+            // Mettre à jour l'affichage après un délai
+            setTimeout(() => {
+                // Si tous les mots sont trouvés, passer au niveau suivant
+                if (gameWords.length === 0) {
+                    completeLevel();
+                } else {
+                    updateGameDisplay();
+                    selectedWord = null;
+                }
+            }, 1000);
+        }
+        
+        function handleIncorrectPair(word1, word2) {
+            // Marquer comme incorrect
+            word1.classList.remove('selected');
+            word1.classList.add('incorrect');
+            word2.classList.add('incorrect');
+            
+            // Jouer le son d'erreur
+            sounds.play('wrong');
+            
+            // Animation de secousse
+            word1.classList.add('shake');
+            word2.classList.add('shake');
+            
+            // Incrémenter le compteur d'erreurs consécutives
+            consecutiveErrors++;
+            
+            // Si deux erreurs consécutives, enlever du temps
+            if (consecutiveErrors >= 2) {
+                timerValue = Math.max(0, timerValue - 2);
+                document.getElementById('timer').textContent = timerValue;
+                consecutiveErrors = 0;
+            }
+            
+            // Réinitialiser après un délai
+            setTimeout(() => {
+                word1.classList.remove('incorrect', 'shake');
+                word2.classList.remove('incorrect', 'shake');
+                selectedWord = null;
+            }, 1000);
+        }
+        
+        function completeLevel() {
+            // Arrêter le timer
+            clearInterval(timerInterval);
+            
+            // Mettre à jour la progression
+            const progress = loadFromStorage('progress') || {};
+            if (!progress[currentTheme] || currentLevel > progress[currentTheme]) {
+                progress[currentTheme] = currentLevel;
+                saveToStorage('progress', progress);
+            }
+            
+            // Jouer le son de fin de niveau
+            sounds.play('levelup');
+            
+            // Afficher le modal de fin de niveau
+            document.getElementById('level-complete-modal').classList.remove('hidden');
+        }
+        
+        function nextLevel() {
+            // Vérifier s'il y a un niveau suivant
+            const nextLevelNum = currentLevel + 1;
+            if (THEMES[currentTheme].levels[nextLevelNum]) {
+                currentLevel = nextLevelNum;
+                hideLevelCompleteModal();
+                startGame(currentTheme, currentLevel);
+            } else {
+                // Si pas de niveau suivant, retourner à l'accueil
+                hideLevelCompleteModal();
+                showScreen('home');
+            }
+        }
+        
+        function replayLevel() {
+            hideLevelCompleteModal();
+            startGame(currentTheme, currentLevel);
+        }
+        
+        function hideLevelCompleteModal() {
+            document.getElementById('level-complete-modal').classList.add('hidden');
+        }
+
+        // =============================================
+        // GESTION DU TIMER
+        // =============================================
+        
+        function startTimer() {
+            // Charger la valeur par défaut du timer
+            const settings = loadFromStorage('settings');
+            timerValue = settings ? settings.timerDefault || 60 : 60;
+            
+            // Mettre à jour l'affichage
+            document.getElementById('timer').textContent = timerValue;
+            
+            // Démarrer le compte à rebours
+            clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                timerValue--;
+                document.getElementById('timer').textContent = timerValue;
+                
+                if (timerValue <= 0) {
+                    gameOver();
+                }
+            }, 1000);
+        }
+        
+        function gameOver() {
+            // Arrêter le timer
+            clearInterval(timerInterval);
+            
+            // Afficher le score
+            document.getElementById('score-display').textContent = 
+                `Vous avez trouvé ${wordsFound} mot${wordsFound > 1 ? 's' : ''}`;
+            
+            // Afficher le modal de fin de jeu
+            document.getElementById('game-over-modal').classList.remove('hidden');
+            
+            // Jouer le son de notification
+            sounds.play('notify');
+        }
+        
+        function hideGameOverModal() {
+            document.getElementById('game-over-modal').classList.add('hidden');
+        }
+
+        // =============================================
+        // BIBLIOTHÈQUE DE MOTS
+        // =============================================
+        
+        function showLibrary() {
+            // Afficher l'écran de bibliothèque
+            showScreen('library');
+            
+            // Charger et afficher tous les mots
+            displayAllWords();
+        }
+        
+        function displayAllWords(filter = '') {
+            const wordList = document.getElementById('word-list');
+            wordList.innerHTML = '';
+            
+            // Rassembler tous les mots de tous les thèmes et niveaux
+            let allWords = [];
+            
+            Object.keys(THEMES).forEach(theme => {
+                Object.keys(THEMES[theme].levels).forEach(level => {
+                    THEMES[theme].levels[level].forEach(word => {
+                        allWords.push({
+                            ...word,
+                            theme: theme,
+                            level: parseInt(level),
+                            mastered: isWordMastered(theme, word.id)
+                        });
+                    });
+                });
+            });
+            
+            // Trier par mot anglais
+            allWords.sort((a, b) => a.en.localeCompare(b.en));
+            
+            // Filtrer si nécessaire
+            if (filter) {
+                const lowerFilter = filter.toLowerCase();
+                allWords = allWords.filter(word => 
+                    word.en.toLowerCase().includes(lowerFilter) || 
+                    word.fr.toLowerCase().includes(lowerFilter)
+                );
+            }
+            
+            // Afficher les mots
+            if (allWords.length === 0) {
+                wordList.innerHTML = '<div class="p-4 text-center text-gray-500">Aucun mot trouvé</div>';
+                return;
+            }
+            
+            // Grouper par première lettre
+            const groupedWords = {};
+            allWords.forEach(word => {
+                const firstLetter = word.en.charAt(0).toUpperCase();
+                if (!groupedWords[firstLetter]) {
+                    groupedWords[firstLetter] = [];
+                }
+                groupedWords[firstLetter].push(word);
+            });
+            
+            // Créer les éléments d'affichage
+            Object.keys(groupedWords).sort().forEach(letter => {
+                // En-tête de lettre
+                const letterHeader = document.createElement('div');
+                letterHeader.className = 'bg-gray-100 p-2 font-medium';
+                letterHeader.textContent = letter;
+                wordList.appendChild(letterHeader);
+                
+                // Mots pour cette lettre
+                groupedWords[letter].forEach(word => {
+                    const wordElement = document.createElement('div');
+                    wordElement.className = 'p-3 border-b border-gray-200 flex justify-between items-center';
+                    
+                    wordElement.innerHTML = `
+                        <div>
+                            <div class="font-medium">${word.en}</div>
+                            <div class="text-sm text-gray-600">${word.fr}</div>
+                            <div class="text-xs text-gray-500 mt-1">${word.theme} - Niveau ${word.level}</div>
+                        </div>
+                        ${word.mastered ? '<span class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">Maîtrisé</span>' : ''}
+                    `;
+                    
+                    wordList.appendChild(wordElement);
+                });
+            });
+        }
+        
+        function exportToCSV() {
+            // Rassembler tous les mots
+            let allWords = [];
+            
+            Object.keys(THEMES).forEach(theme => {
+                Object.keys(THEMES[theme].levels).forEach(level => {
+                    THEMES[theme].levels[level].forEach(word => {
+                        allWords.push({
+                            anglais: word.en,
+                            français: word.fr,
+                            thème: theme,
+                            niveau: level,
+                            maîtrisé: isWordMastered(theme, word.id) ? 'Oui' : 'Non'
+                        });
+                    });
+                });
+            });
+            
+            // Trier par mot anglais
+            allWords.sort((a, b) => a.anglais.localeCompare(b.anglais));
+            
+            // Créer le contenu CSV
+            let csvContent = "Anglais,Français,Thème,Niveau,Maîtrisé\n";
+            allWords.forEach(word => {
+                csvContent += `"${word.anglais}","${word.français}","${word.thème}","${word.niveau}","${word.maîtrisé}"\n`;
+            });
+            
+            // Créer et télécharger le fichier
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.setAttribute('href', url);
+            link.setAttribute('download', 'mots_anglais_francais.csv');
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            // Jouer le son de notification
+            sounds.play('notify');
+        }
+
+        // =============================================
+        // INITIALISATION
+        // =============================================
+        
+        function init() {
+            // Charger les données du localStorage
+            masteredWords = loadFromStorage('word_mastered') || {};
+            
+            const settings = loadFromStorage('settings') || { sound: true, timerDefault: 60 };
+            soundEnabled = settings.sound;
+            
+            // Initialiser les sons
+            window.sounds = loadSounds();
+            
+            // Démarrer l'animation des dictons
+            startQuoteAnimation();
+            
+            // Configurer les écouteurs d'événements
+            
+            // Navigation
+            document.getElementById('home-btn').addEventListener('click', () => showScreen('home'));
+            document.getElementById('play-btn').addEventListener('click', showThemeModal);
+            document.getElementById('play-home-btn').addEventListener('click', showThemeModal);
+            document.getElementById('library-btn').addEventListener('click', showLibrary);
+            
+            // Retour depuis le jeu
+            document.getElementById('back-to-home').addEventListener('click', () => {
+                clearInterval(timerInterval);
+                showScreen('home');
+            });
+            
+            // Retour depuis la bibliothèque
+            document.getElementById('back-from-library').addEventListener('click', () => showScreen('home'));
+            
+            // Modal de sélection thème/niveau
+            document.getElementById('cancel-theme').addEventListener('click', hideThemeModal);
+            document.getElementById('confirm-theme').addEventListener('click', () => {
+                const theme = document.getElementById('theme-select').value;
+                const level = document.getElementById('level-select').value;
+                hideThemeModal();
+                startGame(theme, level);
+            });
+            
+            // Modal de fin de niveau
+            document.getElementById('next-level-btn').addEventListener('click', nextLevel);
+            document.getElementById('replay-level-btn').addEventListener('click', replayLevel);
+            
+            // Modal de fin de jeu
+            document.getElementById('replay-game-btn').addEventListener('click', () => {
+                hideGameOverModal();
+                startGame(currentTheme, currentLevel);
+            });
+            document.getElementById('home-from-gameover-btn').addEventListener('click', () => {
+                hideGameOverModal();
+                showScreen('home');
+            });
+            
+            // Bibliothèque
+            document.getElementById('search-input').addEventListener('input', (e) => {
+                displayAllWords(e.target.value);
+            });
+            document.getElementById('export-btn').addEventListener('click', exportToCSV);
+            
+            // Bouton de son
+            document.getElementById('sound-toggle').addEventListener('click', () => {
+                soundEnabled = !soundEnabled;
+                const icon = document.querySelector('#sound-toggle i');
+                icon.className = soundEnabled ? 'fas fa-volume-up' : 'fas fa-volume-mute';
+                
+                // Sauvegarder le paramètre
+                const settings = loadFromStorage('settings') || { sound: true, timerDefault: 60 };
+                settings.sound = soundEnabled;
+                saveToStorage('settings', settings);
+            });
+            
+            // Afficher l'écran d'accueil au démarrage
+            showScreen('home');
+        }
+
+        // Démarrer l'application quand la page est chargée
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
