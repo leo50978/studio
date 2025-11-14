@@ -1,0 +1,1146 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Boutique en ligne avec livraison rapide et économique">
+    <title>Boutique en ligne - Produits à la mode</title>
+    
+    <!-- Intégration CDN Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Intégration CDN Anime.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    
+    <!-- Intégration Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Intégration Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Styles CSS additionnels -->
+    <style>
+        /* Application de la police Google Fonts */
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        /* Animation pour le splash screen */
+        .splash-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+        
+        .splash-screen.fade-out {
+            opacity: 0;
+            transform: translateY(-20px);
+            pointer-events: none;
+        }
+        
+        /* Animation pour le marquee personnalisé */
+        .custom-marquee {
+            overflow: hidden;
+            white-space: nowrap;
+            box-sizing: border-box;
+        }
+        
+        .custom-marquee-content {
+            display: inline-block;
+            padding-left: 100%;
+            animation: marquee 20s linear infinite;
+        }
+        
+        @keyframes marquee {
+            0% {
+                transform: translate(0, 0);
+            }
+            100% {
+                transform: translate(-100%, 0);
+            }
+        }
+        
+        /* Animation pour les boutons Commander */
+        .btn-commander {
+            transition: all 0.3s ease;
+        }
+        
+        .btn-commander:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Styles pour la modale */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+        
+        .modal-content {
+            background-color: white;
+            border-radius: 8px;
+            max-width: 90%;
+            max-height: 90%;
+            overflow-y: auto;
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+        }
+        
+        .modal-overlay.active .modal-content {
+            transform: scale(1);
+        }
+        
+        /* Styles pour le carousel */
+        .carousel-item {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+        
+        .carousel-item.active {
+            opacity: 1;
+            position: relative;
+        }
+    </style>
+</head>
+<body class="bg-gray">
+    <!-- Splash screen avec le logo -->
+    <div id="splashScreen" class="splash-screen">
+        <div class="text-center">
+            <img src="V_Clogo-removebg-preview.png" width="500px" height="500px" alt="">
+        </div>
+    </div>
+
+    <!-- Header fixe -->
+    <header class="fixed top-0 left-0 w-full bg-white shadow-md z-50">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <!-- Logo -->
+            <div class="flex items-center">
+                <img src="V_Clogo-removebg-preview.png" width="50px" height="50px" style="scale: 1.5;"  alt="">
+              
+            </div>
+            
+            <!-- Menu -->
+            <nav class="hidden md:block">
+                <ul class="flex space-x-6">
+                    <li><a href="#accueil" class="text-gray-700 hover:text-blue-600 transition">Accueil</a></li>
+                    <li><a href="#catalogue" class="text-gray-700 hover:text-blue-600 transition">Catalogue</a></li>
+                    <li><a href="#livraison" class="text-gray-700 hover:text-blue-600 transition">Livraison</a></li>
+                    <li><a href="#contact" class="text-gray-700 hover:text-blue-600 transition">Contact</a></li>
+                </ul>
+            </nav>
+            
+            <!-- Menu mobile -->
+            <button id="mobileMenuButton" class="md:hidden text-gray-700">
+                <i class="fas fa-bars text-xl"></i>
+            </button>
+        </div>
+        
+        <!-- Menu mobile déroulant -->
+        <div id="mobileMenu" class="md:hidden bg-white py-2 px-4 shadow-lg hidden">
+            <ul class="space-y-2">
+                <li><a href="#accueil" class="block py-2 text-gray-700 hover:text-blue-600 transition">Accueil</a></li>
+                <li><a href="#catalogue" class="block py-2 text-gray-700 hover:text-blue-600 transition">Catalogue</a></li>
+                <li><a href="#livraison" class="block py-2 text-gray-700 hover:text-blue-600 transition">Livraison</a></li>
+                <li><a href="#contact" class="block py-2 text-gray-700 hover:text-blue-600 transition">Contact</a></li>
+            </ul>
+        </div>
+    </header>
+
+    <!-- Bannière de livraison (marquee) -->
+    <div class="custom-marquee bg-blue-600 text-white py-2 mt-16">
+        <div class="custom-marquee-content">
+            <span class="text-sm md:text-base">
+                <i class="fas fa-shipping-fast mr-2"></i>
+                Frais de livraison : 250 HTG. Si vous acceptez d'attendre, frais réduit : 100 HTG. Livraisons en masse les lundi, mercredi et vendredi. Pas de livraison hors de la ville pour l'instant.
+            </span>
+        </div>
+    </div>
+
+    <main class="pt-4">
+        <!-- Section Hero avec carousel -->
+        <section id="accueil" class="container mx-auto px-4 py-8">
+            
+            <div class="relative bg-white rounded-lg shadow-lg overflow-hidden">
+                <!-- Conteneur du carousel -->
+                <div id="carouselContainer" class="relative h-80 md:h-96 overflow-hidden">
+                    <!-- Les produits du carousel seront injectés ici par JavaScript -->
+                </div>
+                
+                <!-- Contrôles du carousel -->
+                <div class="absolute bottom-4 hidden left-0 right-0 flex justify-center space-x-4">
+                    <button id="prevBtn" class="bg-white bg-opacity-70 rounded-full p-2 shadow-md hover:bg-opacity-100 transition" aria-label="Produit précédent">
+                        <i class="fas fa-chevron-left text-gray-800"></i>
+                    </button>
+                    <button id="playPauseBtn" class="bg-white bg-opacity-70 rounded-full p-2 shadow-md hover:bg-opacity-100 transition" aria-label="Pause/Play">
+                        <i class="fas fa-pause text-gray-800"></i>
+                    </button>
+                    <button id="nextBtn" class="bg-white bg-opacity-70 rounded-full p-2 shadow-md hover:bg-opacity-100 transition" aria-label="Produit suivant">
+                        <i class="fas fa-chevron-right text-gray-800"></i>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section Catalogue -->
+        <section id="catalogue" class="container mx-auto px-4 py-8">
+            <h2 class="text-2xl font-bold mb-6 text-gray-800">Notre Catalogue</h2>
+            
+            <!-- Filtres et recherche -->
+            <div class="bg-white p-4 rounded-lg shadow-md mb-6">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <!-- Recherche par nom -->
+                    <div>
+                        <label for="searchInput" class="block text-sm font-medium text-gray-700 mb-1">Rechercher</label>
+                        <input type="text" id="searchInput" placeholder="Nom du produit..." class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    
+                    <!-- Filtre par catégorie -->
+                    <div>
+                        <label for="categoryFilter" class="block text-sm font-medium text-gray-700 mb-1">Catégorie</label>
+                        <select id="categoryFilter" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="all">Toutes les catégories</option>
+                            <!-- Les options seront injectées par JavaScript -->
+                        </select>
+                    </div>
+                    
+                    <!-- Tri par prix -->
+                    <div>
+                        <label for="priceSort" class="block text-sm font-medium text-gray-700 mb-1">Trier par prix</label>
+                        <select id="priceSort" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="default">Par défaut</option>
+                            <option value="asc">Prix croissant</option>
+                            <option value="desc">Prix décroissant</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Grille de produits -->
+            <div id="productsGrid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                <!-- Les produits seront injectés ici par JavaScript -->
+            </div>
+        </section>
+
+        <!-- Section Livraison -->
+        <section id="livraison" class="container mx-auto px-4 py-8 bg-blue-50 rounded-lg my-8">
+            <h2 class="text-2xl font-bold mb-6 text-gray-800">Notre Service de Livraison</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                    <div class="flex items-start mb-4">
+                        <i class="fas fa-shipping-fast text-2xl text-blue-600 mr-3 mt-1"></i>
+                        <div>
+                            <h3 class="text-lg font-semibold text-gray-800">Livraison Standard</h3>
+                            <p class="text-gray-600">Frais de livraison : <span class="font-bold">250 HTG</span></p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-start mb-4">
+                        <i class="fas fa-clock text-2xl text-green-600 mr-3 mt-1"></i>
+                        <div>
+                            <h3 class="text-lg font-semibold text-gray-800">Livraison Économique</h3>
+                            <p class="text-gray-600">Si vous acceptez d'attendre, frais réduit : <span class="font-bold">100 HTG</span></p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div>
+                    <div class="flex items-start mb-4">
+                        <i class="fas fa-calendar-alt text-2xl text-purple-600 mr-3 mt-1"></i>
+                        <div>
+                            <h3 class="text-lg font-semibold text-gray-800">Jours de Livraison</h3>
+                            <p class="text-gray-600">Livraisons en masse les <span class="font-bold">lundi, mercredi et vendredi</span></p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-start">
+                        <i class="fas fa-map-marker-alt text-2xl text-red-600 mr-3 mt-1"></i>
+                        <div>
+                            <h3 class="text-lg font-semibold text-gray-800">Zone de Livraison</h3>
+                            <p class="text-gray-600">Pas de livraison hors de la ville pour l'instant</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section Contact -->
+        <section id="contact" class="container mx-auto px-4 py-8">
+            <h2 class="text-2xl font-bold mb-6 text-gray-800">Contactez-nous</h2>
+            
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <div class="flex flex-col md:flex-row items-center justify-between">
+                    <div class="mb-4 md:mb-0">
+                        <h3 class="text-lg font-semibold text-gray-800">Service Client</h3>
+                        <p class="text-gray-600">Nous sommes disponibles pour répondre à vos questions</p>
+                    </div>
+                    
+                    <a href="https://wa.me/50935601379" target="_blank" class="bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-lg flex items-center transition btn-commander">
+                        <i class="fab fa-whatsapp mr-2 text-xl"></i>
+                        Contacter sur WhatsApp
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-8 mt-8">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-4 md:mb-0">
+                    <div class="flex items-center">
+                      
+                        <span class="text-xl font-bold">V&C Maison</span>
+                    </div>
+                    <p class="text-gray-400 mt-2">Votre boutique en ligne de confiance</p>
+                </div>
+                
+                <div class="text-center md:text-right">
+                    <p class="text-gray-400">&copy; 2025 V&C Maison. Tous droits réservés.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Modale de commande -->
+    <div id="orderModal" class="modal-overlay" aria-hidden="true">
+        <div class="modal-content w-full max-w-md mx-4">
+            <div class="bg-white rounded-lg shadow-xl">
+                <!-- En-tête de la modale -->
+                <div class="flex justify-between items-center p-4 border-b">
+                    <h3 class="text-lg font-semibold text-gray-800">Commander</h3>
+                    <button id="closeModal" class="text-gray-500 hover:text-gray-700 transition" aria-label="Fermer">
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
+                </div>
+                
+                <!-- Contenu de la modale -->
+                <div class="p-4">
+                    <div id="modalProductContent">
+                        <!-- Le contenu du produit sera injecté ici par JavaScript -->
+                    </div>
+                    
+                    <!-- Informations de livraison -->
+                    <div class="mt-4 p-3 bg-blue-50 rounded-lg">
+                        <h4 class="font-semibold text-gray-800 mb-2">Options de livraison</h4>
+                        <div class="space-y-2">
+                            <div class="flex items-center">
+                                <input type="radio" id="deliveryFast" name="deliveryOption" value="fast" class="mr-2" checked>
+                                <label for="deliveryFast" class="text-gray-700">Livraison rapide - 250 HTG</label>
+                            </div>
+                            <div class="flex items-center">
+                                <input type="radio" id="deliveryEconomy" name="deliveryOption" value="economy" class="mr-2">
+                                <label for="deliveryEconomy" class="text-gray-700">Livraison économique - 100 HTG (attente nécessaire)</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Informations client -->
+                    <div class="mt-4">
+                        <h4 class="font-semibold text-gray-800 mb-2">Vos informations</h4>
+                        <div class="space-y-3">
+                            <div>
+                                <label for="customerName" class="block text-sm font-medium text-gray-700 mb-1">Nom complet</label>
+                                <input type="text" id="customerName" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                            </div>
+                            <div>
+                                <label for="customerPhone" class="block text-sm font-medium text-gray-700 mb-1">Numéro de téléphone</label>
+                                <input type="tel" id="customerPhone" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                            </div>
+                            <div>
+                                <label for="customerAddress" class="block text-sm font-medium text-gray-700 mb-1">Adresse de livraison</label>
+                                <textarea id="customerAddress" rows="2" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Pied de la modale -->
+                <div class="flex justify-between p-4 border-t">
+                    <button id="copyOrder" class="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 transition">
+                        <i class="fas fa-copy mr-2"></i>Copier
+                    </button>
+                    <button id="confirmOrder" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition btn-commander">
+                        <i class="fas fa-check mr-2"></i>Certifier
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script JavaScript -->
+    <script>
+        // =============================================
+        // CONSTANTES ET CONFIGURATION
+        // =============================================
+        
+        // Numéro WhatsApp pour les commandes
+        const WHATSAPP_NUMBER = "50935601379";
+        
+        // Configuration du carousel
+        const CAROUSEL_CONFIG = {
+            autoPlay: true,
+            interval: 5000, // 5 secondes
+            animationDuration: 500 // durée de l'animation en ms
+        };
+        
+        // Données des produits
+        const PRODUCTS = [
+            {
+                id: 1,
+                name: "Vaporisateur",
+                shortDescription: "Diffuse un liquide fin (parfum, soin) en spray.",
+                description: "Vaporisateur de voyage discret, idéal pour créer et mélanger vos parfums uniques. Emmenez votre signature olfactive partout, sans être repéré. Un flacon personnel et secret.",
+                price: 500,
+                category: "Accessoires",
+                image: "vaporisateur.jpg",
+                inTrend: true,
+                options: {
+                    colors: [],
+                    sizes: []
+                }
+            },
+            {
+                id: 2,
+                name: "Backup",
+                shortDescription: "Backup 150 watts",
+                description: "T-shirt confortable en coton biologique, disponible en plusieurs couleurs.",
+                price: 12_500,
+                category: "Électronique",
+                image: "backup.jpeg",
+                inTrend: true,
+                options: {
+                    colors: [""],
+                    sizes: [""]
+                }
+            },
+            {
+                id: 3,
+                name: "cable kit",
+                shortDescription: "ompact USB-C adapter and cable kit",
+                description: "Montre élégante avec bracelet en cuir véritable et mouvement à quartz précis.",
+                price: 500,
+                category: "Électronique",
+                image: "accessoire.jpeg",
+                inTrend: true,
+                options: {
+                    colors: [""],
+                    sizes: []
+                }
+            },
+            {
+                id: 4,
+                name: "Adidas Campus 00s ",
+                shortDescription: "Authenticité et style décontracté.",
+                description: "Sac à dos moderne avec compartiment pour ordinateur portable et nombreuses poches organisatrices.",
+                price: 3500,
+                category: "Vêtements",
+                image: "tennis1.jpeg",
+                inTrend: false,
+                options: {
+                    colors: ["Noir", "Gris", "Bleu marine"],
+                    sizes: []
+                }
+            },
+            {
+                id: 5,
+                name: "Vans Knu Skool",
+                shortDescription: "Les Vans Knu Skool sont de retour, plus audacieuses que jamais.",
+                description: "Écouteurs sans fil avec réduction de bruit active et autonomie de 20 heures.",
+                price: 3000,
+                category: "Vêtements",
+                image: "vansnoir.jpeg",
+                inTrend: false,
+                options: {
+                    colors: [""],
+                    sizes: []
+                }
+            },
+            {
+                id: 6,
+                name: " Vans Knu Skool ",
+                shortDescription: " Vans Knu Skool ",
+                description: "Jean décontracté en denim stretch pour un confort optimal toute la journée.",
+                price: 3000,
+                category: "Vêtements",
+                image: "vans.jpeg",
+                inTrend: false,
+                options: {
+                    colors: [""],
+                    sizes: []
+                }
+            },
+            {
+                id: 7,
+                name: "Nike Air Jordan 1",
+                shortDescription: "Nike Air Jordan 1",
+                description: "Tablette Android performante avec écran Full HD et stylet inclus pour la créativité.",
+                price: 3500,
+                category: "Vêtements",
+                image: "jordan.jpeg",
+                inTrend: true,
+                options: {
+                    colors: [""],
+                    sizes: [""]
+                }
+            },
+            {
+                id: 8,
+                name: "Nike Dunk Low Retro",
+                shortDescription: "Nike Dunk Low Retro",
+                description: "Chaussures de running avec semelle amortissante pour un confort optimal pendant l'effort.",
+                price: 3500,
+                category: "Vêtements",
+                image: "nikedunkrouge.jpeg",
+                inTrend: false,
+                options: {
+                    colors: ["Noir/Blanc", "Bleu/Blanc", "Rouge/Noir"],
+                    sizes: ["38", "39", "40", "41", "42", "43", "44"]
+                }
+            }
+        ];
+
+        // =============================================
+        // VARIABLES GLOBALES
+        // =============================================
+        
+        let currentCarouselIndex = 0;
+        let carouselInterval;
+        let isCarouselPlaying = CAROUSEL_CONFIG.autoPlay;
+        let currentProductInModal = null;
+        let filteredProducts = [...PRODUCTS];
+
+        // =============================================
+        // FONCTIONS D'INITIALISATION
+        // =============================================
+        
+        /**
+         * Initialise l'application après le chargement du DOM
+         */
+        function initApp() {
+            // Gestion du splash screen
+            handleSplashScreen();
+            
+            // Initialisation du carousel
+            initCarousel();
+            
+            // Initialisation du catalogue
+            initCatalogue();
+            
+            // Initialisation des écouteurs d'événements
+            initEventListeners();
+        }
+        
+        /**
+         * Gère l'affichage et la disparition du splash screen
+         */
+        function handleSplashScreen() {
+            const splashScreen = document.getElementById('splashScreen');
+            
+            // Cache le splash screen après 10 secondes
+            setTimeout(() => {
+                splashScreen.classList.add('fade-out');
+                
+                // Retire complètement le splash screen du DOM après l'animation
+                setTimeout(() => {
+                    splashScreen.remove();
+                }, 800);
+            }, 2000);
+        }
+        
+        /**
+         * Initialise le carousel des produits tendance
+         */
+        function initCarousel() {
+            const carouselContainer = document.getElementById('carouselContainer');
+            const trendingProducts = PRODUCTS.filter(product => product.inTrend);
+            
+            if (trendingProducts.length === 0) {
+                carouselContainer.innerHTML = '<div class="h-full flex items-center justify-center text-gray-500">Aucun produit tendance disponible</div>';
+                return;
+            }
+            
+            // Crée les éléments du carousel
+            trendingProducts.forEach((product, index) => {
+                const carouselItem = document.createElement('div');
+                carouselItem.className = `carousel-item ${index === 0 ? 'active' : ''}`;
+                carouselItem.innerHTML = `<div class="relative h-80 md:h-96 bg-gradient-to-br from-white to-gray-50 rounded-xl overflow-hidden shadow-lg">
+    <!-- Conteneur image avec dimensions fixes -->
+    <div class="absolute inset-0 z-0 flex items-center justify-center bg-gray-100">
+        <div class="w-full h-full flex items-center justify-center p-4">
+            <img src="${product.image}" alt="${product.name}" 
+                 class="max-w-full max-h-full object-contain transition-transform duration-500 hover:scale-105"
+                 loading="lazy">
+        </div>
+        <!-- Overlay amélioré pour le contraste -->
+        <div class="absolute inset-0 bg-gradient-to-t from-black/70 from-20% via-black/30 via-50% to-transparent to-80%"></div>
+    </div>
+    
+    <!-- Contenu texte et bouton -->
+    <div class="absolute bottom-0 left-0 right-0 z-10 p-4 md:p-6">
+        <!-- Informations produit -->
+        <div class="mb-4">
+            <h3 class="text-lg md:text-xl font-bold text-white mb-2 drop-shadow-lg">${product.name}</h3>
+            <p class="text-gray-100 text-sm md:text-base mb-3 drop-shadow-lg line-clamp-2 bg-black/20 backdrop-blur-sm rounded-lg px-3 py-2">${product.shortDescription}</p>
+            <div class="flex items-center justify-between">
+                <p class="text-xl md:text-2xl font-bold text-white drop-shadow-lg bg-black/30 backdrop-blur-sm rounded-full px-4 py-2">${product.price} HTG</p>
+                ${product.inTrend ? `
+                <span class="bg-red-500 text-white text-xs font-bold px-3 py-2 rounded-full shadow-lg flex items-center gap-1">
+                    <i class="fas fa-fire"></i>
+                    <span class="hidden sm:inline">Tendance</span>
+                </span>
+                ` : ''}
+            </div>
+        </div>
+        
+        <!-- Bouton Commander -->
+        <button onclick="openOrderModal(${product.id})"
+                class="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-6 rounded-xl 
+                      transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98]
+                      shadow-lg hover:shadow-xl flex items-center justify-center gap-3 group
+                      cursor-pointer border-2 border-green-400">
+            <i class="fas fa-shopping-cart group-hover:scale-110 transition-transform"></i>
+            <span class="text-base font-bold">Commander</span>
+            <i class="fas fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
+        </button>
+    </div>
+</div> `;
+                carouselContainer.appendChild(carouselItem);
+            });
+            
+            // Démarre l'auto-rotation si configuré
+            if (CAROUSEL_CONFIG.autoPlay) {
+                startCarouselAutoPlay();
+            }
+        }
+        
+        /**
+         * Initialise le catalogue de produits
+         */
+        function initCatalogue() {
+            // Remplit les options de filtre de catégorie
+            const categoryFilter = document.getElementById('categoryFilter');
+            const categories = [...new Set(PRODUCTS.map(product => product.category))];
+            
+            categories.forEach(category => {
+                const option = document.createElement('option');
+                option.value = category;
+                option.textContent = category;
+                categoryFilter.appendChild(option);
+            });
+            
+            // Affiche tous les produits initialement
+            renderProducts(PRODUCTS);
+        }
+        
+        /**
+         * Initialise les écouteurs d'événements
+         */
+        function initEventListeners() {
+            // Menu mobile
+            document.getElementById('mobileMenuButton').addEventListener('click', toggleMobileMenu);
+            
+            // Contrôles du carousel
+            document.getElementById('prevBtn').addEventListener('click', showPreviousCarouselItem);
+            document.getElementById('nextBtn').addEventListener('click', showNextCarouselItem);
+            document.getElementById('playPauseBtn').addEventListener('click', toggleCarouselPlayPause);
+            
+            // Filtres du catalogue
+            document.getElementById('searchInput').addEventListener('input', applyFilters);
+            document.getElementById('categoryFilter').addEventListener('change', applyFilters);
+            document.getElementById('priceSort').addEventListener('change', applyFilters);
+            
+            // Modale de commande
+            document.getElementById('closeModal').addEventListener('click', closeOrderModal);
+            document.getElementById('confirmOrder').addEventListener('click', confirmOrder);
+            document.getElementById('copyOrder').addEventListener('click', copyOrderToClipboard);
+            
+            // Fermeture de la modale avec ESC
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    closeOrderModal();
+                }
+            });
+            
+            // Fermeture de la modale en cliquant à l'extérieur
+            document.getElementById('orderModal').addEventListener('click', (e) => {
+                if (e.target.id === 'orderModal') {
+                    closeOrderModal();
+                }
+            });
+        }
+        
+        // =============================================
+        // FONCTIONS DU CAROUSEL
+        // =============================================
+        
+        /**
+         * Affiche l'élément précédent du carousel
+         */
+        function showPreviousCarouselItem() {
+            const items = document.querySelectorAll('.carousel-item');
+            const trendingProducts = PRODUCTS.filter(product => product.inTrend);
+            
+            if (trendingProducts.length <= 1) return;
+            
+            items[currentCarouselIndex].classList.remove('active');
+            currentCarouselIndex = (currentCarouselIndex - 1 + trendingProducts.length) % trendingProducts.length;
+            items[currentCarouselIndex].classList.add('active');
+            
+            // Redémarre l'auto-play après une interaction manuelle
+            restartCarouselAutoPlay();
+        }
+        
+        /**
+         * Affiche l'élément suivant du carousel
+         */
+        function showNextCarouselItem() {
+            const items = document.querySelectorAll('.carousel-item');
+            const trendingProducts = PRODUCTS.filter(product => product.inTrend);
+            
+            if (trendingProducts.length <= 1) return;
+            
+            items[currentCarouselIndex].classList.remove('active');
+            currentCarouselIndex = (currentCarouselIndex + 1) % trendingProducts.length;
+            items[currentCarouselIndex].classList.add('active');
+            
+            // Redémarre l'auto-play après une interaction manuelle
+            restartCarouselAutoPlay();
+        }
+        
+        /**
+         * Alterne entre lecture et pause du carousel
+         */
+        function toggleCarouselPlayPause() {
+            const playPauseBtn = document.getElementById('playPauseBtn');
+            
+            if (isCarouselPlaying) {
+                pauseCarouselAutoPlay();
+                playPauseBtn.innerHTML = '<i class="fas fa-play text-gray-800"></i>';
+            } else {
+                startCarouselAutoPlay();
+                playPauseBtn.innerHTML = '<i class="fas fa-pause text-gray-800"></i>';
+            }
+            
+            isCarouselPlaying = !isCarouselPlaying;
+        }
+        
+        /**
+         * Démarre l'auto-rotation du carousel
+         */
+        function startCarouselAutoPlay() {
+            if (carouselInterval) clearInterval(carouselInterval);
+            
+            carouselInterval = setInterval(() => {
+                showNextCarouselItem();
+            }, CAROUSEL_CONFIG.interval);
+        }
+        
+        /**
+         * Met en pause l'auto-rotation du carousel
+         */
+        function pauseCarouselAutoPlay() {
+            if (carouselInterval) {
+                clearInterval(carouselInterval);
+                carouselInterval = null;
+            }
+        }
+        
+        /**
+         * Redémarre l'auto-rotation du carousel
+         */
+        function restartCarouselAutoPlay() {
+            if (isCarouselPlaying) {
+                pauseCarouselAutoPlay();
+                startCarouselAutoPlay();
+            }
+        }
+        
+        // =============================================
+        // FONCTIONS DU CATALOGUE
+        // =============================================
+        
+        /**
+         * Applique les filtres et tris au catalogue
+         */
+        function applyFilters() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const selectedCategory = document.getElementById('categoryFilter').value;
+            const sortOption = document.getElementById('priceSort').value;
+            
+            // Filtre les produits
+            filteredProducts = PRODUCTS.filter(product => {
+                const matchesSearch = product.name.toLowerCase().includes(searchTerm) || 
+                                     product.description.toLowerCase().includes(searchTerm);
+                const matchesCategory = selectedCategory === 'all' || product.category === selectedCategory;
+                
+                return matchesSearch && matchesCategory;
+            });
+            
+            // Trie les produits
+            if (sortOption === 'asc') {
+                filteredProducts.sort((a, b) => a.price - b.price);
+            } else if (sortOption === 'desc') {
+                filteredProducts.sort((a, b) => b.price - a.price);
+            }
+            
+            // Affiche les produits filtrés
+            renderProducts(filteredProducts);
+        }
+        
+        /**
+         * Affiche les produits dans la grille du catalogue
+         * @param {Array} products - Tableau des produits à afficher
+         */
+        function renderProducts(products) {
+            const productsGrid = document.getElementById('productsGrid');
+            
+            if (products.length === 0) {
+                productsGrid.innerHTML = '<div class="col-span-full text-center py-8 text-gray-500">Aucun produit trouvé</div>';
+                return;
+            }
+            
+            productsGrid.innerHTML = '';
+            
+           products.forEach(product => {
+    const productCard = document.createElement('div');
+    productCard.className = 'w-full mb-6'; // Chaque carte prend 100% de largeur
+    productCard.innerHTML = `
+       <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-all duration-300 w-full">
+    <!-- Image produit -->
+    <div class="relative h-48 sm:h-52 overflow-hidden bg-gray-100">
+        <div class="w-full h-full flex items-center justify-center">
+            <img src="${product.image}" alt="${product.name}" 
+                 class="w-full h-full object-contain p-2"
+                 loading="lazy">
+        </div>
+        
+        <!-- Badge tendance -->
+        ${product.inTrend ? `
+        <div class="absolute top-2 left-2 sm:top-3 sm:left-3">
+            <span class="bg-red-500 text-white text-xs font-bold px-2 py-1 sm:px-3 sm:py-1.5 rounded-full shadow-md flex items-center gap-1">
+                <i class="fas fa-fire text-xs"></i>
+                <span class="text-xs sm:text-sm">Tendance</span>
+            </span>
+        </div>
+        ` : ''}
+    </div>
+    
+    <!-- Contenu -->
+    <div class="p-3 sm:p-4">
+        <!-- Nom et description -->
+        <div class="mb-3 sm:mb-4">
+            <h3 class="font-bold text-gray-900 text-base sm:text-lg mb-1 sm:mb-2">${product.name}</h3>
+            <p class="text-gray-600 text-xs sm:text-sm leading-relaxed line-clamp-2">${product.shortDescription}</p>
+        </div>
+        
+        <!-- Prix -->
+        <div class="mb-3 sm:mb-4">
+            <span class="text-lg sm:text-xl font-bold text-blue-600">${product.price} HTG</span>
+        </div>
+        
+        <!-- Bouton Commander pleine largeur -->
+        <button onclick="openOrderModal(${product.id})"
+                class="w-full bg-green-500 hover:bg-green-600 text-white font-semibold py-3 sm:py-4 px-4 rounded-xl 
+                       transition-all duration-200 active:scale-[0.98]
+                       flex items-center justify-center gap-2 sm:gap-3 text-sm sm:text-base">
+            <i class="fas fa-shopping-cart text-xs sm:text-sm"></i>
+            <span>Acheter</span>
+        </button>
+        
+        <!-- Info livraison -->
+        <div class="mt-2 sm:mt-3 flex items-center justify-center gap-1 sm:gap-2 text-gray-500 text-xs">
+            <i class="fas fa-shipping-fast text-xs"></i>
+            <span class="text-xs">Livraison</span>
+        </div>
+    </div>
+</div>
+    `;
+    productsGrid.appendChild(productCard);
+});
+            
+            // Ajoute les écouteurs d'événements aux boutons "Commander"
+            document.querySelectorAll('.btn-commander[data-product-id]').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const productId = parseInt(e.target.getAttribute('data-product-id'));
+                    openOrderModal(productId);
+                });
+            });
+        }
+        
+        // =============================================
+        // FONCTIONS DE LA MODALE DE COMMANDE
+        // =============================================
+        
+        /**
+         * Ouvre la modale de commande pour un produit spécifique
+         * @param {number} productId - ID du produit à commander
+         */
+        function openOrderModal(productId) {
+            const product = PRODUCTS.find(p => p.id === productId);
+            if (!product) return;
+            
+            currentProductInModal = product;
+            const modalContent = document.getElementById('modalProductContent');
+            
+            // Génère le contenu de la modale en fonction du produit
+            let optionsHTML = '';
+            
+            if (product.options.colors.length > 0) {
+                optionsHTML += `
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Couleur</label>
+                        <div class="flex flex-wrap gap-2">
+                            ${product.options.colors.map(color => `
+                                <button class="color-option border border-gray-300 px-3 py-1 rounded-md hover:bg-gray-100 transition" data-color="${color}">
+                                    ${color}
+                                </button>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+            
+            if (product.options.sizes.length > 0) {
+                optionsHTML += `
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Taille</label>
+                        <div class="flex flex-wrap gap-2">
+                            ${product.options.sizes.map(size => `
+                                <button class="size-option border border-gray-300 px-3 py-1 rounded-md hover:bg-gray-100 transition" data-size="${size}">
+                                    ${size}
+                                </button>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+            
+            optionsHTML += `
+                <div class="mb-4">
+                    <label for="quantity" class="block text-sm font-medium text-gray-700 mb-1">Quantité</label>
+                    <input type="number" id="quantity" min="1" value="1" class="w-20 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+            `;
+            
+            modalContent.innerHTML = `
+                <div class="flex items-start mb-4">
+                    <img src="${product.image}" alt="${product.name}" class="w-24 h-24 object-cover rounded-lg mr-4">
+                    <div>
+                        <h4 class="font-semibold text-gray-800">${product.name}</h4>
+                        <p class="text-blue-600 font-bold text-lg">${product.price} HTG</p>
+                    </div>
+                </div>
+                ${optionsHTML}
+            `;
+            
+            // Affiche la modale
+            const modal = document.getElementById('orderModal');
+            modal.classList.add('active');
+            modal.setAttribute('aria-hidden', 'false');
+            
+            // Ajoute les écouteurs d'événements pour les options
+            document.querySelectorAll('.color-option').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    document.querySelectorAll('.color-option').forEach(btn => btn.classList.remove('bg-blue-100', 'border-blue-500'));
+                    e.target.classList.add('bg-blue-100', 'border-blue-500');
+                });
+            });
+            
+            document.querySelectorAll('.size-option').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    document.querySelectorAll('.size-option').forEach(btn => btn.classList.remove('bg-blue-100', 'border-blue-500'));
+                    e.target.classList.add('bg-blue-100', 'border-blue-500');
+                });
+            });
+            
+            // Sélectionne la première option par défaut
+            const firstColorOption = document.querySelector('.color-option');
+            if (firstColorOption) firstColorOption.click();
+            
+            const firstSizeOption = document.querySelector('.size-option');
+            if (firstSizeOption) firstSizeOption.click();
+            
+            // Met le focus sur le premier champ de formulaire
+            document.getElementById('customerName').focus();
+        }
+        
+        /**
+         * Ferme la modale de commande
+         */
+        function closeOrderModal() {
+            const modal = document.getElementById('orderModal');
+            modal.classList.remove('active');
+            modal.setAttribute('aria-hidden', 'true');
+            currentProductInModal = null;
+        }
+        
+        /**
+         * Confirme la commande et ouvre WhatsApp
+         */
+        function confirmOrder() {
+            // Récupère les informations du formulaire
+            const customerName = document.getElementById('customerName').value;
+            const customerPhone = document.getElementById('customerPhone').value;
+            const customerAddress = document.getElementById('customerAddress').value;
+            const quantity = parseInt(document.getElementById('quantity').value) || 1;
+            
+            // Validation des champs obligatoires
+            if (!customerName || !customerPhone || !customerAddress) {
+                alert('Veuillez remplir tous les champs obligatoires.');
+                return;
+            }
+            
+            // Récupère les options sélectionnées
+            const selectedColor = document.querySelector('.color-option.bg-blue-100')?.getAttribute('data-color') || 'Non spécifié';
+            const selectedSize = document.querySelector('.size-option.bg-blue-100')?.getAttribute('data-size') || 'Non spécifié';
+            
+            // Récupère l'option de livraison
+            const deliveryOption = document.querySelector('input[name="deliveryOption"]:checked').value;
+            const deliveryCost = deliveryOption === 'fast' ? 250 : 100;
+            const deliveryType = deliveryOption === 'fast' ? 'Livraison rapide' : 'Livraison économique';
+            
+            // Calcule le total
+            const productTotal = currentProductInModal.price * quantity;
+            const total = productTotal + deliveryCost;
+            
+            // Génère le message pour WhatsApp
+            const message = `Bonjour, je souhaite commander :
+
+Produit: ${currentProductInModal.name}
+Prix unitaire: ${currentProductInModal.price} HTG
+Quantité: ${quantity}
+Couleur: ${selectedColor}
+Taille: ${selectedSize}
+Sous-total: ${productTotal} HTG
+
+Option de livraison: ${deliveryType} (${deliveryCost} HTG)
+Total: ${total} HTG
+
+Informations client:
+Nom: ${customerName}
+Téléphone: ${customerPhone}
+Adresse: ${customerAddress}
+
+Merci !`;
+            
+            // Encode le message pour l'URL
+            const encodedMessage = encodeURIComponent(message);
+            
+            // Ouvre WhatsApp
+            window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodedMessage}`, '_blank');
+            
+            // Ferme la modale
+            closeOrderModal();
+        }
+        
+        /**
+         * Copie le récapitulatif de commande dans le presse-papiers
+         */
+        function copyOrderToClipboard() {
+            // Récupère les informations du formulaire
+            const customerName = document.getElementById('customerName').value;
+            const customerPhone = document.getElementById('customerPhone').value;
+            const customerAddress = document.getElementById('customerAddress').value;
+            const quantity = parseInt(document.getElementById('quantity').value) || 1;
+            
+            // Validation des champs obligatoires
+            if (!customerName || !customerPhone || !customerAddress) {
+                alert('Veuillez remplir tous les champs obligatoires avant de copier.');
+                return;
+            }
+            
+            // Récupère les options sélectionnées
+            const selectedColor = document.querySelector('.color-option.bg-blue-100')?.getAttribute('data-color') || 'Non spécifié';
+            const selectedSize = document.querySelector('.size-option.bg-blue-100')?.getAttribute('data-size') || 'Non spécifié';
+            
+            // Récupère l'option de livraison
+            const deliveryOption = document.querySelector('input[name="deliveryOption"]:checked').value;
+            const deliveryCost = deliveryOption === 'fast' ? 250 : 100;
+            const deliveryType = deliveryOption === 'fast' ? 'Livraison rapide' : 'Livraison économique';
+            
+            // Calcule le total
+            const productTotal = currentProductInModal.price * quantity;
+            const total = productTotal + deliveryCost;
+            
+            // Génère le texte à copier
+            const textToCopy = `Commande - ${currentProductInModal.name}
+
+Produit: ${currentProductInModal.name}
+Prix unitaire: ${currentProductInModal.price} HTG
+Quantité: ${quantity}
+Couleur: ${selectedColor}
+Taille: ${selectedSize}
+Sous-total: ${productTotal} HTG
+
+Option de livraison: ${deliveryType} (${deliveryCost} HTG)
+Total: ${total} HTG
+
+Informations client:
+Nom: ${customerName}
+Téléphone: ${customerPhone}
+Adresse: ${customerAddress}
+
+Numéro WhatsApp: +${WHATSAPP_NUMBER}`;
+            
+            // Copie dans le presse-papiers
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                alert('Commande copiée dans le presse-papiers !');
+            }).catch(err => {
+                console.error('Erreur lors de la copie: ', err);
+                alert('Erreur lors de la copie. Veuillez copier manuellement le texte.');
+            });
+        }
+        
+        // =============================================
+        // FONCTIONS UTILITAIRES
+        // =============================================
+        
+        /**
+         * Alterne l'affichage du menu mobile
+         */
+        function toggleMobileMenu() {
+            const mobileMenu = document.getElementById('mobileMenu');
+            mobileMenu.classList.toggle('hidden');
+        }
+        
+        // =============================================
+        // INITIALISATION DE L'APPLICATION
+        // =============================================
+        
+        // Attend que le DOM soit complètement chargé
+        document.addEventListener('DOMContentLoaded', initApp);
+    </script>
+</body>
+</html>
