@@ -1,0 +1,677 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>vitch - Librairie d'e-books premium</title>
+  <meta name="description" content="Découvrez notre collection d'e-books premium sur vitch. Téléchargez vos livres numériques préférés instantanément.">
+  
+  <!-- Open Graph -->
+  <meta property="og:title" content="vitch - Librairie d'e-books premium">
+  <meta property="og:description" content="Découvrez notre collection d'e-books premium">
+  <meta property="og:type" content="website">
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <style>
+    /* Custom styles for animations and overrides */
+    .carousel-item {
+      transition: transform 0.3s ease;
+    }
+    
+    .modal-overlay {
+      background-color: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(5px);
+    }
+    
+    .menu-open {
+      transform: translateX(0);
+    }
+    
+    .menu-closed {
+      transform: translateX(100%);
+    }
+    
+    /* Smooth scrolling */
+    html {
+      scroll-behavior: smooth;
+    }
+    
+    /* Focus styles for accessibility */
+    button:focus, a:focus {
+      outline: 2px solid #3b82f6;
+      outline-offset: 2px;
+    }
+  </style>
+</head>
+<body class="font-['Inter'] bg-gray-50 text-gray-800">
+  <!-- Header -->
+  <header class="bg-white shadow-sm sticky top-0 z-40">
+    <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+      <!-- Logo -->
+      <a href="#" class="text-2xl font-bold text-indigo-600">vitch.</a>
+      
+      <!-- Desktop Navigation -->
+      <nav class="hidden md:flex space-x-8">
+        <a href="#hero" class="text-gray-600 hover:text-indigo-600 transition-colors">Accueil</a>
+        <a href="#catalogue" class="text-gray-600 hover:text-indigo-600 transition-colors">Catalogue</a>
+        <a href="#contact" class="text-gray-600 hover:text-indigo-600 transition-colors">Contact</a>
+      </nav>
+      
+      <!-- Mobile Menu Button -->
+      <button id="menu-toggle" class="md:hidden text-gray-600 focus:outline-none" aria-label="Ouvrir le menu">
+        <i class="fas fa-bars text-xl"></i>
+      </button>
+    </div>
+    
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="md:hidden menu-closed fixed inset-y-0 right-0 w-64 bg-white shadow-lg z-50 transition-transform duration-300 ease-in-out">
+      <div class="p-4 flex justify-between items-center border-b">
+        <span class="text-lg font-semibold">Menu</span>
+        <button id="menu-close" class="text-gray-500 hover:text-gray-700" aria-label="Fermer le menu">
+          <i class="fas fa-times text-xl"></i>
+        </button>
+      </div>
+      <nav class="p-4 flex flex-col space-y-4">
+        <a href="#hero" class="py-2 text-gray-700 hover:text-indigo-600 transition-colors">Accueil</a>
+        <a href="#catalogue" class="py-2 text-gray-700 hover:text-indigo-600 transition-colors">Catalogue</a>
+        <a href="#contact" class="py-2 text-gray-700 hover:text-indigo-600 transition-colors">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <!-- Hero Section -->
+    <section id="hero" class="py-12 md:py-20 bg-gradient-to-br from-indigo-50 to-white">
+      <div class="container mx-auto px-4">
+        <div class="flex flex-col md:flex-row items-center gap-8 md:gap-12">
+          <!-- Image Column -->
+          <div class="md:w-1/2" id="hero-image">
+            <img src="imglartdegagnerdelargent.png" alt="Couverture de l'e-book vedette - L'art de la productivité" class="rounded-lg shadow-xl w-full max-w-md mx-auto">
+          </div>
+          
+          <!-- Content Column -->
+          <div class="md:w-1/2 text-center md:text-left">
+            <h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-4">L'art de gagner de l'argent </h1>
+            <p class="text-lg text-gray-600 mb-6 max-w-lg">L'art de gagner de l'argent" n'est pas un simple guide sur la richesse rapide. C'est une exploration approfondie des principes fondamentaux qui sous-tendent l'accumulation durable de capital.</p>
+            <div class="flex flex-col sm:flex-row items-center gap-4">
+              <span class="text-3xl font-bold text-indigo-600">149 HTG</span>
+              <button class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-8 rounded-lg transition-colors shadow-md hover:shadow-lg transform hover:-translate-y-1 transition-transform order-whatsapp" data-ebook-id="1">
+                Commander maintenant
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Catalogue Section -->
+    <section id="catalogue" class="py-12 md:py-16 bg-white">
+      <div class="container mx-auto px-4">
+        <h2 class="text-3xl md:text-4xl font-bold text-center mb-12">Notre catalogue d'e-books</h2>
+        
+        <!-- Carousel Container -->
+        <div class="relative">
+          <!-- Carousel -->
+          <div id="carousel" class="overflow-hidden">
+            <div class="flex transition-transform duration-500 ease-in-out" id="carousel-track">
+              <!-- Carousel items will be inserted here by JavaScript -->
+            </div>
+          </div>
+          
+          <!-- Carousel Controls -->
+          <button id="carousel-prev" class="absolute left-0 top-1/2 transform -translate-y-1/2 bg-white rounded-full shadow-lg p-3 text-gray-700 hover:text-indigo-600 transition-colors z-10 focus:outline-none" aria-label="Précédent">
+            <i class="fas fa-chevron-left"></i>
+          </button>
+          <button id="carousel-next" class="absolute right-0 top-1/2 transform -translate-y-1/2 bg-white rounded-full shadow-lg p-3 text-gray-700 hover:text-indigo-600 transition-colors z-10 focus:outline-none" aria-label="Suivant">
+            <i class="fas fa-chevron-right"></i>
+          </button>
+        </div>
+        
+        <!-- Carousel Indicators -->
+        <div class="flex justify-center mt-6 space-x-2" id="carousel-indicators">
+          <!-- Indicators will be inserted here by JavaScript -->
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-12 md:py-16 bg-gray-50">
+      <div class="container mx-auto px-4 max-w-2xl">
+        <h2 class="text-3xl md:text-4xl font-bold text-center mb-4">Contactez-nous</h2>
+        <p class="text-gray-600 text-center mb-8">Une question sur nos e-books ? N'hésitez pas à nous contacter.</p>
+        
+        <form id="contact-form" action="https://formspree.io/f/mpwjajva" method="POST" class="bg-white rounded-lg shadow-md p-6 md:p-8">
+          <div class="mb-4">
+            <label for="name" class="block text-gray-700 mb-2">Nom complet</label>
+            <input type="text" id="name" name="name" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors">
+          </div>
+          
+          <div class="mb-4">
+            <label for="email" class="block text-gray-700 mb-2">Adresse email</label>
+            <input type="email" id="email" name="email" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors">
+          </div>
+          
+          <div class="mb-4">
+            <label for="subject" class="block text-gray-700 mb-2">Sujet</label>
+            <input type="text" id="subject" name="subject" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors">
+          </div>
+          
+          <div class="mb-6">
+            <label for="message" class="block text-gray-700 mb-2">Message</label>
+            <textarea id="message" name="message" rows="5" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors"></textarea>
+          </div>
+          
+          <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-4 rounded-lg transition-colors shadow-md hover:shadow-lg">
+            Envoyer le message
+          </button>
+          
+          <div id="form-feedback" class="mt-4 hidden p-3 rounded-lg text-center"></div>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-gray-800 text-white py-8">
+    <div class="container mx-auto px-4">
+      <div class="flex flex-col md:flex-row justify-between items-center">
+        <div class="mb-4 md:mb-0">
+          <a href="#" class="text-2xl font-bold text-white">vitch.</a>
+          <p class="text-gray-400 mt-2">Votre librairie numérique de confiance</p>
+        </div>
+        
+        <div class="flex space-x-6">
+          <a href="#" class="text-gray-400 hover:text-white transition-colors" aria-label="Facebook">
+            <i class="fab fa-facebook text-xl"></i>
+          </a>
+          <a href="#" class="text-gray-400 hover:text-white transition-colors" aria-label="Twitter">
+            <i class="fab fa-twitter text-xl"></i>
+          </a>
+          <a href="#" class="text-gray-400 hover:text-white transition-colors" aria-label="Instagram">
+            <i class="fab fa-instagram text-xl"></i>
+          </a>
+          <a href="#" class="text-gray-400 hover:text-white transition-colors" aria-label="LinkedIn">
+            <i class="fab fa-linkedin text-xl"></i>
+          </a>
+        </div>
+      </div>
+      
+      <div class="border-t border-gray-700 mt-6 pt-6 text-center text-gray-400">
+        <p>&copy; 2025 Vitch. Tous droits réservés.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Modal -->
+  <div id="modal" class="fixed inset-0 z-50 modal-overlay hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-lg shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+      <div class="p-6">
+        <div class="flex justify-between items-start mb-4">
+          <h3 id="modal-title" class="text-2xl font-bold text-gray-900"></h3>
+          <button id="modal-close" class="text-gray-500 hover:text-gray-700 text-xl" aria-label="Fermer">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        
+        <div class="flex flex-col md:flex-row gap-6">
+          <div class="md:w-1/3">
+            <img id="modal-image" src="" alt="" class="rounded-lg shadow-md w-full">
+          </div>
+          
+          <div class="md:w-2/3">
+            <p id="modal-description" class="text-gray-600 mb-4"></p>
+            <div class="flex items-center justify-between">
+              <span id="modal-price" class="text-2xl font-bold text-indigo-600"></span>
+              <button class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-6 rounded-lg transition-colors order-whatsapp" data-ebook-id="">
+                Commander
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+  
+  <script>
+    // Catalogue data
+    const ebooks = [
+      {
+        id: 1,
+        title: "comment investir son argent",
+        shortDesc: "Maximisez votre efficacité au quotidien",
+        longDesc: "Découvrez les secrets pour maximiser votre efficacité au quotidien. Une méthode éprouvée pour accomplir plus en moins de temps. Ce guide complet vous apprendra à prioriser vos tâches, éviter les distractions et optimiser votre workflow.",
+        price: "149 HTG",
+        image: "commentinvestirsonargent.jpg"
+      },
+      {
+        id: 2,
+        title: "HISTOIRE DE LA PUBLICITÉ.",
+        shortDesc: "Évolution de la pub",
+        longDesc: "Plus de 100 recettes végétariennes savoureuses et équilibrées pour tous les jours. Des plats simples à préparer, riches en saveurs et en nutriments. Idéal pour ceux qui souhaitent adopter une alimentation plus végétale sans sacrifier le goût.",
+        price: "149 HTG",
+        image: "histoiredelapub.jpg"
+      },
+      {
+        id: 3,
+        title: "Dictionnaire commercial",
+        shortDesc: "Termes essentiels : commerce & finance.",
+        longDesc: "Apprenez à concilier travail et voyage avec ce guide complet du nomadisme digital. Des conseils pratiques pour choisir vos destinations, gérer votre temps, rester productif et profiter pleinement de votre liberté géographique.",
+        price: "149 HTG",
+        image: "dictionnairecommercial.jpg"
+      },
+      {
+        id: 4,
+        title: "Entreprise à Jour",
+        shortDesc: "Le monde de l'entreprise, mis à jour.",
+        longDesc: "Maîtrisez les fondamentaux de l'investissement même si vous débutez. Ce guide vous explique les différents types d'investissements, comment diversifier votre portefeuille et prendre des décisions éclairées pour faire fructifier votre argent.",
+        price: "149 HTG",
+        image: "Up To Date Business.jpg"
+      },
+      {
+        id: 5,
+        title: "La Psychologie du Management",
+        shortDesc: "Motiver et diriger par la psychologie.",
+        longDesc: "Un programme de 30 jours pour intégrer la méditation dans votre routine quotidienne. Des exercices progressifs, des techniques de respiration et des conseils pour cultiver la pleine conscience et réduire le stress.",
+        price: "149 HTG",
+        image: "The Psychology of Management.jpg"
+      },
+      {
+        id: 6,
+        title: "La Science de l'Enrichissement",
+        shortDesc: "Principes scientifiques de la richesse.",
+        longDesc: "Un guide complet pour apprendre la programmation Python, même sans expérience préalable. Des concepts de base aux projets pratiques, maîtrisez l'un des langages de programmation les plus populaires et polyvalents.",
+        price: "149 HTG",
+        image: "The Science of Getting Rich.jpg"
+      },
+      {
+        id: 7,
+        title: "La Jungle de la Silicon Valley",
+        shortDesc: "Stratégies et culture de la Tech US",
+        longDesc: "Plongez dans l'histoire fascinante de l'art moderne, des premiers impressionnistes aux mouvements contemporains. Une analyse approfondie des œuvres majeures, des artistes emblématiques et des courants artistiques qui ont façonné notre vision de l'art.",
+        price: "149 HTG",
+        image: "The Silicon Jungle.jpg"
+      },
+      {
+        id: 8,
+        title: "Les Principes de la Gestion Scientifique",
+        shortDesc: "Optimiser travail et efficacité (Taylor).",
+        longDesc: "Apprenez les techniques du jardinage biologique pour cultiver des légumes sains et savoureux dans votre propre jardin. Des conseils pratiques sur le sol, les semis, l'entretien et la lutte naturelle contre les parasites.",
+        price: "149 HTG",
+        image: "The Principles of Scientific Management.jpg"
+      },
+      {
+        id: 9,
+        title: "L'Histoire de la Standard Oil Company",
+        shortDesc: "L'ascension de John D. Rockefeller.",
+        longDesc: "Devenez un photographe accompli en maîtrisant les techniques essentielles de la photographie numérique. De la composition à la retouche, ce guide complet vous accompagne dans votre progression artistique et technique.",
+        price: "149 HTG",
+        image: "The History of the Standard Oil Company .jpg"
+      },
+      {
+        id: 10,
+        title: "Commercial Law by Richard D. Currier",
+        shortDesc: "De l'idée initiale à la publication",
+        longDesc: "Un guide pas-à-pas pour écrire, réviser et publier votre premier roman. Des techniques pour développer vos personnages, structurer votre intrigue et surmonter le syndrome de la page blanche. Réalisez votre rêve d'écrivain!",
+        price: "149 HTG",
+        image: "Commercial Law by Richard D. Currier.jpg"
+      },
+      {
+        id: 11,
+        title: "Mr. Honey's Banking Dictionary",
+        shortDesc: "Lexique complet des termes bancaires.",
+        longDesc: "Découvrez les bienfaits du yoga pour le corps et l'esprit avec ce guide accessible à tous. Des enchaînements adaptés à chaque niveau, des postures détaillées et des conseils pour intégrer le yoga dans votre vie quotidienne.",
+        price: "149 HTG",
+        image: "Mr. Honey's Banking Dictionary .jpg"
+      },
+      {
+        id: 12,
+        title: "Mille Façons de Gagner de l'Argentl",
+        shortDesc: "dées et méthodes pour faire du cash.",
+        longDesc: "Maîtrisez les fondamentaux du marketing digital pour développer votre entreprise ou votre marque personnelle. Des stratégies éprouvées pour les réseaux sociaux, le référencement, le marketing de contenu et l'analyse des performances.",
+        price: "149 HTG",
+        image: "ne Thousand Ways to Make a Living.jpg"
+      }
+    ];
+
+    // DOM Elements
+    const menuToggle = document.getElementById('menu-toggle');
+    const menuClose = document.getElementById('menu-close');
+    const mobileMenu = document.getElementById('mobile-menu');
+    const carouselTrack = document.getElementById('carousel-track');
+    const carouselPrev = document.getElementById('carousel-prev');
+    const carouselNext = document.getElementById('carousel-next');
+    const carouselIndicators = document.getElementById('carousel-indicators');
+    const modal = document.getElementById('modal');
+    const modalClose = document.getElementById('modal-close');
+    const modalTitle = document.getElementById('modal-title');
+    const modalImage = document.getElementById('modal-image');
+    const modalDescription = document.getElementById('modal-description');
+    const modalPrice = document.getElementById('modal-price');
+    const contactForm = document.getElementById('contact-form');
+    const formFeedback = document.getElementById('form-feedback');
+    const heroImage = document.getElementById('hero-image');
+    const heroCta = document.getElementById('hero-cta');
+
+    // Carousel state
+    let currentSlide = 0;
+    let slidesPerView = 1;
+
+    // Initialize the application
+    function init() {
+      setupMobileMenu();
+      setupCarousel();
+      setupModal();
+      setupForm();
+      setupAnimations();
+      setupWhatsAppOrders();
+    }
+
+    // Mobile menu functionality
+    function setupMobileMenu() {
+      menuToggle.addEventListener('click', () => {
+        mobileMenu.classList.remove('menu-closed');
+        mobileMenu.classList.add('menu-open');
+      });
+
+      menuClose.addEventListener('click', () => {
+        mobileMenu.classList.remove('menu-open');
+        mobileMenu.classList.add('menu-closed');
+      });
+
+      // Close menu when clicking on a link
+      const menuLinks = mobileMenu.querySelectorAll('a');
+      menuLinks.forEach(link => {
+        link.addEventListener('click', () => {
+          mobileMenu.classList.remove('menu-open');
+          mobileMenu.classList.add('menu-closed');
+        });
+      });
+    }
+
+    // Carousel functionality
+    function setupCarousel() {
+      // Determine slides per view based on screen size
+      function updateSlidesPerView() {
+        if (window.innerWidth >= 1024) {
+          slidesPerView = 3;
+        } else if (window.innerWidth >= 768) {
+          slidesPerView = 2;
+        } else {
+          slidesPerView = 1;
+        }
+        renderCarousel();
+      }
+
+      // Render carousel items
+      function renderCarousel() {
+        carouselTrack.innerHTML = '';
+        carouselIndicators.innerHTML = '';
+        
+        const totalSlides = Math.ceil(ebooks.length / slidesPerView);
+        
+        // Create slides
+        for (let i = 0; i < totalSlides; i++) {
+          const slide = document.createElement('div');
+          slide.className = 'carousel-item flex-shrink-0 w-full';
+          
+          const slideContent = document.createElement('div');
+          slideContent.className = 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 px-2';
+          
+          // Add ebooks to this slide
+          for (let j = 0; j < slidesPerView; j++) {
+            const ebookIndex = i * slidesPerView + j;
+            if (ebookIndex < ebooks.length) {
+              const ebook = ebooks[ebookIndex];
+              slideContent.appendChild(createEbookCard(ebook));
+            }
+          }
+          
+          slide.appendChild(slideContent);
+          carouselTrack.appendChild(slide);
+          
+          // Create indicator
+          const indicator = document.createElement('button');
+          indicator.className = `w-3 h-3 rounded-full ${i === currentSlide ? 'bg-indigo-600' : 'bg-gray-300'}`;
+          indicator.setAttribute('aria-label', `Aller au slide ${i + 1}`);
+          indicator.addEventListener('click', () => goToSlide(i));
+          carouselIndicators.appendChild(indicator);
+        }
+        
+        updateCarouselPosition();
+      }
+
+      // Create ebook card element
+      function createEbookCard(ebook) {
+        const card = document.createElement('div');
+        card.className = 'bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow';
+        
+        card.innerHTML = `
+          <div class="cursor-pointer" data-ebook-id="${ebook.id}">
+            <img src="${ebook.image}" width=
+            "250px" height="250px"  alt="Couverture de ${ebook.title}" class=" object-cover" loading="lazy">
+          </div>
+          <div class="p-4">
+            <h3 class="font-semibold text-lg mb-2">${ebook.title}</h3>
+            <p class="text-gray-600 text-sm mb-4">${ebook.shortDesc}</p>
+            <div class="flex justify-between items-center">
+              <span class="font-bold text-indigo-600">${ebook.price}</span>
+              <button class="bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium py-2 px-4 rounded transition-colors order-whatsapp" data-ebook-id="${ebook.id}">
+                Commander
+              </button>
+            </div>
+          </div>
+        `;
+        
+        // Add click event to image for modal
+        const image = card.querySelector('img');
+        image.addEventListener('click', () => openModal(ebook.id));
+        
+        return card;
+      }
+
+      // Update carousel position
+      function updateCarouselPosition() {
+        carouselTrack.style.transform = `translateX(-${currentSlide * 100}%)`;
+        
+        // Update indicators
+        const indicators = carouselIndicators.querySelectorAll('button');
+        indicators.forEach((indicator, index) => {
+          indicator.className = `w-3 h-3 rounded-full ${index === currentSlide ? 'bg-indigo-600' : 'bg-gray-300'}`;
+        });
+      }
+
+      // Navigate to specific slide
+      function goToSlide(slideIndex) {
+        const totalSlides = Math.ceil(ebooks.length / slidesPerView);
+        if (slideIndex >= 0 && slideIndex < totalSlides) {
+          currentSlide = slideIndex;
+          updateCarouselPosition();
+        }
+      }
+
+      // Event listeners for carousel controls
+      carouselPrev.addEventListener('click', () => {
+        const totalSlides = Math.ceil(ebooks.length / slidesPerView);
+        currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+        updateCarouselPosition();
+      });
+
+      carouselNext.addEventListener('click', () => {
+        const totalSlides = Math.ceil(ebooks.length / slidesPerView);
+        currentSlide = (currentSlide + 1) % totalSlides;
+        updateCarouselPosition();
+      });
+
+      // Keyboard navigation for carousel
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowLeft') {
+          carouselPrev.click();
+        } else if (e.key === 'ArrowRight') {
+          carouselNext.click();
+        }
+      });
+
+      // Initialize and update on resize
+      updateSlidesPerView();
+      window.addEventListener('resize', updateSlidesPerView);
+    }
+
+    // Modal functionality
+    function setupModal() {
+      // Open modal with ebook details
+      function openModal(ebookId) {
+        const ebook = ebooks.find(e => e.id === ebookId);
+        if (ebook) {
+          modalTitle.textContent = ebook.title;
+          modalImage.src = ebook.image;
+          modalImage.alt = `Couverture de ${ebook.title}`;
+          modalDescription.textContent = ebook.longDesc;
+          modalPrice.textContent = ebook.price;
+          
+          // Set the ebook ID for the order button in the modal
+          const modalOrderBtn = modal.querySelector('.order-whatsapp');
+          modalOrderBtn.setAttribute('data-ebook-id', ebook.id);
+          
+          modal.classList.remove('hidden');
+          document.body.style.overflow = 'hidden';
+          
+          // Focus trap
+          const focusableElements = modal.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+          if (focusableElements.length > 0) {
+            focusableElements[0].focus();
+          }
+        }
+      }
+
+      // Close modal
+      function closeModal() {
+        modal.classList.add('hidden');
+        document.body.style.overflow = 'auto';
+      }
+
+      // Event listeners
+      modalClose.addEventListener('click', closeModal);
+      
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+          closeModal();
+        }
+      });
+
+      // Close modal with Escape key
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && !modal.classList.contains('hidden')) {
+          closeModal();
+        }
+      });
+
+      // Make openModal function globally available for ebook cards
+      window.openModal = openModal;
+    }
+
+   
+
+    // WhatsApp order functionality
+    function setupWhatsAppOrders() {
+      // Add event listeners to all order buttons
+      document.addEventListener('click', function(e) {
+        if (e.target.classList.contains('order-whatsapp')) {
+          const ebookId = e.target.getAttribute('data-ebook-id');
+          sendWhatsAppOrder(ebookId);
+        }
+      });
+    }
+
+    // Send order via WhatsApp
+    function sendWhatsAppOrder(ebookId) {
+      const ebook = ebooks.find(e => e.id === parseInt(ebookId));
+      if (!ebook) return;
+      
+      // Format the message for WhatsApp
+      const phoneNumber = "50935601379"; // Remplacez par votre numéro WhatsApp
+      const message = `Bonjour ! Je souhaite commander l'e-book suivant :%0A%0A*${ebook.title}*%0APrix : ${ebook.price}%0A%0AVeuillez me contacter pour finaliser ma commande.`;
+      
+      // Create WhatsApp URL
+      const whatsappUrl = `https://wa.me/${phoneNumber}?text=${message}`;
+      
+      // Open WhatsApp in a new tab
+      window.open(whatsappUrl, '_blank');
+    }
+
+    // Animations with anime.js
+    function setupAnimations() {
+      // Hero image animation on page load
+      if (heroImage) {
+        anime({
+          targets: heroImage,
+          translateY: [50, 0],
+          opacity: [0, 1],
+          duration: 800,
+          easing: 'easeOutCubic'
+        });
+      }
+      
+      // Hero CTA button animation
+      if (heroCta) {
+        heroCta.addEventListener('mouseenter', () => {
+          anime({
+            targets: heroCta,
+            scale: 1.05,
+            duration: 300,
+            easing: 'easeOutCubic'
+          });
+        });
+        
+        heroCta.addEventListener('mouseleave', () => {
+          anime({
+            targets: heroCta,
+            scale: 1,
+            duration: 300,
+            easing: 'easeOutCubic'
+          });
+        });
+      }
+      
+      // Ebook card hover animations
+      document.addEventListener('DOMContentLoaded', () => {
+        const cards = document.querySelectorAll('.bg-white.rounded-lg.shadow-md');
+        cards.forEach(card => {
+          card.addEventListener('mouseenter', () => {
+            anime({
+              targets: card,
+              translateY: -5,
+              duration: 300,
+              easing: 'easeOutCubic'
+            });
+          });
+          
+          card.addEventListener('mouseleave', () => {
+            anime({
+              targets: card,
+              translateY: 0,
+              duration: 300,
+              easing: 'easeOutCubic'
+            });
+          });
+        });
+      });
+    }
+
+    // Initialize the app when DOM is loaded
+    document.addEventListener('DOMContentLoaded', init);
+  </script>
+</body>
+</html>
